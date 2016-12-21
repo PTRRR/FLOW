@@ -41,6 +41,56 @@ void Screen::draw(){
     
 }
 
+//Inputs
+
+void Screen::mouseDown(ofVec2f _position, function<void (string _text, string _action)> _callback){
+    
+    if(isActive()){
+        onMouseDown(_position, [&](string text, string action){
+            
+            _callback(text, action);
+            
+        });
+    }
+    
+}
+
+void Screen::mouseMove(ofVec2f _position, function<void (string _text, string _action)> _callback){
+    
+    if(isActive()){
+        onMouseMove(_position, [&](string text, string action){
+            
+            _callback(text, action);
+            
+        });
+    }
+    
+}
+
+void Screen::mouseDrag(ofVec2f _position, function<void (string _text, string _action)> _callback){
+    
+    if(isActive()){
+        onMouseDrag(_position, [&](string text, string action){
+            
+            _callback(text, action);
+            
+        });
+    }
+    
+}
+
+void Screen::mouseUp(ofVec2f _position, function<void (string _text, string _action)> _callback){
+    
+    if(isActive()){
+        onMouseUp(_position, [&](string text, string action){
+            
+            _callback(text, action);
+            
+        });
+    }
+    
+}
+
 //Set
 
 void Screen::setAlpha(float _alpha){

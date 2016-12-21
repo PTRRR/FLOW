@@ -36,7 +36,7 @@ void Menu::setFont(shared_ptr<ofTrueTypeFont> _font){
 
 //Inputs
 
-void Menu::mouseDown(ofVec2f _position, function<void(string _text, string _action)> callback){
+void Menu::onMouseDown(ofVec2f _position, function<void(string _text, string _action)> callback){
     
     interface.mouseDown(_position, [&](string text, string action){
         callback(text, action);
@@ -44,7 +44,7 @@ void Menu::mouseDown(ofVec2f _position, function<void(string _text, string _acti
     
 }
 
-void Menu::mouseMove(ofVec2f _position, function<void(string _text, string _action)> callback){
+void Menu::onMouseMove(ofVec2f _position, function<void(string _text, string _action)> callback){
     
     interface.mouseMove(_position, [&](string text, string action){
         callback(text, action);
@@ -52,7 +52,7 @@ void Menu::mouseMove(ofVec2f _position, function<void(string _text, string _acti
     
 }
 
-void Menu::mouseDrag(ofVec2f _position, function<void(string _text, string _action)> callback){
+void Menu::onMouseDrag(ofVec2f _position, function<void(string _text, string _action)> callback){
     
     interface.mouseDrag(_position, [&](string text, string action){
         callback(text, action);
@@ -60,7 +60,7 @@ void Menu::mouseDrag(ofVec2f _position, function<void(string _text, string _acti
     
 }
 
-void Menu::mouseUp(ofVec2f _position, function<void(string _text, string _action)> callback){
+void Menu::onMouseUp(ofVec2f _position, function<void(string _text, string _action)> callback){
     
     interface.mouseUp(_position, [&](string text, string action){
         callback(text, action);

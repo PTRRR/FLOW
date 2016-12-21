@@ -36,7 +36,7 @@ void SplashScreen::setFont(shared_ptr<ofTrueTypeFont> _font){
 
 //Inputs
 
-void SplashScreen::mouseDown(ofVec2f _position, function<void(string _text, string _action)> callback){
+void SplashScreen::onMouseDown(ofVec2f _position, function<void(string _text, string _action)> callback){
     
     interface.mouseDown(_position, [&](string text, string action){
         callback(text, action);
@@ -44,7 +44,7 @@ void SplashScreen::mouseDown(ofVec2f _position, function<void(string _text, stri
     
 }
 
-void SplashScreen::mouseMove(ofVec2f _position, function<void(string _text, string _action)> callback){
+void SplashScreen::onMouseMove(ofVec2f _position, function<void(string _text, string _action)> callback){
     
     interface.mouseMove(_position, [&](string text, string action){
         callback(text, action);
@@ -52,7 +52,7 @@ void SplashScreen::mouseMove(ofVec2f _position, function<void(string _text, stri
     
 }
 
-void SplashScreen::mouseDrag(ofVec2f _position, function<void(string _text, string _action)> callback){
+void SplashScreen::onMouseDrag(ofVec2f _position, function<void(string _text, string _action)> callback){
     
     interface.mouseDrag(_position, [&](string text, string action){
         callback(text, action);
@@ -60,7 +60,7 @@ void SplashScreen::mouseDrag(ofVec2f _position, function<void(string _text, stri
     
 }
 
-void SplashScreen::mouseUp(ofVec2f _position, function<void(string _text, string _action)> callback){
+void SplashScreen::onMouseUp(ofVec2f _position, function<void(string _text, string _action)> callback){
     
     interface.mouseUp(_position, [&](string text, string action){
         callback(text, action);

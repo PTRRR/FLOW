@@ -28,7 +28,7 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     screenPipeline.updateRenderingOrder();
     screenPipeline.renderAllScreens();
     
-    screenPipeline.setScreenActive(splashScreen);
+    screenPipeline.setScreenActive(menu);
     
 };
 
@@ -42,8 +42,39 @@ void GameManager::draw(){
 
 void GameManager::mouseDown(ofVec2f _position){
     
-    menu->mouseDown(_position, [&](string text, string action){
+
+    
+    screenPipeline.getActiveScreen()->mouseDown(_position, [&](string text, string action){
         cout << text << endl;
     });
     
 }
+
+void GameManager::mouseUp(ofVec2f _position){
+    
+    
+}
+
+void GameManager::mouseMove(ofVec2f _position){
+    
+    
+    
+}
+
+void GameManager::mouseDrag(ofVec2f _position){
+    
+    
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+

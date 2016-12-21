@@ -30,15 +30,15 @@ private:
     
     //Virtual inputs
     
-    virtual void mouseMove(ofVec2f _position){};
-    virtual void mouseDrag(ofVec2f _position){};
-    virtual void mouseUp(ofVec2f _position){};
-    virtual void mouseDown(ofVec2f _position){};
+    virtual void onMouseMove(ofVec2f _position){};
+    virtual void onMouseDrag(ofVec2f _position){};
+    virtual void onMouseUp(ofVec2f _position){};
+    virtual void onMouseDown(ofVec2f _position){};
     
-    virtual void mouseDown(ofVec2f _position, function<void(string _text, string _action)> callback){};
-    virtual void mouseMove(ofVec2f _position, function<void(string _text, string _action)> callback){};
-    virtual void mouseDrag(ofVec2f _position, function<void(string _text, string _action)> callback){};
-    virtual void mouseUp(ofVec2f _position, function<void(string _text, string _action)> callback){};
+    virtual void onMouseDown(ofVec2f _position, function<void(string _text, string _action)> _callback){};
+    virtual void onMouseMove(ofVec2f _position, function<void(string _text, string _action)> _callback){};
+    virtual void onMouseDrag(ofVec2f _position, function<void(string _text, string _action)> _callback){};
+    virtual void onMouseUp(ofVec2f _position, function<void(string _text, string _action)> _callback){};
     
 protected:
     
@@ -52,6 +52,18 @@ public:
     void render();
     void draw();
     virtual void update(){};
+    
+    //Inputs
+    
+    void mouseDown(ofVec2f _position);
+    void mouseMove(ofVec2f _position);
+    void mouseDrag(ofVec2f _position);
+    void mouseUp(ofVec2f _position);
+    
+    void mouseDown(ofVec2f _position, function<void(string _text, string _action)> _callback);
+    void mouseMove(ofVec2f _position, function<void(string _text, string _action)> _callback);
+    void mouseDrag(ofVec2f _position, function<void(string _text, string _action)> _callback);
+    void mouseUp(ofVec2f _position, function<void(string _text, string _action)> _callback);
     
     //Set
     void setAlpha(float _alpha);

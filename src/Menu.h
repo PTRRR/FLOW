@@ -29,6 +29,13 @@ private:
     
     void renderToFbo() override;
     
+    //Inputs
+    
+    void onMouseDown(ofVec2f _position, function<void(string _text, string _action)> callback) override;
+    void onMouseMove(ofVec2f _position, function<void(string _text, string _action)> callback) override;
+    void onMouseDrag(ofVec2f _position, function<void(string _text, string _action)> callback) override;
+    void onMouseUp(ofVec2f _position, function<void(string _text, string _action)> callback) override;
+    
 public:
 
     Menu();
@@ -36,10 +43,7 @@ public:
     
     //Inputs
     
-    void mouseDown(ofVec2f _position, function<void(string _text, string _action)> callback) override;
-    void mouseMove(ofVec2f _position, function<void(string _text, string _action)> callback) override;
-    void mouseDrag(ofVec2f _position, function<void(string _text, string _action)> callback) override;
-    void mouseUp(ofVec2f _position, function<void(string _text, string _action)> callback) override;
+    
     
     //Utils
     
