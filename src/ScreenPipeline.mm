@@ -27,8 +27,8 @@ ScreenPipeline::~ScreenPipeline(){};
 void ScreenPipeline::draw(){
     
     //Display all screens in the right order
-    if(activeScreen != nullptr) activeScreen->draw();
     if(lastActiveScreen != nullptr) lastActiveScreen->draw();
+    if(activeScreen != nullptr) activeScreen->draw();
     
 }
 

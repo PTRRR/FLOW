@@ -30,27 +30,16 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     
     screenPipeline.setScreenActive(splashScreen);
     
-    timer.setTimeout([=](){
-    
-        cout << "HAHAHAHA" << endl;
-        
-        
-        
-    }, 2000);
-    
-    timer.setTimeout([=](){
-        
-        cout << ofGetElapsedTimeMillis() << endl;
-        
-    }, 3000);
-    
-    
-    
 };
 
 void GameManager::update(){
     
-    timer.update();
+    if(!initialTimeoutIsOver && ofGetElapsedTimeMillis() >= initialTimeout){
+        
+        screenPipeline.setScreenActive(menu);
+        initialTimeoutIsOver = true;
+        
+    }
     
 }
 
@@ -63,8 +52,7 @@ void GameManager::draw(){
 //Input
 
 void GameManager::mouseDown(ofVec2f _position){
-    
-    
+
     
 }
 

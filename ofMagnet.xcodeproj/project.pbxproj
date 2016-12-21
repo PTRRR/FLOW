@@ -18,7 +18,6 @@
 		0E9BFFA71E0553D9007F9857 /* SplashScreen.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFFA51E0553D9007F9857 /* SplashScreen.mm */; };
 		0E9BFFAC1E055786007F9857 /* BaseElement.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFFAA1E055786007F9857 /* BaseElement.mm */; };
 		0E9BFFAF1E055958007F9857 /* Scene.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFFAD1E055958007F9857 /* Scene.mm */; };
-		0EBA34E61E0ACC6600F284B4 /* Timer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0EBA34E41E0ACC6600F284B4 /* Timer.mm */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
@@ -84,8 +83,6 @@
 		0E9BFFAB1E055786007F9857 /* BaseElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseElement.h; sourceTree = "<group>"; };
 		0E9BFFAD1E055958007F9857 /* Scene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Scene.mm; sourceTree = "<group>"; };
 		0E9BFFAE1E055958007F9857 /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
-		0EBA34E41E0ACC6600F284B4 /* Timer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Timer.mm; sourceTree = "<group>"; };
-		0EBA34E51E0ACC6600F284B4 /* Timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* ofMagnet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ofMagnet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -166,8 +163,6 @@
 				0E9BFF991E053B07007F9857 /* Screen.h */,
 				0E9BFFA01E055051007F9857 /* ScreenPipeline.mm */,
 				0E9BFFA11E055051007F9857 /* ScreenPipeline.h */,
-				0EBA34E41E0ACC6600F284B4 /* Timer.mm */,
-				0EBA34E51E0ACC6600F284B4 /* Timer.h */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -460,7 +455,6 @@
 				0E9BFFA71E0553D9007F9857 /* SplashScreen.mm in Sources */,
 				0E9BFFAC1E055786007F9857 /* BaseElement.mm in Sources */,
 				0277A21A660EFCF41027A1B3 /* tinyxmlparser.cpp in Sources */,
-				0EBA34E61E0ACC6600F284B4 /* Timer.mm in Sources */,
 				0E22F05E1E0A8A8500197899 /* Text.mm in Sources */,
 				0E9BFF931E043DF1007F9857 /* Button.mm in Sources */,
 			);

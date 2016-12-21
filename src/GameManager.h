@@ -11,7 +11,6 @@
 
 #include <stdio.h>
 #include "ofxiOS.h"
-#include "Timer.h"
 #include "ScreenPipeline.h"
 #include "Menu.h"
 #include "SplashScreen.h"
@@ -24,7 +23,8 @@ private:
     
     //Timer utilitie
     
-    Timer timer;
+    int initialTimeout = 1000; //millis
+    bool initialTimeoutIsOver = false;
     
     //Screens
     
