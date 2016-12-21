@@ -23,8 +23,8 @@ void Button::draw(){
     ofSetColor(255, 255, 255);
     ofSetLineWidth(1);
     ofNoFill();
-    ofDrawRectangle(position.x - offset, position.y - (dimensions.y - (dimensions.y - font->stringHeight(text))) - offset, dimensions.x + offset * 2, dimensions.y + offset * 2);
-    font->drawString(text, position.x, position.y);
+//    ofDrawRectangle(position.x - offset, position.y - (dimensions.y - (dimensions.y - font->stringHeight(text))) - offset, dimensions.x + offset * 2, dimensions.y + offset * 2);
+    font->drawString(text, position.x - dimensions.x / 2, position.y - dimensions.y / 2);
     
 }
 

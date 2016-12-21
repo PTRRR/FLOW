@@ -23,7 +23,7 @@ void Text::draw(){
     ofSetColor(255, 255, 255);
     ofSetLineWidth(1);
     ofNoFill();
-    font->drawString(text, position.x, position.y);
+    font->drawString(text, position.x - dimensions.x / 2, position.y + dimensions.y / 2);
     
 }
 
@@ -45,8 +45,8 @@ void Text::setText(string _text){
     
     text = _text;
     
-    dimensions.x = font->stringWidth(text) + 4;
-    dimensions.y = font->getLineHeight();
+    dimensions.x = font->stringWidth(text);
+    dimensions.y = font->stringHeight(text);
     
 }
 

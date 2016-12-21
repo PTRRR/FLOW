@@ -30,11 +30,6 @@ private:
     
     //Virtual inputs
     
-    virtual void onMouseMove(ofVec2f _position){};
-    virtual void onMouseDrag(ofVec2f _position){};
-    virtual void onMouseUp(ofVec2f _position){};
-    virtual void onMouseDown(ofVec2f _position){};
-    
     virtual void onMouseDown(ofVec2f _position, function<void(string _text, string _action)> _callback){};
     virtual void onMouseMove(ofVec2f _position, function<void(string _text, string _action)> _callback){};
     virtual void onMouseDrag(ofVec2f _position, function<void(string _text, string _action)> _callback){};
@@ -54,11 +49,6 @@ public:
     virtual void update(){};
     
     //Inputs
-    
-    void mouseDown(ofVec2f _position);
-    void mouseMove(ofVec2f _position);
-    void mouseDrag(ofVec2f _position);
-    void mouseUp(ofVec2f _position);
     
     void mouseDown(ofVec2f _position, function<void(string _text, string _action)> _callback);
     void mouseMove(ofVec2f _position, function<void(string _text, string _action)> _callback);

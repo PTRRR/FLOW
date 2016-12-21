@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "ofxiOS.h"
+#include "Timer.h"
 #include "ScreenPipeline.h"
 #include "Menu.h"
 #include "SplashScreen.h"
@@ -20,6 +21,10 @@ class GameManager {
 private:
     
     shared_ptr<ofTrueTypeFont> mainFont;
+    
+    //Timer utilitie
+    
+    Timer timer;
     
     //Screens
     
@@ -33,6 +38,7 @@ public:
     GameManager();
     GameManager(shared_ptr<ofTrueTypeFont> _mainFont);
     
+    void update();
     void draw();
     
     //Input

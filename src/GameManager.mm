@@ -28,9 +28,31 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     screenPipeline.updateRenderingOrder();
     screenPipeline.renderAllScreens();
     
-    screenPipeline.setScreenActive(menu);
+    screenPipeline.setScreenActive(splashScreen);
+    
+    timer.setTimeout([=](){
+    
+        cout << "HAHAHAHA" << endl;
+        
+        
+        
+    }, 2000);
+    
+    timer.setTimeout([=](){
+        
+        cout << ofGetElapsedTimeMillis() << endl;
+        
+    }, 3000);
+    
+    
     
 };
+
+void GameManager::update(){
+    
+    timer.update();
+    
+}
 
 void GameManager::draw(){
     
@@ -42,16 +64,15 @@ void GameManager::draw(){
 
 void GameManager::mouseDown(ofVec2f _position){
     
-
     
-    screenPipeline.getActiveScreen()->mouseDown(_position, [&](string text, string action){
-        cout << text << endl;
-    });
     
 }
 
 void GameManager::mouseUp(ofVec2f _position){
     
+    screenPipeline.getActiveScreen()->mouseUp(_position, [&](string text, string action){
+        cout << text << endl;
+    });
     
 }
 

@@ -13,6 +13,8 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 
+    gameManager.update();
+    
 }
 
 //--------------------------------------------------------------
@@ -37,11 +39,15 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
 //--------------------------------------------------------------
 void ofApp::touchMoved(ofTouchEventArgs & touch){
 
+    gameManager.mouseMove(ofVec2f(touch.x, touch.y));
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::touchUp(ofTouchEventArgs & touch){
 
+    gameManager.mouseUp(ofVec2f(touch.x, touch.y));
+    
 }
 
 //--------------------------------------------------------------
@@ -67,6 +73,8 @@ void ofApp::gotFocus(){
 //--------------------------------------------------------------
 void ofApp::gotMemoryWarning(){
 
+    cout << "MEMORY WARNING" << endl;
+    
 }
 
 //--------------------------------------------------------------
