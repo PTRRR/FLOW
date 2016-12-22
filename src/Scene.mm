@@ -174,7 +174,7 @@ void Scene::update(){
 //These inputs will only fire when this screen is active
 
 void Scene::onMouseDown(ofVec2f _position, function<void(string _text, string _action)> _callback){
-    
+
     for(int i = 0; i < magnets.size(); i++){
         
         //Check the distance with each magnets
@@ -186,6 +186,8 @@ void Scene::onMouseDown(ofVec2f _position, function<void(string _text, string _a
         
         if(distance < 50.0f){
             
+            cout << "adsk" << endl;
+            currentMagnet = magnets[i];
             currentMagnetTarget = _position;
             break;
             
@@ -210,16 +212,17 @@ void Scene::onMouseUp(ofVec2f _position, function<void(string _text, string _act
 void Scene::onMouseMove(ofVec2f _position, function<void(string _text, string _action)> _callback){
     
 //    backGroundShader->uniform("uMouse", _position);
-    
-}
-
-void Scene::onMouseDrag(ofVec2f _position, function<void(string _text, string _action)> _callback){
-    
     if(currentMagnet != nullptr){
         
         currentMagnetTarget = _position;
         
     }
+    
+}
+
+void Scene::onMouseDrag(ofVec2f _position, function<void(string _text, string _action)> _callback){
+    
+    
     
 }
 

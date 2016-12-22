@@ -44,10 +44,13 @@ void GameManager::update(){
         
     }
     
+    screenPipeline.getActiveScreen()->update();
+    
 }
 
 void GameManager::draw(){
     
+    screenPipeline.getActiveScreen()->render();
     screenPipeline.draw();
     
 }
@@ -55,23 +58,28 @@ void GameManager::draw(){
 //Input
 
 void GameManager::mouseDown(ofVec2f _position){
+    
+    string currentScreen = screenPipeline.getActiveScreen()->getName();
+    cout << "mouse down on: " + currentScreen << endl;
 
+    screenPipeline.getActiveScreen()->mouseDown(_position, [&](string text, string action){});
     
 }
 
 void GameManager::mouseUp(ofVec2f _position){
     
+    string currentScreen = screenPipeline.getActiveScreen()->getName();
+    cout << "mouse up on: " + currentScreen << endl;
+    
     screenPipeline.getActiveScreen()->mouseUp(_position, [&](string text, string action){
         
-        string currentScreen = screenPipeline.getActiveScreen()->getName();
-        
-        if(currentScreen == "MENU"){
+        if(action == "PLAY"){
             
-            if(action == "PLAY"){
-                
-                screenPipeline.setScreenActive(scene);
-                
-            }
+            screenPipeline.setScreenActive(scene);
+            
+        }else if(action == "MENU"){
+            
+            screenPipeline.setScreenActive(menu);
             
         }
         
@@ -81,7 +89,10 @@ void GameManager::mouseUp(ofVec2f _position){
 
 void GameManager::mouseMove(ofVec2f _position){
     
+    string currentScreen = screenPipeline.getActiveScreen()->getName();
+    cout << "mouse move on: " + currentScreen << endl;
     
+    screenPipeline.getActiveScreen()->mouseMove(_position, [&](string text, string action){});
     
 }
 
