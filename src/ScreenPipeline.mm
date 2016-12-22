@@ -27,8 +27,8 @@ ScreenPipeline::~ScreenPipeline(){};
 void ScreenPipeline::draw(){
     
     //Display all screens in the right order
-    if(lastActiveScreen != nullptr) lastActiveScreen->draw();
     if(activeScreen != nullptr) activeScreen->draw();
+    if(lastActiveScreen != nullptr) lastActiveScreen->draw();
     
 }
 
@@ -87,6 +87,7 @@ void ScreenPipeline::renderCurrentScreens(){
         if(pipeline[i]->isVisible()){
             
             //Draw the current screen and the one behind
+            
             if(i - 1 >= 0) pipeline[i - 1]->render();
             pipeline[i]->render();
             break;
@@ -98,26 +99,15 @@ void ScreenPipeline::renderCurrentScreens(){
 
 void ScreenPipeline::setScreenActive(shared_ptr<Screen> _screen){
     
-    _screen->setActive(true);
-    
-    for(int i = pipeline.size() - 1; i >= 0; i--){
-        
-        if(pipeline[i] != _screen){
-            
-            pipeline[i]->setAlphaTarget(0.0f);
-            pipeline[i]->setActive(false);
-            
-        }else{
-            
-            pipeline[i]->setAlphaTarget(1.0f);
-            pipeline[i]->setActive(true);
-            
-        }
-        
-    }
-    
-    lastActiveScreen = activeScreen;
+    if(activeScreen != nullptr) lastActiveScreen = activeScreen;
     activeScreen = _screen;
+    
+    activeScreen->setActive(true);
+    activeScreen->setAlpha(255);
+    activeScreen->setAlphaTarget(255);
+    
+    if(lastActiveScreen != nullptr) lastActiveScreen->setAlphaTarget(0);
+    if(lastActiveScreen != nullptr) lastActiveScreen->setActive(false);
     
 }
 

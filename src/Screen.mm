@@ -15,8 +15,8 @@ Screen::Screen(){
     
     //By default
     
-    alpha = 1.0f;
-    alphaTarget = 1.0f;
+    alpha = 255;
+    alphaTarget = 255;
     zIndex = 0;
     
     active = false;
@@ -37,7 +37,20 @@ void Screen::render(){
 
 void Screen::draw(){
     
-    texture.draw(0.0f, 0.0f);
+    if(abs(alpha - alphaTarget) > 0.1){
+        alpha += (alphaTarget - alpha) * 0.1;
+    }
+    
+    if(alpha > 1) {
+        
+        ofEnableAlphaBlending();
+        ofSetColor(255, 255, 255, alpha);
+        
+        texture.draw(0.0f, 0.0f);
+        
+        ofDisableAlphaBlending();
+        
+    }
     
 }
 
@@ -97,9 +110,7 @@ void Screen::setAlpha(float _alpha){
     
     //Clamp the value between 0 and 1
     
-    if(_alpha <= 0) this->alpha = 0;
-    else if (_alpha >= 1) this->alpha = 1;
-    else this->alpha = _alpha;
+    alpha = ofClamp(_alpha, 0.0f, 255.0f);
     
 }
 
@@ -107,9 +118,7 @@ void Screen::setAlphaTarget(float _alphaTarget){
     
     //Clamp the value between 0 and 1
     
-    if(_alphaTarget <= 0) this->alphaTarget = 0;
-    else if (_alphaTarget >= 1) this->alphaTarget = 1;
-    else this->alphaTarget = _alphaTarget;
+    alphaTarget = ofClamp(_alphaTarget, 0.0f, 255.0f);
     
 }
 

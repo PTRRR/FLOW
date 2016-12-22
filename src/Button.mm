@@ -24,12 +24,11 @@ void Button::draw(){
     ofSetLineWidth(1);
     ofNoFill();
     
-    float left = position.x - dimensions.x / 2;
-    float top = position.y - dimensions.y / 2;
-
-    ofDrawCircle(position.x, position.y, 2);
+//    float left = position.x - dimensions.x / 2;
+//    float top = position.y - dimensions.y / 2;
+//    ofDrawCircle(position.x, position.y, 2);
+//    ofDrawRectangle(left, top, dimensions.x, dimensions.y);
     
-    ofDrawRectangle(left, top, dimensions.x, dimensions.y);
     font->drawString(text, position.x - dimensions.x / 2, position.y + dimensions.y / 2);
     
 }
@@ -97,7 +96,6 @@ bool Button::isOver(ofVec2f _position){
     float down = top + dimensions.y;
     
     if(_position.x >= left && _position.x <= right && _position.y >= top && _position.y <= down){
-        cout << "asdafasd" << endl;
         return true;
     }else{
         return false;

@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		0277A21A660EFCF41027A1B3 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ADF09787D5B235F9D9229EA1 /* tinyxmlparser.cpp */; };
+		0E223CDA1E0BC97300F37F95 /* Particle.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E223CD81E0BC97300F37F95 /* Particle.mm */; };
+		0E223CDD1E0BC9E900F37F95 /* ParticleSystem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E223CDB1E0BC9E900F37F95 /* ParticleSystem.mm */; };
+		0E223CE01E0BD01000F37F95 /* FlowField.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E223CDE1E0BD01000F37F95 /* FlowField.mm */; };
+		0E223CE31E0BD13900F37F95 /* Magnet.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E223CE11E0BD13900F37F95 /* Magnet.mm */; };
+		0E223CE61E0BD24F00F37F95 /* Receptor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E223CE41E0BD24F00F37F95 /* Receptor.mm */; };
 		0E22F05E1E0A8A8500197899 /* Text.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E22F05C1E0A8A8500197899 /* Text.mm */; };
 		0E9BFF901E043B97007F9857 /* GameManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF8E1E043B97007F9857 /* GameManager.mm */; };
 		0E9BFF931E043DF1007F9857 /* Button.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF911E043DF1007F9857 /* Button.mm */; };
@@ -63,6 +68,16 @@
 
 /* Begin PBXFileReference section */
 		01BFB02058838D6D4FB2BDEF /* tinyxml.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = tinyxml.cpp; path = ../../../../../../Code/OpenFrameworks/of_v0.9.8_ios_release/addons/ofxXmlSettings/libs/tinyxml.cpp; sourceTree = SOURCE_ROOT; };
+		0E223CD81E0BC97300F37F95 /* Particle.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Particle.mm; sourceTree = "<group>"; };
+		0E223CD91E0BC97300F37F95 /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Particle.h; sourceTree = "<group>"; };
+		0E223CDB1E0BC9E900F37F95 /* ParticleSystem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ParticleSystem.mm; sourceTree = "<group>"; };
+		0E223CDC1E0BC9E900F37F95 /* ParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleSystem.h; sourceTree = "<group>"; };
+		0E223CDE1E0BD01000F37F95 /* FlowField.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FlowField.mm; sourceTree = "<group>"; };
+		0E223CDF1E0BD01000F37F95 /* FlowField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlowField.h; sourceTree = "<group>"; };
+		0E223CE11E0BD13900F37F95 /* Magnet.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Magnet.mm; sourceTree = "<group>"; };
+		0E223CE21E0BD13900F37F95 /* Magnet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Magnet.h; sourceTree = "<group>"; };
+		0E223CE41E0BD24F00F37F95 /* Receptor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Receptor.mm; sourceTree = "<group>"; };
+		0E223CE51E0BD24F00F37F95 /* Receptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Receptor.h; sourceTree = "<group>"; };
 		0E22F05C1E0A8A8500197899 /* Text.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Text.mm; sourceTree = "<group>"; };
 		0E22F05D1E0A8A8500197899 /* Text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Text.h; sourceTree = "<group>"; };
 		0E9BFF8E1E043B97007F9857 /* GameManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameManager.mm; sourceTree = "<group>"; };
@@ -183,6 +198,16 @@
 			children = (
 				0E9BFFAA1E055786007F9857 /* BaseElement.mm */,
 				0E9BFFAB1E055786007F9857 /* BaseElement.h */,
+				0E223CD81E0BC97300F37F95 /* Particle.mm */,
+				0E223CD91E0BC97300F37F95 /* Particle.h */,
+				0E223CDB1E0BC9E900F37F95 /* ParticleSystem.mm */,
+				0E223CDC1E0BC9E900F37F95 /* ParticleSystem.h */,
+				0E223CDE1E0BD01000F37F95 /* FlowField.mm */,
+				0E223CDF1E0BD01000F37F95 /* FlowField.h */,
+				0E223CE11E0BD13900F37F95 /* Magnet.mm */,
+				0E223CE21E0BD13900F37F95 /* Magnet.h */,
+				0E223CE41E0BD24F00F37F95 /* Receptor.mm */,
+				0E223CE51E0BD24F00F37F95 /* Receptor.h */,
 			);
 			name = "Game elements";
 			sourceTree = "<group>";
@@ -449,11 +474,16 @@
 				DDA2E262B07659E1DBBB4D5E /* ofxXmlSettings.cpp in Sources */,
 				0E9BFFA21E055051007F9857 /* ScreenPipeline.mm in Sources */,
 				0E9BFF9F1E053C25007F9857 /* Menu.mm in Sources */,
+				0E223CE01E0BD01000F37F95 /* FlowField.mm in Sources */,
+				0E223CDD1E0BC9E900F37F95 /* ParticleSystem.mm in Sources */,
 				0E9BFF9A1E053B07007F9857 /* Screen.mm in Sources */,
+				0E223CE61E0BD24F00F37F95 /* Receptor.mm in Sources */,
 				C32E84B046A417CA7171613C /* tinyxml.cpp in Sources */,
 				F00B7884241FB2CD87F076E0 /* tinyxmlerror.cpp in Sources */,
 				0E9BFFA71E0553D9007F9857 /* SplashScreen.mm in Sources */,
 				0E9BFFAC1E055786007F9857 /* BaseElement.mm in Sources */,
+				0E223CE31E0BD13900F37F95 /* Magnet.mm in Sources */,
+				0E223CDA1E0BC97300F37F95 /* Particle.mm in Sources */,
 				0277A21A660EFCF41027A1B3 /* tinyxmlparser.cpp in Sources */,
 				0E22F05E1E0A8A8500197899 /* Text.mm in Sources */,
 				0E9BFF931E043DF1007F9857 /* Button.mm in Sources */,

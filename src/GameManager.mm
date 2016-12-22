@@ -15,19 +15,22 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     mainFont = _mainFont;
     
     splashScreen = shared_ptr<SplashScreen>(new SplashScreen(mainFont));
-    splashScreen->setIndex(0);
+    splashScreen->setName("SPLASHSCREEN");
     
     menu = shared_ptr<Menu>(new Menu(mainFont));
-    menu->setIndex(1);
+    menu->setName("MENU");
+    
+    //Scene test
+    scene = shared_ptr<Scene>(new Scene(mainFont));
+    scene->setName("SCENE");
     
     //Screen pipeline setup
     
     screenPipeline.addScreen(splashScreen);
     screenPipeline.addScreen(menu);
+    screenPipeline.addScreen(scene);
     
-    screenPipeline.updateRenderingOrder();
     screenPipeline.renderAllScreens();
-    
     screenPipeline.setScreenActive(splashScreen);
     
 };
@@ -59,7 +62,19 @@ void GameManager::mouseDown(ofVec2f _position){
 void GameManager::mouseUp(ofVec2f _position){
     
     screenPipeline.getActiveScreen()->mouseUp(_position, [&](string text, string action){
-        cout << text << endl;
+        
+        string currentScreen = screenPipeline.getActiveScreen()->getName();
+        
+        if(currentScreen == "MENU"){
+            
+            if(action == "PLAY"){
+                
+                screenPipeline.setScreenActive(scene);
+                
+            }
+            
+        }
+        
     });
     
 }

@@ -15,7 +15,7 @@ Menu::Menu(shared_ptr<ofTrueTypeFont> _font){
     font = _font;
     interface.setFont(font);
     
-    interface.addButton("HAHA", "HUHU", ofVec2f(100, 100));
+    interface.addButton("PLAY", "PLAY", ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2));
     
 }
 

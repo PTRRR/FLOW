@@ -12,8 +12,9 @@
 #include <stdio.h>
 #include "ofxiOS.h"
 #include "ScreenPipeline.h"
-#include "Menu.h"
 #include "SplashScreen.h"
+#include "Menu.h"
+#include "Scene.h"
 
 class GameManager {
 
@@ -32,6 +33,7 @@ private:
     
     shared_ptr<SplashScreen> splashScreen;
     shared_ptr<Menu> menu;
+    shared_ptr<Scene> scene;
     
 public:
     

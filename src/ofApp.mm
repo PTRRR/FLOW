@@ -4,7 +4,7 @@
 void ofApp::setup(){	
 
     mainFont = shared_ptr<ofTrueTypeFont>(new ofTrueTypeFont());
-    mainFont->load("GT-Cinetype-Trial-Regular.otf", 30);
+    mainFont->load("GT-Cinetype-Trial-Regular.otf", 20);
     
     gameManager = GameManager(mainFont);
     
@@ -21,6 +21,9 @@ void ofApp::update(){
 void ofApp::draw(){
     
     gameManager.draw();
+    
+    ofSetColor(255, 255, 255);
+    ofDrawBitmapString("FPS: " + to_string(floor(ofGetFrameRate() * 10) / 10), 20, 20);
     
 }
 
