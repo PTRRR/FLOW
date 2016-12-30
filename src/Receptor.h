@@ -16,12 +16,26 @@ class Receptor : public Actuator {
 
 private:
     
-    int particlesCount = 0;
+    float particlesCount = 0;
+    float decreasingFactor = 0.022;
+    
+    float maxParticles = 300;
     
 public:
 
     Receptor();
     
+    void update();
+    void debugDraw();
+    
+    //Set
+    
+    void addOneParticleToCount();
+    
+    //Get
+    
+    float getPercentFill();
+    int getCount();
     
 };
 

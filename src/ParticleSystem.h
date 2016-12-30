@@ -42,6 +42,7 @@ public:
     void applyGravity(ofVec2f _gravity);
     void applyForce(ofVec2f _force);
     void addParticles(int _num);
+    void removeParticle(int _index);
     void addActuator(shared_ptr<Actuator> _actuator);
     void addReceptor(shared_ptr<Receptor> _receptor);
     void removeActuator(shared_ptr<Actuator> _actuator);

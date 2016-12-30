@@ -52,6 +52,12 @@ void BaseElement::update(){
     
     float boxArea = box.z * box.w;
     
+    if(position.x < box.x || position.x > box.x + box.z || position.y < box.y || position.y > box.y + box.w){
+        out = true;
+    }else{
+        out = false;
+    }
+    
     if(boxArea > 0){
         
         position.x = ofClamp(position.x, box.x, box.x + box.z);
@@ -163,6 +169,12 @@ float BaseElement::getMass(){
 float BaseElement::getDamping(){
     
     return damping;
+    
+}
+
+bool BaseElement::isOut(){
+    
+    return out;
     
 }
 

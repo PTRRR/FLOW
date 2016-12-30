@@ -12,6 +12,7 @@ Particle::Particle(){
 
     numPoints = floor(ofRandom(10));
     circleDefinition = floor(ofRandom(5) + 3);
+    dead = false;
 
 }
 

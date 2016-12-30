@@ -130,7 +130,7 @@ void ParticleSystem::update(){
     
     for(int i = particles.size() - 1; i >= 0; i--){
         
-        if(particles[i]->isDead()){
+        if(particles[i]->isDead() || particles[i]->isOut()){
             particles.erase(particles.begin() + i);
         }
         
@@ -172,11 +172,17 @@ void ParticleSystem::addParticles(int _num){
         newParticle->setMass(ofRandom(3.0));
         newParticle->setVelocity(ofVec2f(ofRandomf() * 0, 0));
         newParticle->setMaxVelocity(20);
-        newParticle->setBox(10, 10, ofGetWidth() - 10, ofGetHeight() - 10);
-        newParticle->setLifeSpan(ofRandom(10000));
+        newParticle->setBox(-100, -100, ofGetWidth() + 200, ofGetHeight() + 200);
+        newParticle->setLifeSpan(ofRandom(20000));
         particles.push_back(newParticle);
         
     }
+    
+}
+
+void ParticleSystem::removeParticle(int _index){
+    
+    particles.erase(particles.begin() + _index);
     
 }
 

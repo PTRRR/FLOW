@@ -31,6 +31,7 @@ private:
     //If set, this box restrict the movements of the object in that box
     
     ofVec4f box;
+    bool out;
     
     //Time variables
     
@@ -71,6 +72,8 @@ public:
     
     float getMass();
     float getDamping();
+    
+    bool isOut();
     
     //Physics
     

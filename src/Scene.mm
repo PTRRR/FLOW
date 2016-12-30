@@ -62,7 +62,7 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
         
     }
     
-    //Initialize a polygone (obstacle)
+    //Initialize some polygones (obstacle)
     
     shared_ptr<Polygone> polygone = shared_ptr<Polygone>(new Polygone());
     polygone->addVertex(ofGetWidth() / 2, 1000);
@@ -73,18 +73,19 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     
     polygones.push_back(polygone);
     
+    shared_ptr<Polygone> polygone1 = shared_ptr<Polygone>(new Polygone());
+    polygone1->addVertex(100, 1000);
+    polygone1->addVertex(ofGetWidth() / 2 - 200, 1900);
+    polygone1->addVertex(100, 1900);
     
-//    ofVec3f points[200];
-//    
-//    for(int i = 0; i < 200; i++){
-//        points[i].x = ofGetWidth() * ofRandom(1.0);
-//        points[i].y = ofGetHeight() * ofRandom(1.0);
-//        points[i].z = 0.0;
-//    }
-//    
-//    
-//    
-//    pointsVbo.setVertexData(points, 200, GL_DYNAMIC_DRAW);
+    polygones.push_back(polygone1);
+    
+    shared_ptr<Polygone> polygone2 = shared_ptr<Polygone>(new Polygone());
+    polygone2->addVertex(ofGetWidth() - 100, 1000);
+    polygone2->addVertex(ofGetWidth() / 2 + 200, 1900);
+    polygone2->addVertex(ofGetWidth() - 100, 1900);
+    
+    polygones.push_back(polygone2);
     
 };
 
@@ -131,6 +132,21 @@ void Scene::update(){
     particleSystem.update();
     particleSystem.applyGravity(ofVec2f(0.0, 0.1));
     
+    vector<shared_ptr<Particle>> particles = particleSystem.getParticles();
+    
+    for(int i = particles.size() - 1; i >= 0 ; i--){
+        for(int j = 0; j < receptors.size(); j++){
+         
+            float distance = (particles[i]->getPosition() - receptors[j]->getPosition()).length();
+            
+            if(distance < 50){
+                particleSystem.removeParticle(i);
+                receptors[j]->addOneParticleToCount();
+            }
+            
+        }
+    }
+    
     //Update actuators
     
     if(activeActuator != nullptr){
@@ -142,6 +158,12 @@ void Scene::update(){
     
     for(int i = 0; i < actuators.size(); i++){
         actuators[i]->update();
+    }
+    
+    //Update receptors
+    
+    for(int i = 0; i < receptors.size(); i++){
+        receptors[i]->update();
     }
     
     checkForCollisions();
