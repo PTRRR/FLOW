@@ -14,23 +14,26 @@
 #include "Interface.h"
 #include "Button.h"
 
-#include "FlowField.h"
 #include "BaseElement.h"
 #include "ParticleSystem.h"
 #include "Receptor.h"
 #include "Particle.h"
-#include "Magnet.h"
+#include "Actuator.h"
+#include "Polygone.h"
 
 class Scene : public Screen{
 
 private:
     
-    //GUI
-    Interface interface;
-    
     //Main
+    
+    ofVec2f touchPos;
     float time;
-    void renderToFbo() override;
+    void renderToScreen() override;
+    
+    //GUI
+    
+    Interface interface;
     
     //Emitter
     
@@ -38,32 +41,18 @@ private:
     
     //Receptor
     
-    shared_ptr<Receptor> receptor;
+    vector<shared_ptr<Receptor>> receptors;
     
-    //Magnets
+    //Actuators
     
     static const int MAX_MAGNET_NUM = 10;
-    vector<shared_ptr<Magnet>> magnets;
+    vector<shared_ptr<Actuator>> actuators;
+    shared_ptr<Actuator> activeActuator;
     
-    shared_ptr<Magnet> currentMagnet = nullptr;
-    ofVec2f currentMagnetTarget;
+    //Polygones
     
-    //Utility to add some magnets to the scene and in the flow field
-    
-    void addMagnet(ofVec2f _position, float _strength, float _radiusOfAction);
-    
-    //Flow field
-    
-    shared_ptr<FlowField> flowField;
-    
-    //3D
-//    CameraPersp camera;
-    
-    //Background shader -> draw the outlines of the magnetic field
-//    gl::GlslProgRef backGroundShader;
-//    void loadBackgroundShader();
-//    void updateBackgroudShader();
-    
+    vector<shared_ptr<Polygone>> polygones;
+    void checkForCollisions();
     
     //User inputs callbacks
     void onMouseDown(ofVec2f _position, function<void(string _text, string _action)> _callback) override;
@@ -73,6 +62,14 @@ private:
     
     //Other callbacks
     function<void()> levelEndCallback = nullptr;
+    
+    //Test shader
+    
+    ofShader shader;
+    ofShader circleShader;
+    ofShader particleShader;
+    
+    ofVbo pointsVbo;
     
 public:
     

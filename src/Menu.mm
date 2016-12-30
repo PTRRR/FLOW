@@ -15,14 +15,16 @@ Menu::Menu(shared_ptr<ofTrueTypeFont> _font){
     font = _font;
     interface.setFont(font);
     
-    interface.addButton("PLAY", "PLAY", ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2));
+    interface.addButton("PLAY", "PLAY", ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2 - 40));
+    interface.addButton("EXIT", "EXIT", ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2 + 40));
     
 }
 
-void Menu::renderToFbo(){
+void Menu::renderToScreen(){
     
-    ofSetColor(0, 0, 0);
+    ofSetColor(0, 0, 0, getAlpha());
     ofDrawRectangle(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+    
     interface.draw();
     
 }

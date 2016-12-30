@@ -8,12 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		0277A21A660EFCF41027A1B3 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ADF09787D5B235F9D9229EA1 /* tinyxmlparser.cpp */; };
-		0E223CDA1E0BC97300F37F95 /* Particle.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E223CD81E0BC97300F37F95 /* Particle.mm */; };
-		0E223CDD1E0BC9E900F37F95 /* ParticleSystem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E223CDB1E0BC9E900F37F95 /* ParticleSystem.mm */; };
-		0E223CE01E0BD01000F37F95 /* FlowField.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E223CDE1E0BD01000F37F95 /* FlowField.mm */; };
-		0E223CE31E0BD13900F37F95 /* Magnet.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E223CE11E0BD13900F37F95 /* Magnet.mm */; };
-		0E223CE61E0BD24F00F37F95 /* Receptor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E223CE41E0BD24F00F37F95 /* Receptor.mm */; };
+		0E078B7E1E16772F004595EF /* BaseElement.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E078B721E16772F004595EF /* BaseElement.mm */; };
+		0E078B7F1E16772F004595EF /* Particle.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E078B741E16772F004595EF /* Particle.mm */; };
+		0E078B801E16772F004595EF /* ParticleSystem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E078B761E16772F004595EF /* ParticleSystem.mm */; };
+		0E078B811E16772F004595EF /* Actuator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E078B781E16772F004595EF /* Actuator.mm */; };
+		0E078B831E16772F004595EF /* Polygone.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E078B7C1E16772F004595EF /* Polygone.mm */; };
+		0E078B891E168984004595EF /* Receptor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E078B871E168984004595EF /* Receptor.mm */; };
 		0E22F05E1E0A8A8500197899 /* Text.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E22F05C1E0A8A8500197899 /* Text.mm */; };
+		0E51B64E1E0D726D00CFF1D6 /* shaders in Resources */ = {isa = PBXBuildFile; fileRef = 0E51B64D1E0D726D00CFF1D6 /* shaders */; };
 		0E9BFF901E043B97007F9857 /* GameManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF8E1E043B97007F9857 /* GameManager.mm */; };
 		0E9BFF931E043DF1007F9857 /* Button.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF911E043DF1007F9857 /* Button.mm */; };
 		0E9BFF971E0442A3007F9857 /* Interface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF951E0442A3007F9857 /* Interface.mm */; };
@@ -21,7 +23,6 @@
 		0E9BFF9F1E053C25007F9857 /* Menu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF9D1E053C25007F9857 /* Menu.mm */; };
 		0E9BFFA21E055051007F9857 /* ScreenPipeline.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFFA01E055051007F9857 /* ScreenPipeline.mm */; };
 		0E9BFFA71E0553D9007F9857 /* SplashScreen.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFFA51E0553D9007F9857 /* SplashScreen.mm */; };
-		0E9BFFAC1E055786007F9857 /* BaseElement.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFFAA1E055786007F9857 /* BaseElement.mm */; };
 		0E9BFFAF1E055958007F9857 /* Scene.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFFAD1E055958007F9857 /* Scene.mm */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
@@ -68,18 +69,21 @@
 
 /* Begin PBXFileReference section */
 		01BFB02058838D6D4FB2BDEF /* tinyxml.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = tinyxml.cpp; path = ../../../../../../Code/OpenFrameworks/of_v0.9.8_ios_release/addons/ofxXmlSettings/libs/tinyxml.cpp; sourceTree = SOURCE_ROOT; };
-		0E223CD81E0BC97300F37F95 /* Particle.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Particle.mm; sourceTree = "<group>"; };
-		0E223CD91E0BC97300F37F95 /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Particle.h; sourceTree = "<group>"; };
-		0E223CDB1E0BC9E900F37F95 /* ParticleSystem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ParticleSystem.mm; sourceTree = "<group>"; };
-		0E223CDC1E0BC9E900F37F95 /* ParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleSystem.h; sourceTree = "<group>"; };
-		0E223CDE1E0BD01000F37F95 /* FlowField.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FlowField.mm; sourceTree = "<group>"; };
-		0E223CDF1E0BD01000F37F95 /* FlowField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlowField.h; sourceTree = "<group>"; };
-		0E223CE11E0BD13900F37F95 /* Magnet.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Magnet.mm; sourceTree = "<group>"; };
-		0E223CE21E0BD13900F37F95 /* Magnet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Magnet.h; sourceTree = "<group>"; };
-		0E223CE41E0BD24F00F37F95 /* Receptor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Receptor.mm; sourceTree = "<group>"; };
-		0E223CE51E0BD24F00F37F95 /* Receptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Receptor.h; sourceTree = "<group>"; };
+		0E078B721E16772F004595EF /* BaseElement.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BaseElement.mm; sourceTree = "<group>"; };
+		0E078B731E16772F004595EF /* BaseElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseElement.h; sourceTree = "<group>"; };
+		0E078B741E16772F004595EF /* Particle.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Particle.mm; sourceTree = "<group>"; };
+		0E078B751E16772F004595EF /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Particle.h; sourceTree = "<group>"; };
+		0E078B761E16772F004595EF /* ParticleSystem.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ParticleSystem.mm; sourceTree = "<group>"; };
+		0E078B771E16772F004595EF /* ParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleSystem.h; sourceTree = "<group>"; };
+		0E078B781E16772F004595EF /* Actuator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Actuator.mm; sourceTree = "<group>"; };
+		0E078B791E16772F004595EF /* Actuator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Actuator.h; sourceTree = "<group>"; };
+		0E078B7C1E16772F004595EF /* Polygone.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Polygone.mm; sourceTree = "<group>"; };
+		0E078B7D1E16772F004595EF /* Polygone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Polygone.h; sourceTree = "<group>"; };
+		0E078B871E168984004595EF /* Receptor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Receptor.mm; sourceTree = "<group>"; };
+		0E078B881E168984004595EF /* Receptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Receptor.h; sourceTree = "<group>"; };
 		0E22F05C1E0A8A8500197899 /* Text.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Text.mm; sourceTree = "<group>"; };
 		0E22F05D1E0A8A8500197899 /* Text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Text.h; sourceTree = "<group>"; };
+		0E51B64D1E0D726D00CFF1D6 /* shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shaders; path = bin/data/shaders; sourceTree = "<group>"; };
 		0E9BFF8E1E043B97007F9857 /* GameManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameManager.mm; sourceTree = "<group>"; };
 		0E9BFF8F1E043B97007F9857 /* GameManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameManager.h; sourceTree = "<group>"; };
 		0E9BFF911E043DF1007F9857 /* Button.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Button.mm; sourceTree = "<group>"; };
@@ -94,8 +98,6 @@
 		0E9BFFA11E055051007F9857 /* ScreenPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenPipeline.h; sourceTree = "<group>"; };
 		0E9BFFA51E0553D9007F9857 /* SplashScreen.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SplashScreen.mm; sourceTree = "<group>"; };
 		0E9BFFA61E0553D9007F9857 /* SplashScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashScreen.h; sourceTree = "<group>"; };
-		0E9BFFAA1E055786007F9857 /* BaseElement.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BaseElement.mm; sourceTree = "<group>"; };
-		0E9BFFAB1E055786007F9857 /* BaseElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseElement.h; sourceTree = "<group>"; };
 		0E9BFFAD1E055958007F9857 /* Scene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Scene.mm; sourceTree = "<group>"; };
 		0E9BFFAE1E055958007F9857 /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -196,18 +198,18 @@
 		0E9BFFA81E055548007F9857 /* Game elements */ = {
 			isa = PBXGroup;
 			children = (
-				0E9BFFAA1E055786007F9857 /* BaseElement.mm */,
-				0E9BFFAB1E055786007F9857 /* BaseElement.h */,
-				0E223CD81E0BC97300F37F95 /* Particle.mm */,
-				0E223CD91E0BC97300F37F95 /* Particle.h */,
-				0E223CDB1E0BC9E900F37F95 /* ParticleSystem.mm */,
-				0E223CDC1E0BC9E900F37F95 /* ParticleSystem.h */,
-				0E223CDE1E0BD01000F37F95 /* FlowField.mm */,
-				0E223CDF1E0BD01000F37F95 /* FlowField.h */,
-				0E223CE11E0BD13900F37F95 /* Magnet.mm */,
-				0E223CE21E0BD13900F37F95 /* Magnet.h */,
-				0E223CE41E0BD24F00F37F95 /* Receptor.mm */,
-				0E223CE51E0BD24F00F37F95 /* Receptor.h */,
+				0E078B721E16772F004595EF /* BaseElement.mm */,
+				0E078B731E16772F004595EF /* BaseElement.h */,
+				0E078B741E16772F004595EF /* Particle.mm */,
+				0E078B751E16772F004595EF /* Particle.h */,
+				0E078B761E16772F004595EF /* ParticleSystem.mm */,
+				0E078B771E16772F004595EF /* ParticleSystem.h */,
+				0E078B781E16772F004595EF /* Actuator.mm */,
+				0E078B791E16772F004595EF /* Actuator.h */,
+				0E078B7C1E16772F004595EF /* Polygone.mm */,
+				0E078B7D1E16772F004595EF /* Polygone.h */,
+				0E078B871E168984004595EF /* Receptor.mm */,
+				0E078B881E168984004595EF /* Receptor.h */,
 			);
 			name = "Game elements";
 			sourceTree = "<group>";
@@ -246,6 +248,7 @@
 				678E130B1795153C005B6D19 /* Default.png */,
 				678E130D17951540005B6D19 /* Default@2x.png */,
 				678E130F17951549005B6D19 /* Default-568h@2x~iphone.png */,
+				0E51B64D1E0D726D00CFF1D6 /* shaders */,
 				E4D8936A11527B74007E1F53 /* src */,
 				BB24E1F710DAA51900E9C588 /* openFrameworks */,
 				BB16F26B0F2B646B00518274 /* addons */,
@@ -394,6 +397,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0600;
+				TargetAttributes = {
+					1D6058900D05DD3D006BFB54 = {
+						DevelopmentTeam = 9V7Y8WTPZV;
+					};
+				};
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "ofMagnet" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -438,6 +446,7 @@
 				678E130817951530005B6D19 /* Icon@2x.png in Resources */,
 				678E130A17951536005B6D19 /* Icon.png in Resources */,
 				678E130C1795153C005B6D19 /* Default.png in Resources */,
+				0E51B64E1E0D726D00CFF1D6 /* shaders in Resources */,
 				678E130E17951540005B6D19 /* Default@2x.png in Resources */,
 				678E131017951549005B6D19 /* Default-568h@2x~iphone.png in Resources */,
 			);
@@ -474,16 +483,16 @@
 				DDA2E262B07659E1DBBB4D5E /* ofxXmlSettings.cpp in Sources */,
 				0E9BFFA21E055051007F9857 /* ScreenPipeline.mm in Sources */,
 				0E9BFF9F1E053C25007F9857 /* Menu.mm in Sources */,
-				0E223CE01E0BD01000F37F95 /* FlowField.mm in Sources */,
-				0E223CDD1E0BC9E900F37F95 /* ParticleSystem.mm in Sources */,
+				0E078B801E16772F004595EF /* ParticleSystem.mm in Sources */,
+				0E078B7F1E16772F004595EF /* Particle.mm in Sources */,
+				0E078B831E16772F004595EF /* Polygone.mm in Sources */,
+				0E078B891E168984004595EF /* Receptor.mm in Sources */,
 				0E9BFF9A1E053B07007F9857 /* Screen.mm in Sources */,
-				0E223CE61E0BD24F00F37F95 /* Receptor.mm in Sources */,
+				0E078B811E16772F004595EF /* Actuator.mm in Sources */,
 				C32E84B046A417CA7171613C /* tinyxml.cpp in Sources */,
 				F00B7884241FB2CD87F076E0 /* tinyxmlerror.cpp in Sources */,
+				0E078B7E1E16772F004595EF /* BaseElement.mm in Sources */,
 				0E9BFFA71E0553D9007F9857 /* SplashScreen.mm in Sources */,
-				0E9BFFAC1E055786007F9857 /* BaseElement.mm in Sources */,
-				0E223CE31E0BD13900F37F95 /* Magnet.mm in Sources */,
-				0E223CDA1E0BC97300F37F95 /* Particle.mm in Sources */,
 				0277A21A660EFCF41027A1B3 /* tinyxmlparser.cpp in Sources */,
 				0E22F05E1E0A8A8500197899 /* Text.mm in Sources */,
 				0E9BFF931E043DF1007F9857 /* Button.mm in Sources */,
@@ -505,12 +514,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ofxiOS_Prefix.pch;
 				"GCC_WARN_64_TO_32_BIT_CONVERSION[arch=*64]" = NO;
 				INFOPLIST_FILE = "ofxiOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "${TARGET_NAME}";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "$(ARCHS_STANDARD)";
 			};
 			name = Debug;
@@ -518,12 +529,14 @@
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ofxiOS_Prefix.pch;
 				"GCC_WARN_64_TO_32_BIT_CONVERSION[arch=*64]" = NO;
 				INFOPLIST_FILE = "ofxiOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "${TARGET_NAME}";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "$(ARCHS_STANDARD)";
 			};
 			name = Release;

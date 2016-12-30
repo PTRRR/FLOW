@@ -14,14 +14,13 @@ SplashScreen::SplashScreen(shared_ptr<ofTrueTypeFont> _font){
     
     font = _font;
     interface.setFont(font);
-    interface.addText("M A G N E T", ofVec2f(ofGetWindowWidth() / 2, ofGetWindowHeight() / 2));
-    
+    interface.addText("F L O W", ofVec2f(ofGetWindowWidth() / 2, ofGetWindowHeight() / 2));
     
 }
 
-void SplashScreen::renderToFbo(){
+void SplashScreen::renderToScreen(){
     
-    ofSetColor(0, 0, 0);
+    ofSetColor(0, 0, 0, getAlpha());
     ofDrawRectangle(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
     interface.draw();
     

@@ -1,8 +1,8 @@
 //
 //  BaseElement.h
-//  ofMagnet
+//  particleSystem
 //
-//  Created by Pietro Alberti on 17.12.16.
+//  Created by Pietro Alberti on 22.12.16.
 //
 //
 
@@ -13,51 +13,68 @@
 #include "ofxiOS.h"
 
 class BaseElement {
-
+    
 private:
     
-protected:
-    
+    ofVec2f lastPosition;
     ofVec2f position;
-    ofVec2f lastPos;
+    ofVec2f nextPosition;
     ofVec2f velocity;
     ofVec2f acceleration;
     
     float mass;
     float damping;
     
-    float maxSpeed = 3;
+    float maxVelocity;
     
-    float lifeSpan = 100;
+    //Box
+    //If set, this box restrict the movements of the object in that box
     
-//    Rectf boundingBox;
-    bool limit = false;
-    bool out = false;
+    ofVec4f box;
     
-    void updateIsOut();
+    //Time variables
+    
+    float lastTime;
+    float deltaTime;
+    float targetDeltaTime = 1000.0 / 60.0;
+    
+protected:
+    
+    float getDeltatime();
     
 public:
     
     BaseElement();
     
+    //Main
+    
     void update();
     
     //Set
+    
     void setPosition(ofVec2f _position);
     void setVelocity(ofVec2f _velocity);
-    void setMass(float _mass);
-    void setMaxVelocity(float _maxVelocity);
-    void applyForce(ofVec2f _force);
+    void setAcceleration(ofVec2f _acceleration);
     
-//    void setBoundingBox(Rectf _boundingBox);
-    void setLimitToBoundingBox(bool _limit);
+    void setMass(float _mass);
+    void setDamping(float _damping);
+    void setMaxVelocity(float _maxVelocity);
+    void setBox(float _x, float _y, float _width, float _height);
     
     //Get
+    
+    ofVec2f getLastPosition();
     ofVec2f getPosition();
-    ofVec2f getLastPos();
+    ofVec2f getNextPosition();
     ofVec2f getVelocity();
+    ofVec2f getAcceleration();
+    
     float getMass();
-    bool isOut();
+    float getDamping();
+    
+    //Physics
+    
+    void applyForce(ofVec2f _force);
     
 };
 

@@ -1,8 +1,8 @@
 //
 //  ParticleSystem.h
-//  ofMagnet
+//  particleSystem
 //
-//  Created by Pietro Alberti on 22.12.16.
+//  Created by Pietro Alberti on 24.12.16.
 //
 //
 
@@ -10,72 +10,54 @@
 #define ParticleSystem_h
 
 #include <stdio.h>
-#include "FlowField.h"
 #include "BaseElement.h"
 #include "Particle.h"
+#include "Actuator.h"
+#include "Receptor.h"
 
 class ParticleSystem : public BaseElement{
 
 private:
     
-    //These variables will be usefull to add particles according to a precise rate.
+    ofVec2f boxSize;
     
-    float currentTime = 0.0f; //ms
-    float lastTime = 0.0f; //ms
-    float deltatime = 0.0f; //ms
-    float elapsedTime = 0.0f; //ms
+    float rate;
+    float updateRate;
+    float elapsedTime;
+    float toEmit;
+    int maxParticles;
     
-    //The updateRate varable defines the rate the emitter will update the number of particle.
-    //(milliseconds)
-    
-    float updateRate = 10;
-    
-    //The emissionRate variable defines how much particles will be emmitted per second.
-    //(particles per seconds)
-    
-    float toEmit = 0.0f;
-    float emissionRate = 10;
-    
-    //Settings
-    int nParticles = 1;
-    int maxParticles = 100;
-    
-    //Apperance
-    
-    //Emitter object
-//    gl::BatchRef        mRect;
-//    gl::GlslProgRef		mGlsl;
-    
-    float radius;
     vector<shared_ptr<Particle>> particles;
-    
-    int updateTime = 100; //ms
+    vector<shared_ptr<Actuator>> actuators;
+    vector<shared_ptr<Receptor>> receptors;
     
 public:
-    
+
     ParticleSystem();
     
-    //Initialize the emitter after setting properties
-    void initialize();
-    void display();
-    void update();
+    //Main
     
-    //Control
-    void addParticles(int num);
+    void debugDraw();
+    void update();
+    void applyGravity(ofVec2f _gravity);
+    void applyForce(ofVec2f _force);
+    void addParticles(int _num);
+    void addActuator(shared_ptr<Actuator> _actuator);
+    void addReceptor(shared_ptr<Receptor> _receptor);
+    void removeActuator(shared_ptr<Actuator> _actuator);
     
     //Set
-    void setRadius(float _radius);
-    void setEmissionRate(float _emissionRate);
-    void applyForceToParticles(ofVec2f _force);
-    void applyForceToParticles(shared_ptr<FlowField> _flowField);
     
-    void removeParticle(shared_ptr<Particle> _particle);
-    vector<shared_ptr<Particle>> getParticles();
-    
+    void setBoxSize(ofVec2f _boxSize);
+    void setRate(float _rate);
+    void empty();
+    void setMaxParticles(int _maxParticles);
     
     //Get
-    float getRadius();
-    float getEmissionRate();
+    
+    vector<shared_ptr<Particle>> getParticles();
+    float getRate();
+    int getMaxParticles();
     
 };
 

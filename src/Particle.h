@@ -1,8 +1,8 @@
 //
 //  Particle.h
-//  ofMagnet
+//  particleSystem
 //
-//  Created by Pietro Alberti on 22.12.16.
+//  Created by Pietro Alberti on 24.12.16.
 //
 //
 
@@ -10,34 +10,43 @@
 #define Particle_h
 
 #include <stdio.h>
+#include "ofxiOS.h"
 #include "BaseElement.h"
 
 class Particle : public BaseElement{
-
-    int headDefinition;
     
-    int maxPoints = 70;
-    float angle = 0.0f;
+    
+    int circleDefinition;
+    
+    int numPoints;
     vector<ofVec2f> points;
     
-    float time;
-    float lastTime;
-    float totalLife;
     float lifeSpan;
+    float lifeLeft;
     bool dead;
     
 public:
     
     Particle();
     
-    void display();
     void update();
-    bool isDead();
+    void debugDraw();
     
+    //Set
+    
+    void setNumPoints(int _num);
+    void setLifeSpan(float _lifeSpan);
+    
+    //Get
+    
+    float getAngle();
+    int getNumPoints();
     float getLifeSpan();
-    float getTotalLife();
+    float getLifeLeft();
     
     vector<ofVec2f> getPoints();
+    
+    bool isDead();
     
 };
 

@@ -21,37 +21,22 @@ Screen::Screen(){
     
     active = false;
 
-    fbo.allocate(w, h, GL_RGBA);
-
-}
-
-void Screen::render(){
-    
-    fbo.begin();
-    renderToFbo();
-    fbo.end();
-    
-    texture = fbo.getTexture();
-    
 }
 
 void Screen::draw(){
     
-    if(abs(alpha - alphaTarget) > 0.1){
-        alpha += (alphaTarget - alpha) * 0.1;
-    }
+    alpha += (alphaTarget - alpha) * 0.1;
     
-    if(alpha > 1) {
+    if(alpha > 1){
+        ofPushStyle();
+        ofPushMatrix();
         
-        ofEnableAlphaBlending();
-        ofSetColor(255, 255, 255, alpha);
+        renderToScreen();
         
-        texture.draw(0.0f, 0.0f);
-        
-        ofDisableAlphaBlending();
-        
+        ofPopMatrix();
+        ofPopStyle();
     }
-    
+
 }
 
 //Inputs

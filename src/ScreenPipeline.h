@@ -28,10 +28,6 @@ public:
     
     void addScreen(shared_ptr<Screen> _screen);
     
-    void updateRenderingOrder();
-    void renderAllScreens();
-    void renderCurrentScreens();
-    
     void setScreenActive(shared_ptr<Screen> _screen);
     
     //Get

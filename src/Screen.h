@@ -26,7 +26,7 @@ private:
     
     bool active;
     
-    virtual void renderToFbo(){};
+    virtual void renderToScreen(){};
     
     //Virtual inputs
     
@@ -35,16 +35,10 @@ private:
     virtual void onMouseDrag(ofVec2f _position, function<void(string _text, string _action)> _callback){};
     virtual void onMouseUp(ofVec2f _position, function<void(string _text, string _action)> _callback){};
     
-protected:
-    
-    ofFbo fbo;
-    ofTexture texture;
-    
 public:
     
     Screen();
-    
-    void render();
+
     void draw();
     virtual void update(){};
     

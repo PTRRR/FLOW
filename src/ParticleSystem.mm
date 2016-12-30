@@ -1,55 +1,54 @@
 //
 //  ParticleSystem.mm
-//  ofMagnet
+//  particleSystem
 //
-//  Created by Pietro Alberti on 22.12.16.
+//  Created by Pietro Alberti on 24.12.16.
 //
 //
 
 #include "ParticleSystem.h"
 
-ParticleSystem::ParticleSystem(){};
+ParticleSystem::ParticleSystem(){
 
-void ParticleSystem::initialize(){
+    boxSize = ofVec2f(0);
+    rate = 1.0;
+    maxParticles = 100;
+    updateRate = 10; //ms
+    elapsedTime = 0;
+    toEmit = 0;
+
+}
+
+void ParticleSystem::debugDraw(){
+
+    ofPushStyle();
+    ofSetColor(255, 100, 60);
+    ofDrawCircle(getPosition(), 7);
+    ofPopStyle();
+    
+    ofEnableBlendMode(OF_BLENDMODE_ADD);
     
     for(int i = 0; i < particles.size(); i++){
         
-        shared_ptr<Particle> cM = particles[i];
-        cM->setPosition(this->position);
+        particles[i]->debugDraw();
         
     }
     
-    //Initialize all variables
-    elapsedTime = 0.0f;
-    currentTime = 0.0f;
-    lastTime = 0.0f;
-    deltatime = 0.0f;
-    
-    //Initialize object
+    ofEnableBlendMode(OF_BLENDMODE_ADD);
     
 }
 
 void ParticleSystem::update(){
     
-    BaseElement::update();
-    
-    //Determine the delta time between two updates
-    
-    currentTime = ofGetElapsedTimeMillis();
-    deltatime = currentTime - lastTime;
-    
-    //The elapsed time is incremented every updates.
-    //It's set to zero when he's greater than the update rate
-    
-    elapsedTime += deltatime;
-    
     //How many times the emitter size will be updated in on second according to the
     //update rate variable.
     
-    int updateTimesPerSec = 1000 / updateRate;
+    float updateTimesPerSec = 1000 / updateRate;
     
     //When the elapsed time is greater than the update rate, increment the variable "toEmit".
     //The elapsed time is then set to zero to restart the timeout.
+    
+    elapsedTime += getDeltatime();
     
     if(elapsedTime > updateRate){
         
@@ -60,7 +59,7 @@ void ParticleSystem::update(){
         //Increment toEmit to determine how many particles should be added to the emitter every
         //(updateRate) milliseconds.
         
-        toEmit += (float) emissionRate / updateTimesPerSec;
+        if(particles.size() <= maxParticles) toEmit += rate / updateTimesPerSec;
         
         //If the variable to emit is greater than one, add particles.
         //The number to add is determined by the floored value of toEmit since toEmit is a floating
@@ -68,7 +67,7 @@ void ParticleSystem::update(){
         //Then we subtrack the emitted number of particules to the "toEmit" variable
         
         if(floor(toEmit) >= 1){
-            
+
             addParticles(floor(toEmit));
             toEmit -= floor(toEmit);
             
@@ -76,75 +75,85 @@ void ParticleSystem::update(){
         
     }
     
-    //Here, all particles are updated (position, velocity, acceleration, etc...).
+    //Update particles
+    
+    for(int i = 0; i < particles.size(); i++){
+        
+        //Calculate the force emitted by the actuators at the particle's position
+        
+        ofVec2f force = ofVec2f(0);
+        
+        for(int j = 0; j < actuators.size(); j++){
+            
+            force += actuators[j]->getForceAtPoint(particles[i]->getPosition());
+            
+        }
+        
+        for(int j = 0; j < receptors.size(); j++){
+            
+            force += receptors[j]->getForceAtPoint(particles[i]->getPosition());
+            
+        }
+        
+        //Apply that force
+        
+        particles[i]->applyForce(force);
+        
+        //Separation algorithme --> very expensive
+        
+//        float maxDist = 15.0;
+//        
+//        for(int k = 0; k < particles.size(); k++){
+//            
+//            if(particles[i] != particles[k]){
+//                
+//                ofVec2f direction = particles[i]->getPosition() - particles[k]->getPosition();
+//                float dist = direction.length();
+//                
+//                if(dist < maxDist){
+//                    
+//                    ofVec2f repulsionForce = direction * (dist / maxDist) * 0.01f;
+//                    repulsionForce *= 0.1;
+//                    particles[i]->applyForce(repulsionForce);
+//                    
+//                }
+//                
+//            }
+//            
+//        }
+        
+        particles[i]->update();
+        
+    }
+    
+    //Check dead particles
     
     for(int i = particles.size() - 1; i >= 0; i--){
         
-        if(particles[i]->isOut() || particles[i]->isDead()){
-            
+        if(particles[i]->isDead()){
             particles.erase(particles.begin() + i);
-            
-        }
-        else{
-            
-            //Separation algorithme
-            //Check the distance with all other particles and apply force if some are too close
-            //from each other
-            
-            float maxDist = 15.0f;
-            
-            particles[i]->update();
-            
-            for(int j = 0; j < particles.size(); j++){
-                
-                if(particles[i] != particles[j]){
-                    
-                    ofVec2f direction = particles[i]->getPosition() - particles[j]->getPosition();
-                    float dist = direction.length();
-                    
-                    if(dist < maxDist){
-                        
-                        particles[i]->applyForce(direction * (dist / maxDist) * 0.01f);
-                        
-                    }
-                    
-                }
-                
-            }
-            
         }
         
     }
     
-    //Update the lastTime value
+    //Update the physics of the particle system itself
     
-    lastTime = currentTime;
+    ParticleSystem::BaseElement::update();
     
 }
 
-//Public function to add particles
-
-void ParticleSystem::addParticles(int num){
+void ParticleSystem::applyGravity(ofVec2f _gravity){
     
-    for(int i = 0; i < num; i++){
+    for(int i = 0; i < particles.size(); i++){
         
-        //Set a offset to let the particles leave the screen before they are removed
+        particles[i]->applyForce(_gravity * particles[i]->getMass());
         
-        float offsetBoundingBox = 150.0f;
-        
-        shared_ptr<Particle> newParticle(new Particle());
-        newParticle->setPosition(position);
-        newParticle->setVelocity(ofVec2f(ofRandomf() - 0.5f, ofRandomf() - 0.5f));
-        newParticle->setMass(1.0f + ofRandomf() * 10.0f);
-        newParticle->setMaxVelocity(3.0f);
-//        newParticle->setBoundingBox(Rectf(-offsetBoundingBox, -offsetBoundingBox, getWindowWidth() + offsetBoundingBox, getWindowHeight() + offsetBoundingBox));
-        particles.push_back(newParticle);
         
     }
     
 }
 
-void ParticleSystem::applyForceToParticles(ofVec2f _force){
+void ParticleSystem::applyForce(ofVec2f _force){
     
     for(int i = 0; i < particles.size(); i++){
         
@@ -154,87 +163,94 @@ void ParticleSystem::applyForceToParticles(ofVec2f _force){
     
 }
 
-void ParticleSystem::applyForceToParticles(shared_ptr<FlowField> _flowField){
+void ParticleSystem::addParticles(int _num){
     
-    for(int i = 0; i < particles.size(); i++){
+    for(int i = 0; i < _num; i++){
         
-        particles[i]->applyForce(_flowField->getForceAtPoint(particles[i]->getPosition()));
-        
-    }
-    
-}
-
-void ParticleSystem::display(){
-    
-    
-//    gl::begin(GL_LINES);
-    
-    for(int i = 0; i < particles.size(); i++){
-        
-//        gl::enableAdditiveBlending();
-//        vector<vec2> points = particles[i]->getPoints();
-//        
-//        for(int p = points.size() - 1; p > 0; p-=1){
-//            
-//            gl::color(1.0f, 1.0f, 1.0f, particles[i]->getLifeSpan() / particles[i]->getTotalLife());
-//            gl::vertex(points[p].x, points[p].y);
-//            gl::vertex(points[p - 1].x, points[p - 1].y);
-//            
-//        }
-        
-        particles[i]->display();
+        shared_ptr<Particle> newParticle = shared_ptr<Particle>(new Particle());
+        newParticle->setPosition(ofVec2f( getPosition().x + ofRandomf() * boxSize.x, getPosition().y + ofRandomf() * boxSize.y ));
+        newParticle->setMass(ofRandom(3.0));
+        newParticle->setVelocity(ofVec2f(ofRandomf() * 0, 0));
+        newParticle->setMaxVelocity(20);
+        newParticle->setBox(10, 10, ofGetWidth() - 10, ofGetHeight() - 10);
+        newParticle->setLifeSpan(ofRandom(10000));
+        particles.push_back(newParticle);
         
     }
     
-//    gl::end();
+}
+
+void ParticleSystem::addActuator(shared_ptr<Actuator> _actuator){
     
-//    gl::drawSolidCircle(position, 5);
+    actuators.push_back(_actuator);
     
 }
 
-//Set
-void ParticleSystem::setRadius(float _radius){
+void ParticleSystem::addReceptor(shared_ptr<Receptor> _receptor){
     
-    this->radius = _radius;
-    
-}
-
-void ParticleSystem::setEmissionRate(float _emissionRate){
-    
-    emissionRate = _emissionRate;
+    receptors.push_back(_receptor);
     
 }
 
-void ParticleSystem::removeParticle(shared_ptr<Particle> _particle){
+void ParticleSystem::removeActuator(shared_ptr<Actuator> _actuator){
     
-    for(int i = particles.size() - 1; i >= 0; i--){
+    for(int i = actuators.size() - 1; i >= 0; i--){
         
-        if(particles[i] == _particle){
-            
-            particles.erase(particles.begin() + i);
+        if(actuators[i] == _actuator){
+            actuators.erase(actuators.begin() + i);
             break;
-            
         }
         
     }
     
 }
 
-//Get
-float ParticleSystem::getRadius(){
-    
-    return radius;
+//Set
+
+void ParticleSystem::setBoxSize(ofVec2f _boxSize){
+
+    boxSize = _boxSize;
     
 }
 
-float ParticleSystem::getEmissionRate(){
+void ParticleSystem::setRate(float _rate){
     
-    return emissionRate;
+    rate = _rate;
     
 }
+
+void ParticleSystem::empty(){
+    
+    for(int i = particles.size() - 1; i >= 0; i--){
+        
+        particles.erase(particles.begin() + i);
+        
+    }
+    
+}
+
+void ParticleSystem::setMaxParticles(int _maxParticles){
+    
+    maxParticles = _maxParticles;
+    
+}
+
+//Get
 
 vector<shared_ptr<Particle>> ParticleSystem::getParticles(){
     
     return particles;
+    
+}
+
+float ParticleSystem::getRate(){
+    
+    return rate;
+    
+}
+
+int ParticleSystem::getMaxParticles(){
+    
+    return maxParticles;
     
 }

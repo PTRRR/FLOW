@@ -27,7 +27,7 @@ private:
     
     //Rendering
     
-    void renderToFbo() override;
+    void renderToScreen() override;
     
     //Inputs
     

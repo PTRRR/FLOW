@@ -1,65 +1,68 @@
 //
 //  Particle.mm
-//  ofMagnet
+//  particleSystem
 //
-//  Created by Pietro Alberti on 22.12.16.
+//  Created by Pietro Alberti on 24.12.16.
 //
 //
 
 #include "Particle.h"
 
 Particle::Particle(){
-    
-    headDefinition = floor(ofRandomf() * 3.0f + 3.0f);
-    maxPoints = floor(ofRandomf() * 50.0f + 20.0f);
-    time = ofGetElapsedTimeMillis();
-    lastTime = time;
-    lifeSpan = ofRandomf() * 10000.0f + 2000.0f;
-    totalLife = lifeSpan;
-    dead = false;
-    
-};
 
-void Particle::display(){
-    
-    ofPushMatrix();
-    ofTranslate(position);
-    ofRotate(angle);
-    ofDrawCircle(ofVec2f(0), mass * 0.4f + 1.5f);
-    ofPopMatrix();
-    
+    numPoints = floor(ofRandom(10));
+    circleDefinition = floor(ofRandom(5) + 3);
+
 }
 
 void Particle::update(){
     
-    if(!isDead()){
-        
-        time += (ofGetElapsedTimeMillis()) - lastTime;
-        
-        Particle::BaseElement::update();
-        
-        applyForce(ofVec2f(ofRandomf() - 0.5f, ofRandomf() - 0.5f) * 0.1f);
-        
-        //Update lifespan
-        
-        if(lifeSpan > 0){
-            lifeSpan -= time - lastTime;
-        }else{
-            dead = true;
-        }
-        
-        angle = atan2(velocity.y, velocity.x);
-        
-        if(points.size() <= maxPoints){
-            points.push_back(position);
-        }else{
-            points.erase(points.begin());
-            points.push_back(position);
-        }
-        
-        lastTime = time;
-        
-    }
+    Particle::BaseElement::update();
+    
+    lifeLeft -= getDeltatime();
+    
+}
+
+void Particle::debugDraw(){
+    
+    ofPushStyle();
+    ofFill();
+    ofSetColor(255, 255, 255, lifeLeft / lifeSpan * 255);
+    ofPushMatrix();
+    ofTranslate(getPosition());
+    ofRotate(ofRadToDeg(getAngle()));
+    ofDrawCircle(ofVec2f(0), getMass() * 5.0);
+    ofPopMatrix();
+    ofPopStyle();
+    
+}
+
+//Set
+
+void Particle::setNumPoints(int _num){
+    
+    numPoints = _num;
+    
+}
+
+void Particle::setLifeSpan(float _lifeSpan){
+    
+    lifeSpan = _lifeSpan;
+    lifeLeft = _lifeSpan;
+    
+}
+
+//Get
+
+float Particle::getAngle(){
+    
+    return atan2(getVelocity().y, getVelocity().x);
+    
+}
+
+int Particle::getNumPoints(){
+    
+    return numPoints;
     
 }
 
@@ -69,20 +72,20 @@ float Particle::getLifeSpan(){
     
 }
 
-float Particle::getTotalLife(){
+float Particle::getLifeLeft(){
     
-    return totalLife;
-    
-}
-
-bool Particle::isDead(){
-    
-    return dead;
+    return lifeLeft;
     
 }
 
 vector<ofVec2f> Particle::getPoints(){
     
     return points;
+    
+}
+
+bool Particle::isDead(){
+    
+    return lifeLeft <= 0.0;
     
 }

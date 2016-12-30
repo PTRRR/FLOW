@@ -16,21 +16,21 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     
     splashScreen = shared_ptr<SplashScreen>(new SplashScreen(mainFont));
     splashScreen->setName("SPLASHSCREEN");
-    
+
     menu = shared_ptr<Menu>(new Menu(mainFont));
     menu->setName("MENU");
-    
+
     //Scene test
+    
     scene = shared_ptr<Scene>(new Scene(mainFont));
     scene->setName("SCENE");
-    
+
     //Screen pipeline setup
-    
+
     screenPipeline.addScreen(splashScreen);
     screenPipeline.addScreen(menu);
     screenPipeline.addScreen(scene);
-    
-    screenPipeline.renderAllScreens();
+
     screenPipeline.setScreenActive(splashScreen);
     
 };
@@ -39,7 +39,7 @@ void GameManager::update(){
     
     if(!initialTimeoutIsOver && ofGetElapsedTimeMillis() >= initialTimeout){
         
-        screenPipeline.setScreenActive(menu);
+        screenPipeline.setScreenActive(scene);
         initialTimeoutIsOver = true;
         
     }
@@ -50,7 +50,6 @@ void GameManager::update(){
 
 void GameManager::draw(){
     
-    screenPipeline.getActiveScreen()->render();
     screenPipeline.draw();
     
 }
@@ -81,6 +80,11 @@ void GameManager::mouseUp(ofVec2f _position){
             
             screenPipeline.setScreenActive(menu);
             
+        }else if(action == "EXIT"){
+            
+            ofExit();
+            exit(0);
+            
         }
         
     });
@@ -93,12 +97,6 @@ void GameManager::mouseMove(ofVec2f _position){
     cout << "mouse move on: " + currentScreen << endl;
     
     screenPipeline.getActiveScreen()->mouseMove(_position, [&](string text, string action){});
-    
-}
-
-void GameManager::mouseDrag(ofVec2f _position){
-    
-    
     
 }
 

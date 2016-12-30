@@ -1,8 +1,8 @@
 //
 //  BaseElement.mm
-//  ofMagnet
+//  particleSystem
 //
-//  Created by Pietro Alberti on 17.12.16.
+//  Created by Pietro Alberti on 22.12.16.
 //
 //
 
@@ -11,63 +11,67 @@
 BaseElement::BaseElement(){
     
     position = ofVec2f(0);
-    lastPos = ofVec2f(0);
     velocity = ofVec2f(0);
     acceleration = ofVec2f(0);
-    mass = 1;
-//    boundingBox.zero();
     
+    mass = 1.0;
+    damping = 0.99;
     
-};
-
-void BaseElement::update(){
+    maxVelocity = 1;
     
-    velocity *= 0.99f;
-    velocity += acceleration / mass;
+    //Box
     
-//    if(glm::length(velocity) > maxSpeed){
-//        velocity = glm::normalize(velocity) * maxSpeed;
-//    }
+    box = ofVec4f(0);
     
-    setPosition(position + velocity);
+    //Time variables
     
-    acceleration *= 0;
-    
+    lastTime = ofGetElapsedTimeMillis();
+    deltaTime = 0;
     
 }
 
-void BaseElement::updateIsOut(){
+//Main
+
+void BaseElement::update(){
     
-//    if (boundingBox.calcArea() > 0) {
-//        
-//        if (position.x >= boundingBox.getX1() && position.x <= boundingBox.getX2() && position.y >= boundingBox.getY1() && position.y <= boundingBox.getY2()) {
-//            out = false;
-//        }else{
-//            out = true;
-//        }
-//        
-//    }
+    deltaTime = ofGetElapsedTimeMillis() - lastTime;
+    
+    //Scale the physics calculations according to the frame rate
+    
+    float FPSScaleFactor = deltaTime / targetDeltaTime;
+    
+    velocity += acceleration * FPSScaleFactor;
+    velocity = velocity.limit(maxVelocity);
+    velocity *= damping;
+    
+    lastPosition = position;
+    position += velocity * FPSScaleFactor;
+    nextPosition = position + velocity * FPSScaleFactor;
+    
+    //Check if box is set
+    
+    float boxArea = box.z * box.w;
+    
+    if(boxArea > 0){
+        
+        position.x = ofClamp(position.x, box.x, box.x + box.z);
+        position.y = ofClamp(position.y, box.y, box.y + box.w);
+        
+    }
+    
+    //Reset
+    
+    acceleration *= 0;
+    
+    lastTime = ofGetElapsedTimeMillis();
     
 }
 
 //Set
+
 void BaseElement::setPosition(ofVec2f _position){
     
-    lastPos = this->position;
     position = _position;
-    
-    updateIsOut();
-    
-//    if(limit && isOut()){
-//        
-//        if(this->position.x > boundingBox.x2) this->position.x = boundingBox.x2;
-//        if(this->position.x < boundingBox.x1) this->position.x = boundingBox.x1;
-//        if(this->position.y > boundingBox.y2) this->position.y = boundingBox.y2;
-//        if(this->position.y < boundingBox.y1) this->position.y = boundingBox.y1;
-//        
-//        out = false;
-//        
-//    }
     
 }
 
@@ -77,52 +81,76 @@ void BaseElement::setVelocity(ofVec2f _velocity){
     
 }
 
-void BaseElement::setMaxVelocity(float _maxVelocity){
+void BaseElement::setAcceleration(ofVec2f _acceleration){
     
-    maxSpeed = _maxVelocity;
+    acceleration = _acceleration;
     
 }
 
 void BaseElement::setMass(float _mass){
     
-    mass = _mass;
+    mass = ofClamp(_mass, 1.0, 1000.0);
     
 }
 
-void BaseElement::applyForce(ofVec2f _force){
+void BaseElement::setDamping(float _damping){
     
-    acceleration += _force;
+    damping = ofClamp(_damping, 0.0, 1.0);
     
 }
 
-//void BaseElement::setBoundingBox(Rectf _boundingBox){
-//    
-//    boundingBox = _boundingBox;
-//    
-//}
-
-void BaseElement::setLimitToBoundingBox(bool _limit){
+void BaseElement::setMaxVelocity(float _maxVelocity){
     
-    limit = _limit;
+    maxVelocity = _maxVelocity;
+    
+}
+
+void BaseElement::setBox(float _x, float _y, float _width, float _height){
+
+    box.x = _x;
+    box.y = _y;
+    box.z = _width;
+    box.w = _height;
+    
+}
+
+//Get protected
+
+float BaseElement::getDeltatime(){
+    
+    return deltaTime;
     
 }
 
 //Get
-ofVec2f BaseElement::getPosition(){
+
+ofVec2f BaseElement::getLastPosition(){
     
-    return this->position;
+    return lastPosition;
     
 }
 
-ofVec2f BaseElement::getLastPos(){
+ofVec2f BaseElement::getPosition(){
     
-    return lastPos;
+    return position;
+    
+}
+
+ofVec2f BaseElement::getNextPosition(){
+    
+    return nextPosition;
     
 }
 
 ofVec2f BaseElement::getVelocity(){
     
-    return this->velocity;
+    return velocity;
+    
+}
+
+ofVec2f BaseElement::getAcceleration(){
+    
+    return acceleration;
     
 }
 
@@ -132,8 +160,17 @@ float BaseElement::getMass(){
     
 }
 
-bool BaseElement::isOut(){
+float BaseElement::getDamping(){
     
-    return out;
+    return damping;
+    
+}
+
+
+//Physics
+
+void BaseElement::applyForce(ofVec2f _force){
+    
+    acceleration += _force / mass;
     
 }

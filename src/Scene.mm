@@ -17,107 +17,108 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     //Create the user interface : MENU button
     
     interface = Interface(_mainFont);
-    interface.addButton("MENU", "MENU", ofVec2f(ofGetWidth() - _mainFont->stringWidth("MENU"), 30));
+    interface.addButton("MENU", "MENU", ofVec2f(ofGetWidth() - _mainFont->stringWidth("MENU"), 50));
     
     //Load the shader in order to draw the background
     //This shader will draw the contours of the magnetic field
     
 //    loadBackgroundShader();
     
-    //Create the camera for the scene
-    //The aspect ration is determined from the screen size
-    
-//    camera.setAspectRatio(0.75f);
-//    camera.setFov(60);
-    
-    //Create the flow field that will guide the particles trhough the scene
-    //The flow field contains references to the magnets and calculate the "magnetic field" in each points of the screen
-    
-    flowField = shared_ptr<FlowField>(new FlowField(30, 30));
     
     //Initialize the emitter
     
-    particleSystem.setPosition(ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2));
-    particleSystem.setEmissionRate(60);
+    particleSystem.setPosition(ofVec2f(ofGetWidth() / 2, 200));
+    particleSystem.setBoxSize(ofVec2f(100, 10));
+    particleSystem.setRate(80);
+    particleSystem.setMaxParticles(300);
     
-    //Initialize the receptor
+    //Set up some actuators
     
-    receptor = shared_ptr<Receptor>(new Receptor());
-    receptor->setPosition(ofVec2f(ofGetWidth() / 2, ofGetHeight()));
-    receptor->setRadius(30.0f);
+    for(int i = 0; i < 3; i++){
+        
+        shared_ptr<Actuator> newActuator = shared_ptr<Actuator>(new Actuator());
+        newActuator->setPosition(ofVec2f(ofRandom(ofGetWidth()), ofRandom(ofGetHeight())));
+        newActuator->setRadius(100 + ofRandom(350));
+        newActuator->setMass(20);
+        newActuator->setDamping(0.84);
+        newActuator->setMaxVelocity(100);
+        newActuator->setBox(0, 0, ofGetWidth(), ofGetHeight());
+        newActuator->setStrength(-5);
+        actuators.push_back(newActuator);
+        particleSystem.addActuator(newActuator);
+        
+    }
     
-    //The receptor is a child of magnet in order to attrack slightly the particles toward it
+    //Initialize some receptors
     
-    receptor->setStrength(-2.5f);
-    receptor->setRadiusOfAction(100.0f);
-    magnets.push_back(receptor);
-    flowField->addMagnet(receptor);
+    for(int i = 0; i < 1; i++){
+        
+        shared_ptr<Receptor> newReceptor = shared_ptr<Receptor>(new Receptor());
+        newReceptor->setPosition(ofVec2f(ofGetWidth() / 2, ofGetHeight()));
+        newReceptor->setRadius(150.0);
+        newReceptor->setStrength(5.0);
+        receptors.push_back(newReceptor);
+        particleSystem.addReceptor(newReceptor);
+        
+    }
     
-    //Set up some magnets
+    //Initialize a polygone (obstacle)
     
-    addMagnet(ofVec2f(ofGetWidth() / 2, 20.0f), 10.0f, 200.0f);
-    addMagnet(ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2 - 300), 1.0f, 300.0f);
-    addMagnet(ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2 + 300), 1.0f, 300.0f);
+    shared_ptr<Polygone> polygone = shared_ptr<Polygone>(new Polygone());
+    polygone->addVertex(ofGetWidth() / 2, 1000);
+    polygone->addVertex(ofGetWidth() / 2 + 200, 800);
+    polygone->addVertex(ofGetWidth() / 2 + 200, 1100);
+    polygone->addVertex(ofGetWidth() / 2 - 200, 1100);
+    polygone->addVertex(ofGetWidth() / 2 - 200, 800);
+    
+    polygones.push_back(polygone);
+    
+    
+//    ofVec3f points[200];
+//    
+//    for(int i = 0; i < 200; i++){
+//        points[i].x = ofGetWidth() * ofRandom(1.0);
+//        points[i].y = ofGetHeight() * ofRandom(1.0);
+//        points[i].z = 0.0;
+//    }
+//    
+//    
+//    
+//    pointsVbo.setVertexData(points, 200, GL_DYNAMIC_DRAW);
     
 };
 
 //Where all the scene is rendered
-void Scene::renderToFbo(){
+void Scene::renderToScreen(){
     
-    ofClear(0, 0, 0);
-    ofPushStyle();
-    ofSetColor(0, 0, 0);
+    //Draw background
+    
+    ofSetColor(0, 0, 0, getAlpha());
     ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
-    ofPopStyle();
     
-    //Update the uniforms on the fragment shader
+    //Draw particles
     
-//    updateBackgroudShader();
+    particleSystem.debugDraw();
     
-    //Bind the shader to draw the background
+    //Draw actuators
     
-//    gl::Context::getCurrent()->pushGlslProg();
-//    gl::Context::getCurrent()->bindGlslProg(backGroundShader);
-    
-    //Draw the background with a solid rect
-    
-    //    gl::drawSolidRect(Rectf(0.0f, 0.0f, getWindowWidth(), getWindowHeight()));
-    
-    //Unbind the background shader and restore last shader
-    
-//    gl::Context::getCurrent()->popGlslProg();
-    
-    //Debug draw
-    
-    for(int i = 0; i < magnets.size(); i++){
-        
-        magnets[i]->debugDraw();
-        
+    for(int i = 0; i < actuators.size(); i++){
+        actuators[i]->debugDraw();
     }
     
-    //    gl::setMatrices(camera);
-    //
-    //    camera.lookAt(vec3(0.0f, 0.0f, 10.0f), vec3(0));
+    //Draw receptors
     
-    //Draw the emitter
+    for(int i = 0; i < receptors.size(); i++){
+        receptors[i]->debugDraw();
+    }
     
-    particleSystem.display();
+    //Draw polygones
     
-    //Draw the receptor
+    for(int i = 0; i < polygones.size(); i++){
+        polygones[i]->debugDraw();
+    }
     
-    receptor->display();
-    
-    //Reset
-    //matrices before drawing the interface
-    
-//    gl::setMatricesWindow(getWindowSize());
-    
-    //Draw the flow field
-    //This drawing function draws the flow fiels with a grid of arrows
-    
-    //    flowField->debugDraw();
-    
-    //Lastly draw the user interface on top of all others objecs
+    //Draw interface
     
     interface.draw();
     
@@ -125,42 +126,66 @@ void Scene::renderToFbo(){
 
 void Scene::update(){
     
-    time += ofGetElapsedTimeMillis();
-    
-    //Update the emitter : add particles and update their position
+    //Update particle system
     
     particleSystem.update();
+    particleSystem.applyGravity(ofVec2f(0.0, 0.1));
     
-    //Apply some forces to these particles
+    //Update actuators
     
-    particleSystem.applyForceToParticles(ofVec2f(0.0f, 0.0f));
-    particleSystem.applyForceToParticles(flowField);
-    
-    if(currentMagnet != nullptr){
+    if(activeActuator != nullptr){
         
-        ofVec2f newCurrentMagnetPosition = currentMagnet->getPosition();
-        newCurrentMagnetPosition += (currentMagnetTarget - newCurrentMagnetPosition) * 0.13f;
-        
-        currentMagnet->setPosition(newCurrentMagnetPosition);
+        ofVec2f force = touchPos - activeActuator->getPosition();
+        activeActuator->applyForce(force);
         
     }
     
-    //Remove particles when they hit the receptor
+    for(int i = 0; i < actuators.size(); i++){
+        actuators[i]->update();
+    }
+    
+    checkForCollisions();
+    
+}
+
+void Scene::checkForCollisions(){
     
     vector<shared_ptr<Particle>> particles = particleSystem.getParticles();
     
     for(int i = 0; i < particles.size(); i++){
         
-        float distance = (receptor->getPosition() - particles[i]->getPosition()).length();
+        ofVec2f currentPos = particles[i]->getPosition() + particles[i]->getVelocity();
+        ofVec2f direction = -particles[i]->getVelocity().normalize();
+        float maxDistRay = particles[i]->getVelocity().length() * 30;
         
-        if (distance < 100) {
+        //First check if inside bounding box
+        
+        for(int j = 0; j < polygones.size(); j++){
             
-            particleSystem.removeParticle(particles[i]);
-            receptor->setCount(receptor->getCount() + 1);
+            shared_ptr<Polygone> currentPoly = polygones[j];
             
-            if(receptor->getCount() >= 100){
+            if(currentPoly->insideBoundingBox(currentPos)){
                 
-                if(levelEndCallback != nullptr) levelEndCallback();
+                if(currentPoly->inside(currentPos)){
+                    
+                    bool intersectionDetected = false;
+                    
+                    currentPoly->getParticleCollisionsInformations(currentPos, direction, maxDistRay, [&](ofVec2f intersection, ofVec2f normal){
+                        
+                        particles[i]->setPosition(intersection + normal);
+                        float angle = direction.normalize().angleRad(normal.normalize());
+                        ofVec2f bounceDirection = normal.rotateRad(angle).normalize();
+                        particles[i]->setVelocity(particles[i]->getVelocity().length() * bounceDirection * 0.7);
+                        
+                        intersectionDetected = true;
+                        
+                    });
+                    
+                    if(!intersectionDetected){
+                        //particles[i]->setLifeSpan(0);
+                    }
+                    
+                }
                 
             }
             
@@ -175,21 +200,20 @@ void Scene::update(){
 
 void Scene::onMouseDown(ofVec2f _position, function<void(string _text, string _action)> _callback){
 
-    for(int i = 0; i < magnets.size(); i++){
+    touchPos = ofVec2f(_position.x, _position.y);
+    
+    for(int i = 0; i < actuators.size(); i++){
         
-        //Check the distance with each magnets
-        
-        float distance = ofVec2f(magnets[i]->getPosition() - _position).length();
-        
-        //If the distance between the mouse and a magnet is less than 20.0 set the reference
-        // to current magnet variable and break the loop to take only this magnet
-        
-        if(distance < 50.0f){
+        if(actuators[i]->isOver(touchPos)){
             
-            cout << "adsk" << endl;
-            currentMagnet = magnets[i];
-            currentMagnetTarget = _position;
+            activeActuator = actuators[i];
             break;
+            
+        }
+        
+        if(i == actuators.size() - 1 && activeActuator == nullptr){
+            
+//            particleSystem.empty();
             
         }
         
@@ -203,6 +227,8 @@ void Scene::onMouseDown(ofVec2f _position, function<void(string _text, string _a
 
 void Scene::onMouseUp(ofVec2f _position, function<void(string _text, string _action)> _callback){
     
+    activeActuator = nullptr;
+    
     interface.mouseUp(_position, [&](string _text, string _action){
         _callback(_text, _action);
     });
@@ -211,40 +237,13 @@ void Scene::onMouseUp(ofVec2f _position, function<void(string _text, string _act
 
 void Scene::onMouseMove(ofVec2f _position, function<void(string _text, string _action)> _callback){
     
-//    backGroundShader->uniform("uMouse", _position);
-    if(currentMagnet != nullptr){
-        
-        currentMagnetTarget = _position;
-        
-    }
+    touchPos = ofVec2f(_position.x, _position.y);
     
 }
 
 void Scene::onMouseDrag(ofVec2f _position, function<void(string _text, string _action)> _callback){
     
     
-    
-}
-
-//Utility to add some magnets to the scene and in the flow field
-//This takes care of storing references of the magnets in the scene and the flow field
-
-void Scene::addMagnet(ofVec2f _position, float _strength, float _radiusOfAction){
-    
-    shared_ptr<Magnet> newMagnet (new Magnet());
-    
-    newMagnet->setPosition(_position);
-    newMagnet->setStrength(_strength);
-//    newMagnet->setBoundingBox(Rectf(0.0f, 0.0f, getWindowWidth(), getWindowHeight()));
-    newMagnet->setRadiusOfAction(_radiusOfAction);
-    newMagnet->setMaxVelocity(10.0f);
-    newMagnet->setMass(2.0f);
-    newMagnet->setLimitToBoundingBox(true);
-    
-    //Store the reference in both places
-    
-    flowField->addMagnet(newMagnet);
-    magnets.push_back(newMagnet);
     
 }
 

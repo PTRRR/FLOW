@@ -48,7 +48,6 @@ public:
     void mouseDown(ofVec2f _position);
     void mouseUp(ofVec2f _position);
     void mouseMove(ofVec2f _position);
-    void mouseDrag(ofVec2f _position);
     
 };
 

@@ -2,7 +2,7 @@
 //  Receptor.h
 //  ofMagnet
 //
-//  Created by Pietro Alberti on 22.12.16.
+//  Created by Pietro Alberti on 30.12.16.
 //
 //
 
@@ -10,31 +10,18 @@
 #define Receptor_h
 
 #include <stdio.h>
-#include "Magnet.h"
-#include "Particle.h"
+#include "Actuator.h"
 
-class Receptor : public Magnet {
-    
+class Receptor : public Actuator {
+
 private:
     
-    int count;
-    float radius;
-    vector<Particle> particles;
+    int particlesCount = 0;
     
 public:
-    
+
     Receptor();
     
-    void display();
-    
-    //Set
-    void setPosition(ofVec2f _position);
-    void setRadius(float _radius);
-    void setCount(int _count);
-    
-    //Get
-    int getCount();
-    float getRadius();
     
 };
 
