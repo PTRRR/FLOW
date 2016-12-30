@@ -14,8 +14,15 @@ void Receptor::update(){
     
     Receptor::Actuator::update();
     
-    particlesCount -= getDeltatime() * decreasingFactor * (particlesCount / maxParticles);
-    particlesCount = ofClamp(particlesCount, 0, maxParticles);
+    if(!filled){
+        particlesCount -= getDeltatime() * decreasingFactor * (particlesCount / maxParticles);
+        particlesCount = ofClamp(particlesCount, 0, maxParticles);
+    }
+    
+    if (getPercentFill() == 100) {
+        particlesCount = maxParticles;
+        filled = true;
+    }
     
 }
 
@@ -24,13 +31,13 @@ void Receptor::debugDraw(){
     Receptor::Actuator::debugDraw();
     
     ofSetColor(255, 255, 255);
-    ofDrawBitmapString(to_string((int) particlesCount) + " / " + to_string((int) maxParticles), getPosition().x, getPosition().y - 30);
+    ofDrawBitmapString(to_string((int) getPercentFill()) + "%", getPosition().x, getPosition().y - 30);
     
 }
 
 void Receptor::addOneParticleToCount(){
     
-    particlesCount ++;
+    if(!filled) particlesCount ++;
     
 }
 
@@ -43,5 +50,11 @@ float Receptor::getPercentFill(){
 int Receptor::getCount(){
     
     return (int) floor(particlesCount);
+    
+}
+
+bool Receptor::isFilled(){
+    
+    return filled;
     
 }

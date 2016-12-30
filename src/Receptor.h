@@ -21,6 +21,8 @@ private:
     
     float maxParticles = 300;
     
+    bool filled = false;
+    
 public:
 
     Receptor();
@@ -36,6 +38,7 @@ public:
     
     float getPercentFill();
     int getCount();
+    bool isFilled();
     
 };
 
