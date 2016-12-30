@@ -23,7 +23,7 @@ void ofApp::draw(){
     gameManager.draw();
     
     ofSetColor(255, 255, 255);
-    ofDrawBitmapString("FPS: " + to_string(floor(ofGetFrameRate() * 10) / 10), 20, 20);
+    ofDrawBitmapString("FPS: " + to_string((int) floor(ofGetFrameRate() * 10) / 10), 20, 20);
     
 }
 
