@@ -37,6 +37,7 @@ private:
     
     //Emitter
     
+    const int MAX_PARTICLES = 1500;
     ParticleSystem particleSystem;
     
     //Receptor
@@ -63,13 +64,17 @@ private:
     //Other callbacks
     function<void()> levelEndCallback = nullptr;
     
-    //Test shader
+    //Particles rendering
     
-    ofShader shader;
-    ofShader circleShader;
-    ofShader particleShader;
+    ofImage particleImg;
     
-    ofVbo pointsVbo;
+    ofVbo particlesHeadVbo;
+    vector<ofVec3f> positions;
+    vector<ofVec3f> attributes;
+    
+    ofShader particleHeadProgram;
+    
+    void updateParticlesRendering();
     
 public:
     
@@ -77,6 +82,7 @@ public:
     Scene(shared_ptr<ofTrueTypeFont> _mainFont);
     
     void update() override;
+    void initialize();
     void onEnd(function<void()> _levelEndCallback);
     
     void XMLSetup();

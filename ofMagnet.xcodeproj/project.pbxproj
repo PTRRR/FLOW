@@ -15,7 +15,7 @@
 		0E078B831E16772F004595EF /* Polygone.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E078B7C1E16772F004595EF /* Polygone.mm */; };
 		0E078B891E168984004595EF /* Receptor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E078B871E168984004595EF /* Receptor.mm */; };
 		0E22F05E1E0A8A8500197899 /* Text.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E22F05C1E0A8A8500197899 /* Text.mm */; };
-		0E51B64E1E0D726D00CFF1D6 /* shaders in Resources */ = {isa = PBXBuildFile; fileRef = 0E51B64D1E0D726D00CFF1D6 /* shaders */; };
+		0E2775A91E196FC200A9BD2D /* data in Resources */ = {isa = PBXBuildFile; fileRef = 0E2775A81E196FC200A9BD2D /* data */; };
 		0E9BFF901E043B97007F9857 /* GameManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF8E1E043B97007F9857 /* GameManager.mm */; };
 		0E9BFF931E043DF1007F9857 /* Button.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF911E043DF1007F9857 /* Button.mm */; };
 		0E9BFF971E0442A3007F9857 /* Interface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF951E0442A3007F9857 /* Interface.mm */; };
@@ -83,7 +83,7 @@
 		0E078B881E168984004595EF /* Receptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Receptor.h; sourceTree = "<group>"; };
 		0E22F05C1E0A8A8500197899 /* Text.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Text.mm; sourceTree = "<group>"; };
 		0E22F05D1E0A8A8500197899 /* Text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Text.h; sourceTree = "<group>"; };
-		0E51B64D1E0D726D00CFF1D6 /* shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = shaders; path = bin/data/shaders; sourceTree = "<group>"; };
+		0E2775A81E196FC200A9BD2D /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = bin/data; sourceTree = "<group>"; };
 		0E9BFF8E1E043B97007F9857 /* GameManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameManager.mm; sourceTree = "<group>"; };
 		0E9BFF8F1E043B97007F9857 /* GameManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameManager.h; sourceTree = "<group>"; };
 		0E9BFF911E043DF1007F9857 /* Button.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Button.mm; sourceTree = "<group>"; };
@@ -243,12 +243,12 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				0E2775A81E196FC200A9BD2D /* data */,
 				678E130917951536005B6D19 /* Icon.png */,
 				678E130717951530005B6D19 /* Icon@2x.png */,
 				678E130B1795153C005B6D19 /* Default.png */,
 				678E130D17951540005B6D19 /* Default@2x.png */,
 				678E130F17951549005B6D19 /* Default-568h@2x~iphone.png */,
-				0E51B64D1E0D726D00CFF1D6 /* shaders */,
 				E4D8936A11527B74007E1F53 /* src */,
 				BB24E1F710DAA51900E9C588 /* openFrameworks */,
 				BB16F26B0F2B646B00518274 /* addons */,
@@ -444,9 +444,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				678E130817951530005B6D19 /* Icon@2x.png in Resources */,
+				0E2775A91E196FC200A9BD2D /* data in Resources */,
 				678E130A17951536005B6D19 /* Icon.png in Resources */,
 				678E130C1795153C005B6D19 /* Default.png in Resources */,
-				0E51B64E1E0D726D00CFF1D6 /* shaders in Resources */,
 				678E130E17951540005B6D19 /* Default@2x.png in Resources */,
 				678E131017951549005B6D19 /* Default-568h@2x~iphone.png in Resources */,
 			);

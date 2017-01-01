@@ -18,7 +18,7 @@ private:
     
     float w;
     float h;
-    float alpha;
+    float mainAlpha;
     float alphaTarget;
     
     float zIndex;
@@ -27,6 +27,7 @@ private:
     bool active;
     
     virtual void renderToScreen(){};
+    float alpha(float _alpha);
     
     //Virtual inputs
     
@@ -34,6 +35,8 @@ private:
     virtual void onMouseMove(ofVec2f _position, function<void(string _text, string _action)> _callback){};
     virtual void onMouseDrag(ofVec2f _position, function<void(string _text, string _action)> _callback){};
     virtual void onMouseUp(ofVec2f _position, function<void(string _text, string _action)> _callback){};
+    
+    ofFbo fbo;
     
 public:
     

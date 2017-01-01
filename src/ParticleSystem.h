@@ -37,6 +37,7 @@ public:
     
     //Main
     
+    void init();
     void debugDraw();
     void update();
     void applyGravity(ofVec2f _gravity);

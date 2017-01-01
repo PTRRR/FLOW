@@ -20,6 +20,8 @@ ScreenPipeline::ScreenPipeline(shared_ptr<Screen> _firstScreen, shared_ptr<Scree
     this->activeScreen = _firstScreen;
     this->lastActiveScreen = _lastScreen;
     
+//    shader.load("shaders/fboShader.vert", "shaders/fboShader.frag");
+    
 };
 
 ScreenPipeline::~ScreenPipeline(){};

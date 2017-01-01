@@ -14,6 +14,8 @@
 
 class ScreenPipeline {
     
+private:
+    
     vector<shared_ptr<Screen>> pipeline;
     shared_ptr<Screen> activeScreen;
     shared_ptr<Screen> lastActiveScreen;

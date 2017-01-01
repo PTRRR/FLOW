@@ -20,10 +20,6 @@ void Button::draw(){
     
     if(font == nullptr) return;
     
-    ofSetColor(255, 255, 255);
-    ofSetLineWidth(1);
-    ofNoFill();
-    
 //    float left = position.x - dimensions.x / 2;
 //    float top = position.y - dimensions.y / 2;
 //    ofDrawCircle(position.x, position.y, 2);

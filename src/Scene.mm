@@ -19,20 +19,43 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     interface = Interface(_mainFont);
     interface.addButton("MENU", "MENU", ofVec2f(ofGetWidth() - _mainFont->stringWidth("MENU"), 50));
     
-    //Load the shader in order to draw the background
-    //This shader will draw the contours of the magnetic field
+    initialize();
     
-//    loadBackgroundShader();
-    
+};
+
+void Scene::initialize(){
     
     //Initialize the emitter
     
+    particleSystem.init();
     particleSystem.setPosition(ofVec2f(ofGetWidth() / 2, 200));
-    particleSystem.setBoxSize(ofVec2f(100, 10));
-    particleSystem.setRate(80);
-    particleSystem.setMaxParticles(300);
+    particleSystem.setBoxSize(ofVec2f(ofGetWidth() / 3, 1));
+    particleSystem.setRate(150);
+    particleSystem.setMaxParticles(MAX_PARTICLES);
+    
+    //Rendering
+    
+    //Load custom shaders and create the program
+    
+    particleHeadProgram.load("shaders/particleHead");
+    
+    //Set un vbo for rendering the particles
+    
+    positions = vector<ofVec3f>(MAX_PARTICLES, ofVec3f(0));
+    attributes = vector<ofVec3f>(MAX_PARTICLES, ofVec3f(0));
+    
+    particlesHeadVbo.setVertexData(&positions[0], (int) positions.size(), GL_DYNAMIC_DRAW);
+    particlesHeadVbo.setNormalData(&attributes[0], (int) attributes.size(), GL_STATIC_DRAW);
+    
+    updateParticlesRendering();
+    
+    //Load particle texture
+    
+    particleImg.load("images/particleTex_1.png");
     
     //Set up some actuators
+    
+    actuators.empty();
     
     for(int i = 0; i < 3; i++){
         
@@ -51,6 +74,8 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     
     //Initialize some receptors
     
+    receptors.empty();
+    
     for(int i = 0; i < 1; i++){
         
         shared_ptr<Receptor> newReceptor = shared_ptr<Receptor>(new Receptor());
@@ -63,6 +88,8 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     }
     
     //Initialize some polygones (obstacle)
+    
+    polygones.empty();
     
     shared_ptr<Polygone> polygone = shared_ptr<Polygone>(new Polygone());
     polygone->addVertex(ofGetWidth() / 2, 1000);
@@ -87,7 +114,7 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     
     polygones.push_back(polygone2);
     
-};
+}
 
 //Where all the scene is rendered
 void Scene::renderToScreen(){
@@ -99,7 +126,21 @@ void Scene::renderToScreen(){
     
     //Draw particles
     
-    particleSystem.debugDraw();
+    updateParticlesRendering();
+    
+    ofEnablePointSprites();
+    ofEnableBlendMode(OF_BLENDMODE_ADD);
+    
+    particleHeadProgram.begin();
+    particleImg.bind();
+    
+    particlesHeadVbo.draw(GL_POINTS, 0, (int) positions.size());
+    
+    particleImg.unbind();
+    particleHeadProgram.end();
+    
+    ofDisableBlendMode();
+    ofDisablePointSprites();
     
     //Draw actuators
     
@@ -121,7 +162,31 @@ void Scene::renderToScreen(){
     
     //Draw interface
     
-    interface.draw();
+    interface.draw(getAlpha());
+    
+}
+
+void Scene::updateParticlesRendering(){
+    
+    vector<shared_ptr<Particle>> particles = particleSystem.getParticles();
+    
+    for(int i = 0; i < MAX_PARTICLES; i++){
+        if(i < particles.size()){
+            
+            positions[i] = particles[i]->getPosition();
+            attributes[i].x = particles[i]->getMass() * 10; //Radius
+            attributes[i].z = particles[i]->getLifeLeft() / particles[i]->getLifeSpan(); //Alpha
+            
+        }else{
+            
+            attributes[i].x = 0; //Radius
+            attributes[i].z = 0; //Alpha
+            
+        }
+    }
+    
+    particlesHeadVbo.updateVertexData(&positions[0], (int) positions.size());
+    particlesHeadVbo.updateNormalData(&attributes[0], (int) attributes.size());
     
 }
 
@@ -162,9 +227,14 @@ void Scene::update(){
     
     //Update receptors
     
+    bool allAreFilled = true;
+    
     for(int i = 0; i < receptors.size(); i++){
         receptors[i]->update();
+        if(!receptors[i]->isFilled()) allAreFilled = false;
     }
+    
+    if(allAreFilled) initialize();
     
     checkForCollisions();
     
@@ -268,53 +338,6 @@ void Scene::onMouseDrag(ofVec2f _position, function<void(string _text, string _a
     
     
 }
-
-//Load backgroud shader
-//This function loads and pass some uniforms to the shader : screen resolution, max number of magnets
-
-//void Scene::loadBackgroundShader(){
-//    
-//    //Create the shader program for the background
-//    
-//    backGroundShader = gl::GlslProg::create(gl::GlslProg::Format().vertex(loadResource("LevelCurves.vert")).fragment(loadResource("LevelCurves.frag")));
-//    
-//    //Pass some uniforms to the shader
-//    //The max number of magnets is useful to set the array of magnets in the fragment shader
-//    
-//    backGroundShader->uniform("uMaxNumber", MAX_MAGNET_NUM);
-//    backGroundShader->uniform("uScreenResolution", vec2(getWindowWidth(), getWindowHeight()));
-//    
-//}
-
-//Update uniforms in the fragment shader
-//The position of the magnets and their strength
-
-//void Scene::updateBackgroudShader(){
-//    
-//    for (int i = 0; i < magnets.size(); i++) {
-//        
-//        //Set uTime
-//        backGroundShader->uniform("uTime", time);
-//        
-//        //Set uMagnetPos
-//        string magnetPosIndex = "uMagnetPos[" + to_string(i) + "]";
-//        backGroundShader->uniform(magnetPosIndex, magnets[i]->getPosition());
-//        
-//        //Set uMagnetStrength
-//        string magnetStrengthIndex = "uMagnetStrength[" + to_string(i) + "]";
-//        backGroundShader->uniform(magnetStrengthIndex, magnets[i]->getStrength());
-//        
-//        //Set uMagnetRadiusOfAction
-//        string magnetRadiusIndex = "uMagnetRadius[" + to_string(i) + "]";
-//        backGroundShader->uniform(magnetRadiusIndex, magnets[i]->getRadius());
-//        
-//        //Set uMagnetRadiusOfAction
-//        string magnetRadiusOfActionIndex = "uMagnetRadiusOfAction[" + to_string(i) + "]";
-//        backGroundShader->uniform(magnetRadiusOfActionIndex, magnets[i]->getRadiusOfAction());
-//        
-//    }
-//    
-//}
 
 void Scene::onEnd(function<void ()> _levelEndCallback){
     

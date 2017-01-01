@@ -15,19 +15,22 @@ Screen::Screen(){
     
     //By default
     
-    alpha = 255;
+    mainAlpha = 255;
     alphaTarget = 255;
     zIndex = 0;
     
     active = false;
+    
+    fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
 
 }
 
 void Screen::draw(){
     
-    alpha += (alphaTarget - alpha) * 0.1;
+    fbo.begin();
+    mainAlpha += (alphaTarget - mainAlpha) * 0.1;
     
-    if(alpha > 1){
+    if(mainAlpha > 1){
         ofPushStyle();
         ofPushMatrix();
         
@@ -36,6 +39,16 @@ void Screen::draw(){
         ofPopMatrix();
         ofPopStyle();
     }
+    
+    fbo.end();
+    
+    ofPushStyle();
+    
+    ofSetColor(255, 255, 255, mainAlpha);
+    fbo.draw(0, 0, ofGetWidth() + 2, ofGetHeight());
+    
+    ofPopStyle();
+    
 
 }
 
@@ -95,7 +108,7 @@ void Screen::setAlpha(float _alpha){
     
     //Clamp the value between 0 and 1
     
-    alpha = ofClamp(_alpha, 0.0f, 255.0f);
+    mainAlpha = ofClamp(_alpha, 0.0f, 255.0f);
     
 }
 
@@ -127,15 +140,21 @@ void Screen::setName(string _name){
 
 //Get
 
+float Screen::alpha(float _alpha){
+
+    return mainAlpha - (255.0 - _alpha);
+    
+}
+
 float Screen::getAlpha(){
     
-    return alpha;
+    return mainAlpha;
     
 }
 
 bool Screen::isVisible(){
     
-    if(alpha > 0) return true;
+    if(mainAlpha > 0) return true;
     return false;
     
 }

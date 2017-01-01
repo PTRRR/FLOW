@@ -25,7 +25,7 @@ void Menu::renderToScreen(){
     ofSetColor(0, 0, 0, getAlpha());
     ofDrawRectangle(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
     
-    interface.draw();
+    interface.draw(getAlpha());
     
 }
 
