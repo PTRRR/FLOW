@@ -16,10 +16,8 @@ Interface::Interface(shared_ptr<ofTrueTypeFont> _font){
     
 }
 
-void Interface::draw(float _alphaTarget){
+void Interface::draw(){
 
-    ofSetColor(255, 255, 255, _alphaTarget);
-    
     for(int i = 0; i < buttons.size(); i++){
         buttons[i]->draw();
     }

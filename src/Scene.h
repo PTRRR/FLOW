@@ -20,10 +20,15 @@
 #include "Particle.h"
 #include "Actuator.h"
 #include "Polygone.h"
+#include "ofxXmlSettings.h"
 
 class Scene : public Screen{
 
 private:
+    
+    //Level
+    
+    ofxXmlSettings XML;
     
     //Main
     
@@ -37,8 +42,8 @@ private:
     
     //Emitter
     
-    const int MAX_PARTICLES = 1500;
-    const int MAX_TAIL_LENGTH = 20;
+    const int MAX_PARTICLES = 1000;
+    const int MAX_TAIL_LENGTH = 10;
     ParticleSystem particleSystem;
     
     //Receptor
@@ -96,7 +101,7 @@ public:
     void initialize();
     void onEnd(function<void()> _levelEndCallback);
     
-    void XMLSetup();
+    void XMLSetup(string _xmlFile);
     
 };
 

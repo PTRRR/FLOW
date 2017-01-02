@@ -29,8 +29,6 @@ void Receptor::update(){
 void Receptor::debugDraw(){
     
     Receptor::Actuator::debugDraw();
-    
-    ofSetColor(255, 255, 255);
     ofDrawBitmapString(to_string((int) getPercentFill()) + "%", getPosition().x, getPosition().y - 30);
     
 }

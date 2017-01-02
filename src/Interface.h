@@ -30,7 +30,7 @@ public:
     Interface();
     Interface(shared_ptr<ofTrueTypeFont> _font);
     
-    void draw(float _alphaTarget);
+    void draw();
     void addButton(string _text, string _action, ofVec2f _position);
     void addText(string _text, ofVec2f _position);
     

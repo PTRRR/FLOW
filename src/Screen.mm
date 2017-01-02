@@ -27,7 +27,7 @@ Screen::Screen(){
 
 void Screen::draw(){
     
-    fbo.begin();
+//    fbo.begin();
     mainAlpha += (alphaTarget - mainAlpha) * 0.1;
     
     if(mainAlpha > 1){
@@ -40,12 +40,12 @@ void Screen::draw(){
         ofPopStyle();
     }
     
-    fbo.end();
+//    fbo.end();
     
     ofPushStyle();
     
-    ofSetColor(255, 255, 255, mainAlpha);
-    fbo.draw(0, 0, ofGetWidth() + 2, ofGetHeight());
+//    ofSetColor(255, 255, 255, mainAlpha);
+//    fbo.draw(0, 0, ofGetWidth() + 2, ofGetHeight());
     
     ofPopStyle();
     

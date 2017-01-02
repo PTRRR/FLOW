@@ -29,8 +29,8 @@ void Scene::initialize(){
     
     particleSystem.init();
     particleSystem.setPosition(ofVec2f(ofGetWidth() / 2, 200));
-    particleSystem.setBoxSize(ofVec2f(200, 1));
-    particleSystem.setRate(100);
+    particleSystem.setBoxSize(ofVec2f(10, 1));
+    particleSystem.setRate(120);
     particleSystem.setMaxParticles(MAX_PARTICLES);
     particleSystem.setMaxTailLength(MAX_TAIL_LENGTH);
     
@@ -104,7 +104,7 @@ void Scene::initialize(){
         
         shared_ptr<Receptor> newReceptor = shared_ptr<Receptor>(new Receptor());
         newReceptor->setPosition(ofVec2f(ofGetWidth() / 2, ofGetHeight()));
-        newReceptor->setRadius(150.0);
+        newReceptor->setRadius(200.0);
         newReceptor->setStrength(5.0);
         receptors.push_back(newReceptor);
         particleSystem.addReceptor(newReceptor);
@@ -138,6 +138,16 @@ void Scene::initialize(){
     
     polygones.push_back(polygone2);
     
+    ofxXmlSettings levels;
+    levels.addTag("level_1");
+    levels.pushTag("level_1");
+    
+    
+    
+    levels.popTag();
+    
+    levels.saveFile("/levels.xml");
+    
 }
 
 //Where all the scene is rendered
@@ -146,7 +156,7 @@ void Scene::renderToScreen(){
     //Draw background
     
     ofSetColor(0, 0, 0, getAlpha());
-    ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
+    ofDrawRectangle(0, 0, ofGetWidth() + 1, ofGetHeight());
     
     //Update GPU data
     //This will update all the data related to the rendering of the particles
@@ -181,6 +191,8 @@ void Scene::renderToScreen(){
     ofDisableAlphaBlending();
     ofDisableBlendMode();
     
+    ofSetColor(255, 255, 255, getAlpha());
+    
     //Draw actuators
     
     for(int i = 0; i < actuators.size(); i++){
@@ -201,7 +213,7 @@ void Scene::renderToScreen(){
     
     //Draw interface
     
-    interface.draw(getAlpha());
+    interface.draw();
     
 }
 
@@ -210,27 +222,42 @@ void Scene::updateParticlesRenderingData(){
     vector<shared_ptr<Particle>> particles = particleSystem.getParticles();
     
     for(int i = 0; i < MAX_PARTICLES; i++){
+        
         if(i < particles.size()){
             
             positions[i] = particles[i]->getPosition();
             attributes[i].x = particles[i]->getMass() * 10; //Radius
-            attributes[i].z = particles[i]->getLifeLeft() / particles[i]->getLifeSpan(); //Alpha
+            attributes[i].z = particles[i]->getLifeLeft() / particles[i]->getLifeSpan() * getAlpha() / 255.0; //Alpha
             
             vector<ofVec2f> points = particles[i]->getPoints();
             
-            for(int j = 0; j < points.size(); j++){
+            for(int j = 0; j < MAX_TAIL_LENGTH; j++){
                 
                 tailPoints[i * MAX_TAIL_LENGTH + j] = points[j];
-                tailColors[i * MAX_TAIL_LENGTH + j].a = particles[i]->getLifeLeft() / particles[i]->getLifeSpan();
+                float alphaMutl = (float) j / MAX_TAIL_LENGTH + 0.05;
+                tailColors[i * MAX_TAIL_LENGTH + j].a = particles[i]->getLifeLeft() / particles[i]->getLifeSpan() * alphaMutl - 0.1;
+                
+                //Fade out between screens
+                
+                tailColors[i * MAX_TAIL_LENGTH + j].a *= getAlpha() / 255.0;
                 
             }
             
         }else{
             
+            //Set all unused data unvisible
+            
             attributes[i].x = 0; //Radius
             attributes[i].z = 0; //Alpha
             
+            for(int j = 0; j < MAX_TAIL_LENGTH; j++){
+            
+                tailColors[i * MAX_TAIL_LENGTH + j].a = 0;
+                
+            }
+            
         }
+        
     }
     
     //Head
@@ -259,7 +286,7 @@ void Scene::update(){
          
             float distance = (particles[i]->getPosition() - receptors[j]->getPosition()).length();
             
-            if(distance < 50){
+            if(distance < 20){
                 particleSystem.removeParticle(i);
                 receptors[j]->addOneParticleToCount();
             }
@@ -403,8 +430,18 @@ void Scene::onEnd(function<void ()> _levelEndCallback){
 //This function loads a scene from a XML file
 //All levels are contained in a XML file
 
-void Scene::XMLSetup(){
+void Scene::XMLSetup(string _xmlFile){
     
+    string message = "";
     
+    if( XML.loadFile(ofxiOSGetDocumentsDirectory() + _xmlFile + ".xml") ){
+        message = "mySettings.xml loaded from documents folder!";
+    }else if( XML.loadFile(_xmlFile) ){
+        message = "mySettings.xml loaded from data folder!";
+    }else{
+        message = "unable to load mySettings.xml check data/ folder";
+    }
+    
+    cout << message << endl;
     
 }

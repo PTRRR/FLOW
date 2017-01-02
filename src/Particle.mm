@@ -30,7 +30,7 @@ Particle::Particle(ofVec2f _position){
     
     //Initialize some variables
     
-    updateRate = 2;
+    updateRate = 4; //More hight is the update rate longer will be the tail
     numPoints = 10;
     points = vector<ofVec2f>(numPoints, getPosition());
     
@@ -58,7 +58,7 @@ void Particle::update(){
     if(ofGetFrameNum() % updateRate == 0){
      
         points.erase(points.begin());
-        points.push_back(ofVec2f(getPosition().x + ofRandomf() * 2, getPosition().y));
+        points.push_back(ofVec2f(getPosition().x + ofRandomf() * 1.5, getPosition().y));
         
     }
     

@@ -24,7 +24,7 @@ void Button::draw(){
 //    float top = position.y - dimensions.y / 2;
 //    ofDrawCircle(position.x, position.y, 2);
 //    ofDrawRectangle(left, top, dimensions.x, dimensions.y);
-    
+
     font->drawString(text, position.x - dimensions.x / 2, position.y + dimensions.y / 2);
     
 }

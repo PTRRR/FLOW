@@ -23,7 +23,6 @@ void Actuator::debugDraw(){
     
     ofPushStyle();
     
-    ofSetColor(255, 255, 255);
     ofDrawCircle(getPosition(), 20);
     ofNoFill();
     ofDrawCircle(getPosition() , radius);

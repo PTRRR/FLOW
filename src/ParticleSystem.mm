@@ -178,10 +178,10 @@ void ParticleSystem::addParticles(int _num){
         
         shared_ptr<Particle> newParticle = shared_ptr<Particle>(new Particle(ofVec2f( getPosition().x + ofRandomf() * boxSize.x, getPosition().y + ofRandomf() * boxSize.y )));
         newParticle->setMass(ofRandom(3.0));
-        newParticle->setVelocity(ofVec2f(ofRandomf() * 0, 0));
+        newParticle->setVelocity(ofVec2f(ofRandomf() * 2, 0));
         newParticle->setMaxVelocity(20);
         newParticle->setBox(-100, -100, ofGetWidth() + 200, ofGetHeight() + 200);
-        newParticle->setLifeSpan(ofRandom(10000));
+        newParticle->setLifeSpan(ofRandom(15000));
         newParticle->setNumPoints(maxTailLength);
         particles.push_back(newParticle);
         

@@ -23,9 +23,10 @@ Menu::Menu(shared_ptr<ofTrueTypeFont> _font){
 void Menu::renderToScreen(){
     
     ofSetColor(0, 0, 0, getAlpha());
-    ofDrawRectangle(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
+    ofDrawRectangle(0, 0, ofGetWidth() + 1, ofGetHeight());
     
-    interface.draw(getAlpha());
+    ofSetColor(255, 255, 255, getAlpha());
+    interface.draw();
     
 }
 

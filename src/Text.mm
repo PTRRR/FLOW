@@ -20,10 +20,11 @@ void Text::draw(){
     
     if(font == nullptr) return;
     
-    ofSetColor(255, 255, 255);
+    ofPushStyle();
     ofSetLineWidth(1);
     ofNoFill();
     font->drawString(text, position.x - dimensions.x / 2, position.y + dimensions.y / 2);
+    ofPopStyle();
     
 }
 

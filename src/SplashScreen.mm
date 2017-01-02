@@ -21,8 +21,10 @@ SplashScreen::SplashScreen(shared_ptr<ofTrueTypeFont> _font){
 void SplashScreen::renderToScreen(){
     
     ofSetColor(0, 0, 0, getAlpha());
-    ofDrawRectangle(0, 0, ofGetWindowWidth(), ofGetWindowHeight());
-    interface.draw(getAlpha());
+    ofDrawRectangle(0, 0, ofGetWidth() + 1, ofGetHeight());
+    
+    ofSetColor(255, 255, 255, getAlpha());
+    interface.draw();
     
 }
 

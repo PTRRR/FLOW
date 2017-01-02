@@ -17,7 +17,6 @@ Polygone::Polygone(){
 void Polygone::debugDraw(){
 
     ofPushStyle();
-    ofSetColor(255, 255, 255);
     
     polygone.draw();
     
