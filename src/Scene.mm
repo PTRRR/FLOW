@@ -29,13 +29,12 @@ void Scene::initialize(){
     
     particleSystem.init();
     particleSystem.setPosition(ofVec2f(ofGetWidth() / 2, 200));
-    particleSystem.setBoxSize(ofVec2f(20, 1));
+    particleSystem.setBoxSize(ofVec2f(200, 1));
     particleSystem.setRate(100);
     particleSystem.setMaxParticles(MAX_PARTICLES);
     particleSystem.setMaxTailLength(MAX_TAIL_LENGTH);
     
-    //Rendering
-    
+    //GPU Rendering
     //Load custom shaders and create the program
     
     particleHeadProgram.load("shaders/particleHead");
@@ -53,7 +52,7 @@ void Scene::initialize(){
     //20 is the max number of points composing the particle tail
     
     tailPoints = vector<ofVec3f>(MAX_PARTICLES * MAX_TAIL_LENGTH, ofVec3f(0));
-    tailAttributes = vector<ofVec3f>(MAX_PARTICLES * MAX_TAIL_LENGTH, ofVec3f(0));
+    tailColors = vector<ofFloatColor>(MAX_PARTICLES * MAX_TAIL_LENGTH, ofFloatColor(1.0, 1.0, 1.0, 0.0));
     
     for(int i = 0; i < MAX_PARTICLES; i++){
         
@@ -67,7 +66,7 @@ void Scene::initialize(){
     }
     
     particlesTailVbo.setVertexData(&tailPoints[0], (int) tailPoints.size(), GL_STREAM_DRAW);
-    particlesTailVbo.setNormalData(&tailAttributes[0], (int) tailAttributes.size(), GL_STREAM_DRAW);
+    particlesTailVbo.setColorData(&tailColors[0], (int) tailColors.size(), GL_STREAM_DRAW);
     particlesTailVbo.setIndexData(&tailIndices[0], (int) tailIndices.size(), GL_STATIC_DRAW);
     
     //Update GPU data
@@ -154,9 +153,19 @@ void Scene::renderToScreen(){
     
     updateParticlesRenderingData();
     
-    //Draw particles head
+    //Draw particles tail
     
     ofEnableBlendMode(OF_BLENDMODE_ADD);
+    ofEnableAlphaBlending();
+    
+    particleTailProgram.begin();
+    
+    particlesTailVbo.drawElements(GL_LINES, (int) tailIndices.size());
+    
+    particleTailProgram.end();
+    
+    //Draw particles head
+
     ofEnablePointSprites();
     
     particleHeadProgram.begin();
@@ -168,16 +177,6 @@ void Scene::renderToScreen(){
     particleHeadProgram.end();
     
     ofDisablePointSprites();
-    
-    //Draw particles tail
-    
-    ofEnableAlphaBlending();
-    
-    particleTailProgram.begin();
-    
-    particlesTailVbo.drawElements(GL_LINES, (int) tailIndices.size());
-    
-    particleTailProgram.end();
     
     ofDisableAlphaBlending();
     ofDisableBlendMode();
@@ -219,10 +218,10 @@ void Scene::updateParticlesRenderingData(){
             
             vector<ofVec2f> points = particles[i]->getPoints();
             
-            for(int j = 0; j < points.size() - 1; j++){
+            for(int j = 0; j < points.size(); j++){
                 
                 tailPoints[i * MAX_TAIL_LENGTH + j] = points[j];
-                tailAttributes[i * MAX_TAIL_LENGTH + j].z = particles[i]->getLifeLeft() / particles[i]->getLifeSpan();
+                tailColors[i * MAX_TAIL_LENGTH + j].a = particles[i]->getLifeLeft() / particles[i]->getLifeSpan();
                 
             }
             
@@ -242,7 +241,7 @@ void Scene::updateParticlesRenderingData(){
     //Tail
     
     particlesTailVbo.updateVertexData(&tailPoints[0], (int) tailPoints.size());
-    particlesTailVbo.updateNormalData(&tailAttributes[0], (int) tailAttributes.size());
+    particlesTailVbo.updateColorData(&tailColors[0], (int) tailColors.size());
     
 }
 

@@ -82,7 +82,7 @@ private:
     
     ofVbo particlesTailVbo;
     vector<ofVec3f> tailPoints;
-    vector<ofVec3f> tailAttributes;
+    vector<ofFloatColor> tailColors;
     vector<ofIndexType> tailIndices;
     
     void updateParticlesRenderingData();

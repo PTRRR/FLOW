@@ -30,7 +30,7 @@ Particle::Particle(ofVec2f _position){
     
     //Initialize some variables
     
-    updateRate = 3;
+    updateRate = 2;
     numPoints = 10;
     points = vector<ofVec2f>(numPoints, getPosition());
     
@@ -55,8 +55,12 @@ void Particle::update(){
     //A point is added every n frames defined by the updateRate variable. Not every frame to speed up
     //the rendering time.
     
-    points.erase(points.begin());
-    points.push_back(ofVec2f(getPosition().x + ofRandomf() * 2, getPosition().y));
+    if(ofGetFrameNum() % updateRate == 0){
+     
+        points.erase(points.begin());
+        points.push_back(ofVec2f(getPosition().x + ofRandomf() * 2, getPosition().y));
+        
+    }
     
     //Update the tifespan to make the particle die. getDeltaTime is computed by the base element.
     
