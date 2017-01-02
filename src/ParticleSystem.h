@@ -26,6 +26,7 @@ private:
     float elapsedTime;
     float toEmit;
     int maxParticles;
+    int maxTailLength;
     
     vector<shared_ptr<Particle>> particles;
     vector<shared_ptr<Actuator>> actuators;
@@ -54,6 +55,7 @@ public:
     void setRate(float _rate);
     void empty();
     void setMaxParticles(int _maxParticles);
+    void setMaxTailLength(int _length);
     
     //Get
     

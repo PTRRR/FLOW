@@ -38,6 +38,7 @@ private:
     //Emitter
     
     const int MAX_PARTICLES = 1500;
+    const int MAX_TAIL_LENGTH = 20;
     ParticleSystem particleSystem;
     
     //Receptor
@@ -75,11 +76,13 @@ private:
     vector<ofVec3f> attributes;
     
     ofShader particleHeadProgram;
+    ofShader particleTailProgram;
     
     //Tail
     
     ofVbo particlesTailVbo;
     vector<ofVec3f> tailPoints;
+    vector<ofVec3f> tailAttributes;
     vector<ofIndexType> tailIndices;
     
     void updateParticlesRenderingData();

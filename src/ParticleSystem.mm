@@ -16,6 +16,7 @@ ParticleSystem::ParticleSystem(){
     updateRate = 10; //ms
     elapsedTime = 0;
     toEmit = 0;
+    maxTailLength = 0;
 
 }
 
@@ -176,12 +177,12 @@ void ParticleSystem::addParticles(int _num){
     for(int i = 0; i < _num; i++){
         
         shared_ptr<Particle> newParticle = shared_ptr<Particle>(new Particle(ofVec2f( getPosition().x + ofRandomf() * boxSize.x, getPosition().y + ofRandomf() * boxSize.y )));
-//        newParticle->setPosition(ofVec2f( getPosition().x + ofRandomf() * boxSize.x, getPosition().y + ofRandomf() * boxSize.y ));
         newParticle->setMass(ofRandom(3.0));
         newParticle->setVelocity(ofVec2f(ofRandomf() * 0, 0));
         newParticle->setMaxVelocity(20);
         newParticle->setBox(-100, -100, ofGetWidth() + 200, ofGetHeight() + 200);
         newParticle->setLifeSpan(ofRandom(10000));
+        newParticle->setNumPoints(maxTailLength);
         particles.push_back(newParticle);
         
     }
@@ -246,6 +247,12 @@ void ParticleSystem::empty(){
 void ParticleSystem::setMaxParticles(int _maxParticles){
     
     maxParticles = _maxParticles;
+    
+}
+
+void ParticleSystem::setMaxTailLength(int _length){
+    
+    maxTailLength = _length;
     
 }
 

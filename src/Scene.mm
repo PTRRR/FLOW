@@ -29,15 +29,17 @@ void Scene::initialize(){
     
     particleSystem.init();
     particleSystem.setPosition(ofVec2f(ofGetWidth() / 2, 200));
-    particleSystem.setBoxSize(ofVec2f(ofGetWidth() / 3, 1));
+    particleSystem.setBoxSize(ofVec2f(20, 1));
     particleSystem.setRate(100);
     particleSystem.setMaxParticles(MAX_PARTICLES);
+    particleSystem.setMaxTailLength(MAX_TAIL_LENGTH);
     
     //Rendering
     
     //Load custom shaders and create the program
     
     particleHeadProgram.load("shaders/particleHead");
+    particleTailProgram.load("shaders/particleTail");
     
     //Set un vbo for rendering the particles head
     
@@ -50,20 +52,22 @@ void Scene::initialize(){
     //Set un vbo for rendering the particles tail
     //20 is the max number of points composing the particle tail
     
-    tailPoints = vector<ofVec3f>(MAX_PARTICLES * 20, ofVec3f(0));
+    tailPoints = vector<ofVec3f>(MAX_PARTICLES * MAX_TAIL_LENGTH, ofVec3f(0));
+    tailAttributes = vector<ofVec3f>(MAX_PARTICLES * MAX_TAIL_LENGTH, ofVec3f(0));
     
     for(int i = 0; i < MAX_PARTICLES; i++){
         
-        for(int j = 0; j < 20 - 1; j++){
+        for(int j = 0; j < MAX_TAIL_LENGTH - 1; j++){
             
-            tailIndices.push_back(i * 20 + j);
-            tailIndices.push_back(i * 20 + j + 1);
+            tailIndices.push_back(i * MAX_TAIL_LENGTH + j);
+            tailIndices.push_back(i * MAX_TAIL_LENGTH + j + 1);
             
         }
         
     }
     
-    particlesTailVbo.setVertexData(&tailPoints[0], (int) tailPoints.size(), GL_DYNAMIC_DRAW);
+    particlesTailVbo.setVertexData(&tailPoints[0], (int) tailPoints.size(), GL_STREAM_DRAW);
+    particlesTailVbo.setNormalData(&tailAttributes[0], (int) tailAttributes.size(), GL_STREAM_DRAW);
     particlesTailVbo.setIndexData(&tailIndices[0], (int) tailIndices.size(), GL_STATIC_DRAW);
     
     //Update GPU data
@@ -113,7 +117,7 @@ void Scene::initialize(){
     polygones.empty();
     
     shared_ptr<Polygone> polygone = shared_ptr<Polygone>(new Polygone());
-    polygone->addVertex(ofGetWidth() / 2, 1000);
+    polygone->addVertex(ofGetWidth() / 2, 600);
     polygone->addVertex(ofGetWidth() / 2 + 200, 800);
     polygone->addVertex(ofGetWidth() / 2 + 200, 1100);
     polygone->addVertex(ofGetWidth() / 2 - 200, 1100);
@@ -152,8 +156,8 @@ void Scene::renderToScreen(){
     
     //Draw particles head
     
-    ofEnablePointSprites();
     ofEnableBlendMode(OF_BLENDMODE_ADD);
+    ofEnablePointSprites();
     
     particleHeadProgram.begin();
     particleImg.bind();
@@ -163,13 +167,20 @@ void Scene::renderToScreen(){
     particleImg.unbind();
     particleHeadProgram.end();
     
-    ofDisableBlendMode();
     ofDisablePointSprites();
     
     //Draw particles tail
     
-    ofSetColor(255, 255, 255);
+    ofEnableAlphaBlending();
+    
+    particleTailProgram.begin();
+    
     particlesTailVbo.drawElements(GL_LINES, (int) tailIndices.size());
+    
+    particleTailProgram.end();
+    
+    ofDisableAlphaBlending();
+    ofDisableBlendMode();
     
     //Draw actuators
     
@@ -210,7 +221,8 @@ void Scene::updateParticlesRenderingData(){
             
             for(int j = 0; j < points.size() - 1; j++){
                 
-                tailPoints[i * 20 + j] = points[j];
+                tailPoints[i * MAX_TAIL_LENGTH + j] = points[j];
+                tailAttributes[i * MAX_TAIL_LENGTH + j].z = particles[i]->getLifeLeft() / particles[i]->getLifeSpan();
                 
             }
             
@@ -230,6 +242,7 @@ void Scene::updateParticlesRenderingData(){
     //Tail
     
     particlesTailVbo.updateVertexData(&tailPoints[0], (int) tailPoints.size());
+    particlesTailVbo.updateNormalData(&tailAttributes[0], (int) tailAttributes.size());
     
 }
 
