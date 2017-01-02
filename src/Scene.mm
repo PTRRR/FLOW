@@ -30,7 +30,7 @@ void Scene::initialize(){
     particleSystem.init();
     particleSystem.setPosition(ofVec2f(ofGetWidth() / 2, 200));
     particleSystem.setBoxSize(ofVec2f(ofGetWidth() / 3, 1));
-    particleSystem.setRate(150);
+    particleSystem.setRate(100);
     particleSystem.setMaxParticles(MAX_PARTICLES);
     
     //Rendering
@@ -39,7 +39,7 @@ void Scene::initialize(){
     
     particleHeadProgram.load("shaders/particleHead");
     
-    //Set un vbo for rendering the particles
+    //Set un vbo for rendering the particles head
     
     positions = vector<ofVec3f>(MAX_PARTICLES, ofVec3f(0));
     attributes = vector<ofVec3f>(MAX_PARTICLES, ofVec3f(0));
@@ -47,7 +47,28 @@ void Scene::initialize(){
     particlesHeadVbo.setVertexData(&positions[0], (int) positions.size(), GL_DYNAMIC_DRAW);
     particlesHeadVbo.setNormalData(&attributes[0], (int) attributes.size(), GL_STATIC_DRAW);
     
-    updateParticlesRendering();
+    //Set un vbo for rendering the particles tail
+    //20 is the max number of points composing the particle tail
+    
+    tailPoints = vector<ofVec3f>(MAX_PARTICLES * 20, ofVec3f(0));
+    
+    for(int i = 0; i < MAX_PARTICLES; i++){
+        
+        for(int j = 0; j < 20 - 1; j++){
+            
+            tailIndices.push_back(i * 20 + j);
+            tailIndices.push_back(i * 20 + j + 1);
+            
+        }
+        
+    }
+    
+    particlesTailVbo.setVertexData(&tailPoints[0], (int) tailPoints.size(), GL_DYNAMIC_DRAW);
+    particlesTailVbo.setIndexData(&tailIndices[0], (int) tailIndices.size(), GL_STATIC_DRAW);
+    
+    //Update GPU data
+    
+    updateParticlesRenderingData();
     
     //Load particle texture
     
@@ -124,9 +145,12 @@ void Scene::renderToScreen(){
     ofSetColor(0, 0, 0, getAlpha());
     ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
     
-    //Draw particles
+    //Update GPU data
+    //This will update all the data related to the rendering of the particles
     
-    updateParticlesRendering();
+    updateParticlesRenderingData();
+    
+    //Draw particles head
     
     ofEnablePointSprites();
     ofEnableBlendMode(OF_BLENDMODE_ADD);
@@ -141,6 +165,11 @@ void Scene::renderToScreen(){
     
     ofDisableBlendMode();
     ofDisablePointSprites();
+    
+    //Draw particles tail
+    
+    ofSetColor(255, 255, 255);
+    particlesTailVbo.drawElements(GL_LINES, (int) tailIndices.size());
     
     //Draw actuators
     
@@ -166,7 +195,7 @@ void Scene::renderToScreen(){
     
 }
 
-void Scene::updateParticlesRendering(){
+void Scene::updateParticlesRenderingData(){
     
     vector<shared_ptr<Particle>> particles = particleSystem.getParticles();
     
@@ -177,6 +206,14 @@ void Scene::updateParticlesRendering(){
             attributes[i].x = particles[i]->getMass() * 10; //Radius
             attributes[i].z = particles[i]->getLifeLeft() / particles[i]->getLifeSpan(); //Alpha
             
+            vector<ofVec2f> points = particles[i]->getPoints();
+            
+            for(int j = 0; j < points.size() - 1; j++){
+                
+                tailPoints[i * 20 + j] = points[j];
+                
+            }
+            
         }else{
             
             attributes[i].x = 0; //Radius
@@ -185,8 +222,14 @@ void Scene::updateParticlesRendering(){
         }
     }
     
+    //Head
+    
     particlesHeadVbo.updateVertexData(&positions[0], (int) positions.size());
     particlesHeadVbo.updateNormalData(&attributes[0], (int) attributes.size());
+    
+    //Tail
+    
+    particlesTailVbo.updateVertexData(&tailPoints[0], (int) tailPoints.size());
     
 }
 

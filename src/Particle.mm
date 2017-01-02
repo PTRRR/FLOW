@@ -10,19 +10,78 @@
 
 Particle::Particle(){
 
-    numPoints = floor(ofRandom(10));
+    //Initialize some variables
+    
+    updateRate = 4;
+    numPoints = 20;
+    points = vector<ofVec2f>(numPoints, getPosition());
+    
+    //This is for debug draw
+    
     circleDefinition = floor(ofRandom(5) + 3);
+    
     dead = false;
 
 }
 
+Particle::Particle(ofVec2f _position){
+    
+    setPosition(_position);
+    
+    //Initialize some variables
+    
+    updateRate = 2;
+    numPoints = 20;
+    points = vector<ofVec2f>(numPoints, getPosition());
+    
+    //This is for debug draw
+    
+    circleDefinition = floor(ofRandom(5) + 3);
+    
+    dead = false;
+    
+}
+
 void Particle::update(){
     
+    //Here we update the base element of the particle. This will take care of all the movements,
+    //physics, etc...
+    
     Particle::BaseElement::update();
+    
+    //Update tail.
+    //This takes care off adding points to the array of points composing the tail.
+    //They can then be accessed by the function getPoints().
+    //A point is added every n frames defined by the updateRate variable. Not every frame to speed up
+    //the rendering time.
+    
+    if(ofGetFrameNum() % updateRate == 0){
+        
+        if(points.size() > numPoints){
+            
+            points.erase(points.begin());
+            
+        }
+        
+        points.push_back(getPosition());
+        
+    }
+    
+//    if(points.size() > numPoints){
+//        
+//        points.erase(points.begin());
+//        
+//    }
+//    
+//    points.push_back(getPosition());
+    
+    //Update the tifespan to make the particle die. getDeltaTime is computed by the base element.
     
     lifeLeft -= getDeltatime();
     
 }
+
+//This function is used for quickly displaying the particle. Do not use for efficient rendering
 
 void Particle::debugDraw(){
     

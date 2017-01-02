@@ -175,8 +175,8 @@ void ParticleSystem::addParticles(int _num){
     
     for(int i = 0; i < _num; i++){
         
-        shared_ptr<Particle> newParticle = shared_ptr<Particle>(new Particle());
-        newParticle->setPosition(ofVec2f( getPosition().x + ofRandomf() * boxSize.x, getPosition().y + ofRandomf() * boxSize.y ));
+        shared_ptr<Particle> newParticle = shared_ptr<Particle>(new Particle(ofVec2f( getPosition().x + ofRandomf() * boxSize.x, getPosition().y + ofRandomf() * boxSize.y )));
+//        newParticle->setPosition(ofVec2f( getPosition().x + ofRandomf() * boxSize.x, getPosition().y + ofRandomf() * boxSize.y ));
         newParticle->setMass(ofRandom(3.0));
         newParticle->setVelocity(ofVec2f(ofRandomf() * 0, 0));
         newParticle->setMaxVelocity(20);

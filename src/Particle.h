@@ -18,6 +18,9 @@ class Particle : public BaseElement{
     
     int circleDefinition;
     
+    //Tail
+    
+    int updateRate; //Every n frames a point is added to the tail
     int numPoints;
     vector<ofVec2f> points;
     
@@ -28,6 +31,7 @@ class Particle : public BaseElement{
 public:
     
     Particle();
+    Particle(ofVec2f _position);
     
     void update();
     void debugDraw();

@@ -65,6 +65,8 @@ private:
     function<void()> levelEndCallback = nullptr;
     
     //Particles rendering
+    //Head
+    //This variables are related to the rendering of the head of the particle
     
     ofImage particleImg;
     
@@ -74,7 +76,13 @@ private:
     
     ofShader particleHeadProgram;
     
-    void updateParticlesRendering();
+    //Tail
+    
+    ofVbo particlesTailVbo;
+    vector<ofVec3f> tailPoints;
+    vector<ofIndexType> tailIndices;
+    
+    void updateParticlesRenderingData();
     
 public:
     
