@@ -148,6 +148,8 @@ void Scene::initialize(){
     
     levels.saveFile("/levels.xml");
     
+    updateAllParticles();
+    
 }
 
 //Where all the scene is rendered
@@ -217,25 +219,34 @@ void Scene::renderToScreen(){
     
 }
 
+void Scene::updateAllParticles(){
+    
+    
+    
+}
+
 void Scene::updateParticlesRenderingData(){
     
     vector<shared_ptr<Particle>> particles = particleSystem.getParticles();
     
+    allParticles.erase(allParticles.begin(), allParticles.end());
+    allParticles.insert(allParticles.end(), particles.begin(), particles.end());
+    
     for(int i = 0; i < MAX_PARTICLES; i++){
         
-        if(i < particles.size()){
+        if(i < allParticles.size()){
             
-            positions[i] = particles[i]->getPosition();
-            attributes[i].x = particles[i]->getMass() * 10; //Radius
-            attributes[i].z = particles[i]->getLifeLeft() / particles[i]->getLifeSpan() * getAlpha() / 255.0; //Alpha
+            positions[i] = allParticles[i]->getPosition();
+            attributes[i].x = allParticles[i]->getMass() * 10; //Radius
+            attributes[i].z = allParticles[i]->getLifeLeft() / allParticles[i]->getLifeSpan() * getAlpha() / 255.0; //Alpha
             
-            vector<ofVec2f> points = particles[i]->getPoints();
+            vector<ofVec2f> points = allParticles[i]->getPoints();
             
             for(int j = 0; j < MAX_TAIL_LENGTH; j++){
                 
                 tailPoints[i * MAX_TAIL_LENGTH + j] = points[j];
                 float alphaMutl = (float) j / MAX_TAIL_LENGTH + 0.05;
-                tailColors[i * MAX_TAIL_LENGTH + j].a = particles[i]->getLifeLeft() / particles[i]->getLifeSpan() * alphaMutl - 0.1;
+                tailColors[i * MAX_TAIL_LENGTH + j].a = allParticles[i]->getLifeLeft() / allParticles[i]->getLifeSpan() * alphaMutl - 0.1;
                 
                 //Fade out between screens
                 
@@ -273,6 +284,8 @@ void Scene::updateParticlesRenderingData(){
 }
 
 void Scene::update(){
+    
+    updateAllParticles();
     
     //Update particle system
     
