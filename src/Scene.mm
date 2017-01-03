@@ -239,7 +239,7 @@ void Scene::initialize(){
         
     });
     
-//    updateAllParticles();
+    updateAllParticles();
     
 }
 
@@ -365,25 +365,26 @@ void Scene::updateParticlesRenderingData(){
 
 void Scene::updateAllParticles(){
     
-    allParticles.empty();
+//    allParticles.erase(allParticles.begin(), allParticles.end());
+//    
+//    for(int i = allParticles.size() - 1; i >= 0 ; i--){
+//        allParticles.erase(allParticles.begin() + i);
+//    }
+//    
+    vector<shared_ptr<Particle>> particles = emitters[0]->getParticles();
     
-    for(int i = 0; i < emitters.size(); i++){
-        
-        for(int j = 0; j < emitters[i]->getParticles().size(); j++){
-            
-            allParticles.push_back(emitters[i]->getParticles()[j]);
-            
-        }
-        
-    }
+    allParticles = particles;
+//    allParticles.insert(allParticles.end(), particles.begin(), particles.end());
     
-    cout << "sadélkj" << endl;
+//    for(int i = 0; i < particles.size(); i++){
+//        allParticles.push_back(particles[i]);
+//    }
     
 }
 
 void Scene::update(){
     
-//    updateAllParticles();
+    updateAllParticles();
     
     //Update particle system
     
