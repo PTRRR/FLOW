@@ -64,6 +64,18 @@ ofVec2f Actuator::getForceAtPoint(ofVec2f _position){
     
 }
 
+float Actuator::getStrength(){
+    
+    return strength;
+    
+}
+
+float Actuator::getRadius(){
+    
+    return radius;
+    
+}
+
 bool Actuator::isOver(ofVec2f _position){
     
     float distance = (getPosition() - _position).length();

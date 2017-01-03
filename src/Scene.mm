@@ -8,9 +8,15 @@
 
 #include "Scene.h"
 
-Scene::Scene(){}
+Scene::Scene(){
+    
+    name = "level_1";
+
+}
 
 Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
+    
+    name = "salut";
     
     time = 0.0f;
     
@@ -21,18 +27,28 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     
     initialize();
     
+    ofxXmlSettings file;
+//    file.saveFile(ofxiOSGetDocumentsDirectory() + "salut.xml");
+    
 };
 
 void Scene::initialize(){
     
-    //Initialize the emitter
+//    XMLSetup("level_1.xml");
+//    saveScene(name + ".xml");
     
-    particleSystem.init();
-    particleSystem.setPosition(ofVec2f(ofGetWidth() / 2, 200));
-    particleSystem.setBoxSize(ofVec2f(10, 1));
-    particleSystem.setRate(120);
-    particleSystem.setMaxParticles(MAX_PARTICLES);
-    particleSystem.setMaxTailLength(MAX_TAIL_LENGTH);
+    //Initialize one emitter
+    
+    shared_ptr<ParticleSystem> newEmitter = shared_ptr<ParticleSystem>(new ParticleSystem());
+    
+    newEmitter->init();
+    newEmitter->setPosition(ofVec2f(ofGetWidth() / 2, 200));
+    newEmitter->setBoxSize(ofVec2f(10, 1));
+    newEmitter->setRate(120);
+    newEmitter->setMaxParticles(MAX_PARTICLES / 1);
+    newEmitter->setMaxTailLength(MAX_TAIL_LENGTH);
+    
+    emitters.push_back(newEmitter);
     
     //GPU Rendering
     //Load custom shaders and create the program
@@ -92,7 +108,10 @@ void Scene::initialize(){
         newActuator->setBox(0, 0, ofGetWidth(), ofGetHeight());
         newActuator->setStrength(-5);
         actuators.push_back(newActuator);
-        particleSystem.addActuator(newActuator);
+        
+        for(int j = 0; j < emitters.size(); j++){
+            emitters[j]->addActuator(newActuator);
+        }
         
     }
     
@@ -107,7 +126,10 @@ void Scene::initialize(){
         newReceptor->setRadius(200.0);
         newReceptor->setStrength(5.0);
         receptors.push_back(newReceptor);
-        particleSystem.addReceptor(newReceptor);
+
+        for(int j = 0; j < emitters.size(); j++){
+            emitters[j]->addReceptor(newReceptor);
+        }
         
     }
     
@@ -138,15 +160,86 @@ void Scene::initialize(){
     
     polygones.push_back(polygone2);
     
-    ofxXmlSettings levels;
-    levels.addTag("level_1");
-    levels.pushTag("level_1");
+    ofxXmlSettings xml;
     
+    //Actuators
     
+    xml.addTag("actuators");
+    xml.pushTag("actuators");
     
-    levels.popTag();
+    xml.addValue("num", (int) actuators.size());
     
-    levels.saveFile("/levels.xml");
+    xml.popTag();
+    
+    //Receptors
+    
+    xml.addTag("receptors");
+    xml.pushTag("receptors");
+    
+    xml.addValue("num", (int) receptors.size());
+    
+    for(int i = 0; i < receptors.size(); i++){
+        
+        xml.addTag("receptor");
+        xml.pushTag("receptor", i);
+        
+        xml.addValue("X", receptors[i]->getPosition().x / ofGetWidth());
+        xml.addValue("Y", receptors[i]->getPosition().y / ofGetHeight());
+        xml.addValue("strength", receptors[i]->getStrength());
+        xml.addValue("radius", receptors[i]->getRadius());
+        
+        xml.popTag();
+        
+    }
+    
+    xml.popTag();
+    
+    //Polygones
+    
+    xml.addTag("polygones");
+    xml.pushTag("polygones");
+    
+    for(int i = 0; i < polygones.size(); i++){
+        
+        //Polygone container
+        xml.addTag("polygone");
+        xml.pushTag("polygone", i);
+        
+        xml.addTag("vertices");
+        xml.pushTag("vertices");
+        
+        for(int j = 0; j < polygones[i]->getVertices().size(); j++){
+            
+            xml.addTag("vertex");
+            xml.pushTag("vertex", j);
+            
+            xml.addValue("X", polygones[i]->getVertices()[j].x / ofGetWidth());
+            xml.addValue("Y", polygones[i]->getVertices()[j].y / ofGetHeight());
+            xml.addValue("Z", polygones[i]->getVertices()[j].z);
+            
+            xml.popTag();
+            
+        }
+        
+        xml.popTag(); //vertice
+        xml.popTag(); //vertices
+    }
+    
+    xml.popTag();
+    
+    xml.saveFile(ofxiOSGetDocumentsDirectory() + "level_1.xml");
+    
+    loadXML("level_1.xml", [&](ofxXmlSettings _xml){
+        
+        string content;
+        
+        _xml.copyXmlToString(content);
+        
+        cout << content << endl;
+        
+    });
+    
+    updateAllParticles();
     
 }
 
@@ -219,23 +312,21 @@ void Scene::renderToScreen(){
 
 void Scene::updateParticlesRenderingData(){
     
-    vector<shared_ptr<Particle>> particles = particleSystem.getParticles();
-    
     for(int i = 0; i < MAX_PARTICLES; i++){
         
-        if(i < particles.size()){
+        if(i < allParticles.size()){
             
-            positions[i] = particles[i]->getPosition();
-            attributes[i].x = particles[i]->getMass() * 10; //Radius
-            attributes[i].z = particles[i]->getLifeLeft() / particles[i]->getLifeSpan() * getAlpha() / 255.0; //Alpha
+            positions[i] = allParticles[i]->getPosition();
+            attributes[i].x = allParticles[i]->getMass() * 10; //Radius
+            attributes[i].z = allParticles[i]->getLifeLeft() / allParticles[i]->getLifeSpan() * getAlpha() / 255.0; //Alpha
             
-            vector<ofVec2f> points = particles[i]->getPoints();
+            vector<ofVec2f> points = allParticles[i]->getPoints();
             
             for(int j = 0; j < MAX_TAIL_LENGTH; j++){
                 
                 tailPoints[i * MAX_TAIL_LENGTH + j] = points[j];
                 float alphaMutl = (float) j / MAX_TAIL_LENGTH + 0.05;
-                tailColors[i * MAX_TAIL_LENGTH + j].a = particles[i]->getLifeLeft() / particles[i]->getLifeSpan() * alphaMutl - 0.1;
+                tailColors[i * MAX_TAIL_LENGTH + j].a = allParticles[i]->getLifeLeft() / allParticles[i]->getLifeSpan() * alphaMutl - 0.1;
                 
                 //Fade out between screens
                 
@@ -272,26 +363,52 @@ void Scene::updateParticlesRenderingData(){
     
 }
 
+void Scene::updateAllParticles(){
+    
+    allParticles.empty();
+    
+    for(int i = 0; i < emitters.size(); i++){
+        
+        for(int j = 0; j < emitters[i]->getParticles().size(); j++){
+            
+            allParticles.push_back(emitters[i]->getParticles()[j]);
+            
+        }
+        
+    }
+    
+    cout << "sadélkj" << endl;
+    
+}
+
 void Scene::update(){
+    
+//    updateAllParticles();
     
     //Update particle system
     
-    particleSystem.update();
-    particleSystem.applyGravity(ofVec2f(0.0, 0.1));
-    
-    vector<shared_ptr<Particle>> particles = particleSystem.getParticles();
-    
-    for(int i = particles.size() - 1; i >= 0 ; i--){
-        for(int j = 0; j < receptors.size(); j++){
-         
-            float distance = (particles[i]->getPosition() - receptors[j]->getPosition()).length();
+    for(int i = 0; i < emitters.size(); i++){
+        
+        emitters[i]->update();
+        emitters[i]->applyGravity(ofVec2f(0.0, 0.1));
+        
+        for(int j = 0; j < emitters[i]->getParticles().size(); j++){
             
-            if(distance < 20){
-                particleSystem.removeParticle(i);
-                receptors[j]->addOneParticleToCount();
+            for(int k = 0; k < receptors.size(); k ++){
+                
+                float distance = (emitters[i]->getParticles()[j]->getPosition() - receptors[k]->getPosition()).length();
+                
+                if(distance < 20){
+                    
+                    emitters[i]->removeParticle(i);
+                    receptors[k]->addOneParticleToCount();
+                    
+                }
+                
             }
             
         }
+        
     }
     
     //Update actuators
@@ -324,13 +441,11 @@ void Scene::update(){
 
 void Scene::checkForCollisions(){
     
-    vector<shared_ptr<Particle>> particles = particleSystem.getParticles();
-    
-    for(int i = 0; i < particles.size(); i++){
+    for(int i = 0; i < allParticles.size(); i++){
         
-        ofVec2f currentPos = particles[i]->getPosition() + particles[i]->getVelocity();
-        ofVec2f direction = -particles[i]->getVelocity().normalize();
-        float maxDistRay = particles[i]->getVelocity().length() * 30;
+        ofVec2f currentPos = allParticles[i]->getPosition() + allParticles[i]->getVelocity();
+        ofVec2f direction = -allParticles[i]->getVelocity().normalize();
+        float maxDistRay = allParticles[i]->getVelocity().length() * 30;
         
         //First check if inside bounding box
         
@@ -346,10 +461,10 @@ void Scene::checkForCollisions(){
                     
                     currentPoly->getParticleCollisionsInformations(currentPos, direction, maxDistRay, [&](ofVec2f intersection, ofVec2f normal){
                         
-                        particles[i]->setPosition(intersection + normal);
+                        allParticles[i]->setPosition(intersection + normal);
                         float angle = direction.normalize().angleRad(normal.normalize());
                         ofVec2f bounceDirection = normal.rotateRad(angle).normalize();
-                        particles[i]->setVelocity(particles[i]->getVelocity().length() * bounceDirection * 0.7);
+                        allParticles[i]->setVelocity(allParticles[i]->getVelocity().length() * bounceDirection * 0.7);
                         
                         intersectionDetected = true;
                         
@@ -430,18 +545,81 @@ void Scene::onEnd(function<void ()> _levelEndCallback){
 //This function loads a scene from a XML file
 //All levels are contained in a XML file
 
-void Scene::XMLSetup(string _xmlFile){
+void Scene::setupXML(string _xmlFile, function<void(ofxXmlSettings _XML)> _callback){
+    
+    
+    
+}
+
+//Used to save the scene settings
+
+void Scene::saveScene(string _xmlFile){
+    
+    loadXML(_xmlFile, [&](ofxXmlSettings _XML){
+       
+        cout << _XML.getValue("pute", 0) << endl;
+        string content;
+        
+        
+        _XML.setValue("salut", 2);
+        
+        _XML.copyXmlToString(content);
+        
+        cout << content << endl;
+        
+//        saveXML(_xmlFile, _XML);
+        
+    });
+
+}
+
+void Scene::saveXML(string _name, ofxXmlSettings _XML){
     
     string message = "";
     
-    if( XML.loadFile(ofxiOSGetDocumentsDirectory() + _xmlFile + ".xml") ){
-        message = "mySettings.xml loaded from documents folder!";
-    }else if( XML.loadFile(_xmlFile) ){
-        message = "mySettings.xml loaded from data folder!";
+    if( _XML.saveFile(_name) ){
+        
+        message = _name + " saved in the data folder!";
+        
+    }else if( _XML.saveFile(ofxiOSGetDocumentsDirectory() + _name) ){
+        
+        message = _name + " saved in the documents folder!";
+        
     }else{
-        message = "unable to load mySettings.xml check data/ folder";
+        
+        message = "Unable to save " + _name + " check data/ folder";
+        
     }
     
     cout << message << endl;
     
 }
+
+void Scene::loadXML(string _xmlFile, function<void(ofxXmlSettings _XML)> _callback){
+    
+    ofxXmlSettings XML;
+    string message = "";
+    
+    if( XML.loadFile(_xmlFile + "sdf") ){
+        
+        message = _xmlFile + " loaded from data folder!";
+        cout << message << endl;
+        
+        _callback(XML);
+        
+    }else if( XML.loadFile(ofxiOSGetDocumentsDirectory() + _xmlFile) ){
+        
+        message = _xmlFile + " loaded from documents folder!";
+        cout << message << endl;
+        
+        _callback(XML);
+        
+    }else{
+        
+        message = "unable to load " + _xmlFile + " check data/ folder";
+        cout << message << endl;
+
+    }
+
+}
+

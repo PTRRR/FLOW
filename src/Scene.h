@@ -26,9 +26,9 @@ class Scene : public Screen{
 
 private:
     
-    //Level
+    //Name
     
-    ofxXmlSettings XML;
+    string name;
     
     //Main
     
@@ -44,7 +44,10 @@ private:
     
     const int MAX_PARTICLES = 1000;
     const int MAX_TAIL_LENGTH = 10;
-    ParticleSystem particleSystem;
+    vector<shared_ptr<Particle>> allParticles;
+    vector<shared_ptr<ParticleSystem>> emitters;
+    
+    void updateAllParticles();
     
     //Receptor
     
@@ -101,7 +104,12 @@ public:
     void initialize();
     void onEnd(function<void()> _levelEndCallback);
     
-    void XMLSetup(string _xmlFile);
+    //XML
+    
+    void saveScene(string _xmlFile);
+    void saveXML(string _name, ofxXmlSettings _XML);
+    void loadXML(string _xmlFile, function<void(ofxXmlSettings _XML)> _callback);
+    void setupXML(string _xmlFile, function<void(ofxXmlSettings _XML)> _callback);
     
 };
 

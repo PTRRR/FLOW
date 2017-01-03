@@ -1,0 +1,16 @@
+<mainSettings>
+
+    <maxParticles>1000</maxParticles>
+    
+    <maxTailLength>10</maxTailLength>
+    
+    <maxMagnetNum>5</maxMagnetNum>
+
+    <emitterPositionX>1000</emitterPositionX>
+    <MAX_PARTICLES>1000</MAX_PARTICLES>
+    <MAX_PARTICLES>1000</MAX_PARTICLES>
+    <MAX_PARTICLES>1000</MAX_PARTICLES>
+    <MAX_PARTICLES>1000</MAX_PARTICLES>
+    <MAX_PARTICLES>1000</MAX_PARTICLES>
+
+</mainSettings>

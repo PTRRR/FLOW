@@ -40,6 +40,8 @@ public:
     
     ofVec2f getForceAtPoint(ofVec2f _position);
     bool isOver(ofVec2f _position);
+    float getStrength();
+    float getRadius();
     
 };
 
