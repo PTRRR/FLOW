@@ -239,7 +239,7 @@ void Scene::initialize(){
         
     });
     
-    updateAllParticles();
+//    updateAllParticles();
     
 }
 
