@@ -466,6 +466,12 @@ void Scene::onEnd(function<void ()> _levelEndCallback){
 //This function loads a scene from a XML file
 //All levels are contained in a XML file
 
+void Scene::saveSceneToXML(string _fileName){
+    
+    
+    
+}
+
 void Scene::XMLSetup(string _xmlFile){
     
     string message = "";

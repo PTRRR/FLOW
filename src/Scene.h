@@ -95,6 +95,10 @@ private:
     
     void updateParticlesRenderingData();
     
+    //XML files
+    
+    void saveSceneToXML(string _fileName);
+    
 public:
     
     Scene();
