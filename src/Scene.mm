@@ -166,17 +166,7 @@ void Scene::initialize(){
     
     polygones.push_back(polygone2);
     
-    ofxXmlSettings levels;
-    levels.addTag("level_1");
-    levels.pushTag("level_1");
-    
-    
-    
-    levels.popTag();
-    
-    levels.saveFile("/levels.xml");
-    
-    updateAllParticles();
+    ofxXmlSettings XML;
     
 }
 
