@@ -27,12 +27,34 @@ void Scene::initialize(){
     
     //Initialize the emitter
     
-    particleSystem.init();
-    particleSystem.setPosition(ofVec2f(ofGetWidth() / 2, 200));
-    particleSystem.setBoxSize(ofVec2f(10, 1));
-    particleSystem.setRate(120);
-    particleSystem.setMaxParticles(MAX_PARTICLES);
-    particleSystem.setMaxTailLength(MAX_TAIL_LENGTH);
+    shared_ptr<ParticleSystem> particleSystem = shared_ptr<ParticleSystem>(new ParticleSystem());
+    
+    particleSystem->setPosition(ofVec2f(ofGetWidth() / 2 - 200, 200));
+    particleSystem->setBoxSize(ofVec2f(10, 1));
+    particleSystem->setRate(60);
+    
+    //These two parameters need a init call
+    
+    particleSystem->setMaxParticles(MAX_PARTICLES / 2);
+    particleSystem->setMaxTailLength(MAX_TAIL_LENGTH);
+    particleSystem->init(); //initialize the emitter with all new parameters
+    
+    emitters.push_back(particleSystem);
+    
+    shared_ptr<ParticleSystem> particleSystem1 = shared_ptr<ParticleSystem>(new ParticleSystem());
+    
+    particleSystem1->setPosition(ofVec2f(ofGetWidth() / 2 + 200, 200));
+    particleSystem1->setBoxSize(ofVec2f(10, 1));
+    particleSystem1->setRate(60);
+    
+    //These two parameters need a init call
+    
+    particleSystem1->setMaxParticles(MAX_PARTICLES / 2);
+    particleSystem1->setMaxTailLength(MAX_TAIL_LENGTH);
+    particleSystem1->init(); //initialize the emitter with all new parameters
+    
+    emitters.push_back(particleSystem1);
+    
     
     //GPU Rendering
     //Load custom shaders and create the program
@@ -92,7 +114,10 @@ void Scene::initialize(){
         newActuator->setBox(0, 0, ofGetWidth(), ofGetHeight());
         newActuator->setStrength(-5);
         actuators.push_back(newActuator);
-        particleSystem.addActuator(newActuator);
+        
+        for(int j = 0; j < emitters.size(); j++){
+            emitters[j]->addActuator(newActuator);
+        }
         
     }
     
@@ -107,7 +132,10 @@ void Scene::initialize(){
         newReceptor->setRadius(200.0);
         newReceptor->setStrength(5.0);
         receptors.push_back(newReceptor);
-        particleSystem.addReceptor(newReceptor);
+        
+        for(int j = 0; j < emitters.size(); j++){
+            emitters[j]->addReceptor(newReceptor);
+        }
         
     }
     
@@ -159,6 +187,10 @@ void Scene::renderToScreen(){
     
     ofSetColor(0, 0, 0, getAlpha());
     ofDrawRectangle(0, 0, ofGetWidth() + 1, ofGetHeight());
+    
+    //Update main particle container
+    
+//    updateAllParticles();
     
     //Update GPU data
     //This will update all the data related to the rendering of the particles
@@ -217,20 +249,24 @@ void Scene::renderToScreen(){
     
     interface.draw();
     
+    updateAllParticles();
+    
 }
 
 void Scene::updateAllParticles(){
     
+    allParticles.erase(allParticles.begin(), allParticles.end());
     
+    for(int i = 0; i < emitters.size(); i++){
+     
+        vector<shared_ptr<Particle>> particles = emitters[i]->getParticles();
+        allParticles.insert(allParticles.end(), particles.begin(), particles.end());
+        
+    }
     
 }
 
 void Scene::updateParticlesRenderingData(){
-    
-    vector<shared_ptr<Particle>> particles = particleSystem.getParticles();
-    
-    allParticles.erase(allParticles.begin(), allParticles.end());
-    allParticles.insert(allParticles.end(), particles.begin(), particles.end());
     
     for(int i = 0; i < MAX_PARTICLES; i++){
         
@@ -289,24 +325,13 @@ void Scene::update(){
     
     //Update particle system
     
-    particleSystem.update();
-    particleSystem.applyGravity(ofVec2f(0.0, 0.1));
-    
-    vector<shared_ptr<Particle>> particles = particleSystem.getParticles();
-    
-    for(int i = particles.size() - 1; i >= 0 ; i--){
-        for(int j = 0; j < receptors.size(); j++){
-         
-            float distance = (particles[i]->getPosition() - receptors[j]->getPosition()).length();
-            
-            if(distance < 20){
-                particleSystem.removeParticle(i);
-                receptors[j]->addOneParticleToCount();
-            }
-            
-        }
+    for(int i = 0; i < emitters.size(); i++){
+     
+        emitters[i]->update();
+        emitters[i]->applyGravity(ofVec2f(0.0, 0.1));
+        
     }
-    
+        
     //Update actuators
     
     if(activeActuator != nullptr){
@@ -337,13 +362,11 @@ void Scene::update(){
 
 void Scene::checkForCollisions(){
     
-    vector<shared_ptr<Particle>> particles = particleSystem.getParticles();
-    
-    for(int i = 0; i < particles.size(); i++){
+    for(int i = 0; i < allParticles.size(); i++){
         
-        ofVec2f currentPos = particles[i]->getPosition() + particles[i]->getVelocity();
-        ofVec2f direction = -particles[i]->getVelocity().normalize();
-        float maxDistRay = particles[i]->getVelocity().length() * 30;
+        ofVec2f currentPos = allParticles[i]->getPosition() + allParticles[i]->getVelocity();
+        ofVec2f direction = -allParticles[i]->getVelocity().normalize();
+        float maxDistRay = allParticles[i]->getVelocity().length() * 30;
         
         //First check if inside bounding box
         
@@ -359,10 +382,10 @@ void Scene::checkForCollisions(){
                     
                     currentPoly->getParticleCollisionsInformations(currentPos, direction, maxDistRay, [&](ofVec2f intersection, ofVec2f normal){
                         
-                        particles[i]->setPosition(intersection + normal);
+                        allParticles[i]->setPosition(intersection + normal);
                         float angle = direction.normalize().angleRad(normal.normalize());
                         ofVec2f bounceDirection = normal.rotateRad(angle).normalize();
-                        particles[i]->setVelocity(particles[i]->getVelocity().length() * bounceDirection * 0.7);
+                        allParticles[i]->setVelocity(allParticles[i]->getVelocity().length() * bounceDirection * 0.7);
                         
                         intersectionDetected = true;
                         
