@@ -525,7 +525,11 @@
 				GCC_PREFIX_HEADER = ofxiOS_Prefix.pch;
 				"GCC_WARN_64_TO_32_BIT_CONVERSION[arch=*64]" = NO;
 				INFOPLIST_FILE = "ofxiOS-Info.plist";
+<<<<<<< HEAD:FLOW.xcodeproj/project.pbxproj
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+=======
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+>>>>>>> multiple_emitter_implementation_experimantation:FLOW.xcodeproj/project.pbxproj
 				PRODUCT_NAME = FLOW;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -542,7 +546,11 @@
 				GCC_PREFIX_HEADER = ofxiOS_Prefix.pch;
 				"GCC_WARN_64_TO_32_BIT_CONVERSION[arch=*64]" = NO;
 				INFOPLIST_FILE = "ofxiOS-Info.plist";
+<<<<<<< HEAD:FLOW.xcodeproj/project.pbxproj
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+=======
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+>>>>>>> multiple_emitter_implementation_experimantation:FLOW.xcodeproj/project.pbxproj
 				PRODUCT_NAME = FLOW;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";

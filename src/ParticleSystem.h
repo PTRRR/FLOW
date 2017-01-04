@@ -32,6 +32,20 @@ private:
     vector<shared_ptr<Actuator>> actuators;
     vector<shared_ptr<Receptor>> receptors;
     
+    //GPUDraw
+    //Head
+    
+    ofVbo particlesHeadVbo;
+    vector<ofVec3f> positions;
+    vector<ofVec3f> attributes;
+    
+    //Tail
+    
+    ofVbo particlesTailVbo;
+    vector<ofVec3f> tailPoints;
+    vector<ofFloatColor> tailColors;
+    vector<ofIndexType> tailIndices;
+    
 public:
 
     ParticleSystem();
@@ -39,6 +53,7 @@ public:
     //Main
     
     void init();
+    void GPUDraw();
     void debugDraw();
     void update();
     void applyGravity(ofVec2f _gravity);

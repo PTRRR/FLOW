@@ -2,6 +2,10 @@
 <Workspace
    version = "1.0">
    <FileRef
+<<<<<<< HEAD
       location = "self:/Users/pietroalberti/Documents/ECAL/5/No Score - Hardcore/app/beta/ofMagnet/FLOW.xcodeproj">
+=======
+      location = "self:/Users/pietroalberti/Documents/ECAL/5/No Score - Hardcore/app/beta/FLOW/FLOW.xcodeproj">
+>>>>>>> multiple_emitter_implementation_experimantation
    </FileRef>
 </Workspace>

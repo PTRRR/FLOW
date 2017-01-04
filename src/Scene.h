@@ -44,8 +44,13 @@ private:
     
     const int MAX_PARTICLES = 1000;
     const int MAX_TAIL_LENGTH = 10;
+<<<<<<< HEAD
     vector<shared_ptr<Particle>> allParticles;
     vector<shared_ptr<ParticleSystem>> emitters;
+=======
+    vector<shared_ptr<ParticleSystem>> emitters;
+    vector<shared_ptr<Particle>> allParticles;
+>>>>>>> multiple_emitter_implementation_experimantation
     
     void updateAllParticles();
     

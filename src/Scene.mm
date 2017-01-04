@@ -41,6 +41,7 @@ void Scene::initialize(){
     
     shared_ptr<ParticleSystem> newEmitter = shared_ptr<ParticleSystem>(new ParticleSystem());
     
+<<<<<<< HEAD
     newEmitter->init();
     newEmitter->setPosition(ofVec2f(ofGetWidth() / 2, 200));
     newEmitter->setBoxSize(ofVec2f(10, 1));
@@ -49,6 +50,36 @@ void Scene::initialize(){
     newEmitter->setMaxTailLength(MAX_TAIL_LENGTH);
     
     emitters.push_back(newEmitter);
+=======
+    shared_ptr<ParticleSystem> particleSystem = shared_ptr<ParticleSystem>(new ParticleSystem());
+    
+    particleSystem->setPosition(ofVec2f(ofGetWidth() / 2 - 200, 200));
+    particleSystem->setBoxSize(ofVec2f(10, 1));
+    particleSystem->setRate(60);
+    
+    //These two parameters need a init call
+    
+    particleSystem->setMaxParticles(MAX_PARTICLES / 2);
+    particleSystem->setMaxTailLength(MAX_TAIL_LENGTH);
+    particleSystem->init(); //initialize the emitter with all new parameters
+    
+    emitters.push_back(particleSystem);
+    
+    shared_ptr<ParticleSystem> particleSystem1 = shared_ptr<ParticleSystem>(new ParticleSystem());
+    
+    particleSystem1->setPosition(ofVec2f(ofGetWidth() / 2 + 200, 200));
+    particleSystem1->setBoxSize(ofVec2f(10, 1));
+    particleSystem1->setRate(60);
+    
+    //These two parameters need a init call
+    
+    particleSystem1->setMaxParticles(MAX_PARTICLES / 2);
+    particleSystem1->setMaxTailLength(MAX_TAIL_LENGTH);
+    particleSystem1->init(); //initialize the emitter with all new parameters
+    
+    emitters.push_back(particleSystem1);
+    
+>>>>>>> multiple_emitter_implementation_experimantation
     
     //GPU Rendering
     //Load custom shaders and create the program
@@ -126,7 +157,11 @@ void Scene::initialize(){
         newReceptor->setRadius(200.0);
         newReceptor->setStrength(5.0);
         receptors.push_back(newReceptor);
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> multiple_emitter_implementation_experimantation
         for(int j = 0; j < emitters.size(); j++){
             emitters[j]->addReceptor(newReceptor);
         }
@@ -241,6 +276,8 @@ void Scene::initialize(){
     
     updateAllParticles();
     
+    updateAllParticles();
+    
 }
 
 //Where all the scene is rendered
@@ -250,6 +287,10 @@ void Scene::renderToScreen(){
     
     ofSetColor(0, 0, 0, getAlpha());
     ofDrawRectangle(0, 0, ofGetWidth() + 1, ofGetHeight());
+    
+    //Update main particle container
+    
+//    updateAllParticles();
     
     //Update GPU data
     //This will update all the data related to the rendering of the particles
@@ -308,10 +349,28 @@ void Scene::renderToScreen(){
     
     interface.draw();
     
+    updateAllParticles();
+    
+}
+
+void Scene::updateAllParticles(){
+    
+<<<<<<< HEAD
+=======
+    allParticles.erase(allParticles.begin(), allParticles.end());
+    
+    for(int i = 0; i < emitters.size(); i++){
+     
+        vector<shared_ptr<Particle>> particles = emitters[i]->getParticles();
+        allParticles.insert(allParticles.end(), particles.begin(), particles.end());
+        
+    }
+    
 }
 
 void Scene::updateParticlesRenderingData(){
     
+>>>>>>> multiple_emitter_implementation_experimantation
     for(int i = 0; i < MAX_PARTICLES; i++){
         
         if(i < allParticles.size()){
@@ -365,6 +424,7 @@ void Scene::updateParticlesRenderingData(){
 
 void Scene::updateAllParticles(){
     
+<<<<<<< HEAD
 //    allParticles.erase(allParticles.begin(), allParticles.end());
 //    
 //    for(int i = allParticles.size() - 1; i >= 0 ; i--){
@@ -410,8 +470,19 @@ void Scene::update(){
             
         }
         
-    }
+=======
+    updateAllParticles();
     
+    //Update particle system
+    
+    for(int i = 0; i < emitters.size(); i++){
+     
+        emitters[i]->update();
+        emitters[i]->applyGravity(ofVec2f(0.0, 0.1));
+        
+>>>>>>> multiple_emitter_implementation_experimantation
+    }
+        
     //Update actuators
     
     if(activeActuator != nullptr){

@@ -28,6 +28,12 @@ void ParticleSystem::init(){
     
 }
 
+void ParticleSystem::GPUDraw(){
+    
+    
+    
+}
+
 void ParticleSystem::debugDraw(){
 
     ofPushStyle();
@@ -102,11 +108,24 @@ void ParticleSystem::update(){
             
             force += receptors[j]->getForceAtPoint(particles[i]->getPosition());
             
+            //Erase particle if to close of the receptor.
+            
+            float distance = (particles[i]->getPosition() - receptors[j]->getPosition()).length();
+            
+            if(distance < 20){
+                particles.erase(particles.begin() + i);
+                receptors[j]->addOneParticleToCount();
+            }
+            
         }
         
         //Apply that force
         
         particles[i]->applyForce(force);
+        
+        //Apply random force to add some randomness to the movements
+        
+        particles[i]->applyForce(ofVec2f(ofRandomf() * 0.3));
         
         //Separation algorithme --> very expensive
         

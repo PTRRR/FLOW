@@ -58,7 +58,7 @@ void Particle::update(){
     if(ofGetFrameNum() % updateRate == 0){
      
         points.erase(points.begin());
-        points.push_back(ofVec2f(getPosition().x + ofRandomf() * 1.5, getPosition().y));
+        points.push_back(ofVec2f(getPosition().x + ofRandomf() * 1.9, getPosition().y));
         
     }
     
