@@ -165,16 +165,7 @@ void Scene::initialize(){
     polygone2->addVertex(ofGetWidth() - 100, 1900);
     
     polygones.push_back(polygone2);
-    
-    ofxXmlSettings levels;
-    levels.addTag("level_1");
-    levels.pushTag("level_1");
-    
-    
-    
-    levels.popTag();
-    
-    levels.saveFile("/levels.xml");
+
     
     updateAllParticles();
     
@@ -468,7 +459,84 @@ void Scene::onEnd(function<void ()> _levelEndCallback){
 
 void Scene::saveSceneToXML(string _fileName){
     
+    ofxXmlSettings xml;
     
+    //Actuators
+    
+    xml.addTag("actuators");
+    xml.pushTag("actuators");
+    
+    xml.addValue("num", (int) actuators.size());
+    
+    xml.popTag();
+    
+    //Receptors
+    
+    xml.addTag("receptors");
+    xml.pushTag("receptors");
+    
+    xml.addValue("num", (int) receptors.size());
+    
+    for(int i = 0; i < receptors.size(); i++){
+        
+        xml.addTag("receptor");
+        xml.pushTag("receptor", i);
+        
+        xml.addValue("X", receptors[i]->getPosition().x / ofGetWidth());
+        xml.addValue("Y", receptors[i]->getPosition().y / ofGetHeight());
+        xml.addValue("strength", receptors[i]->getStrength());
+        xml.addValue("radius", receptors[i]->getRadius());
+        
+        xml.popTag();
+        
+    }
+    
+    xml.popTag();
+    
+    //Polygones
+    
+    xml.addTag("polygones");
+    xml.pushTag("polygones");
+    
+    for(int i = 0; i < polygones.size(); i++){
+        
+        //Polygone container
+        xml.addTag("polygone");
+        xml.pushTag("polygone", i);
+        
+        xml.addTag("vertices");
+        xml.pushTag("vertices");
+        
+        for(int j = 0; j < polygones[i]->getVertices().size(); j++){
+            
+            xml.addTag("vertex");
+            xml.pushTag("vertex", j);
+            
+            xml.addValue("X", polygones[i]->getVertices()[j].x / ofGetWidth());
+            xml.addValue("Y", polygones[i]->getVertices()[j].y / ofGetHeight());
+            xml.addValue("Z", polygones[i]->getVertices()[j].z);
+            
+            xml.popTag();
+            
+        }
+        
+        xml.popTag(); //vertice
+        xml.popTag(); //vertices
+    }
+    
+    xml.popTag();
+    
+    xml.saveFile(ofxiOSGetDocumentsDirectory() + "level_1.xml");
+    
+    loadXML("level_1.xml", [&](ofxXmlSettings _xml){
+        
+        string content;
+        
+        _xml.copyXmlToString(content);
+        
+        cout << content << endl;
+        
+    });
     
 }
 

@@ -70,3 +70,15 @@ bool Actuator::isOver(ofVec2f _position){
     return distance <= overRadius;
     
 }
+
+float Actuator::getStrength(){
+    
+    return strength;
+    
+}
+
+float Actuator::getRadius(){
+    
+    return radius;
+    
+}

@@ -40,6 +40,7 @@ public:
     int getCount();
     bool isFilled();
     
+    
 };
 
 #endif /* Receptor_h */

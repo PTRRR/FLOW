@@ -45,6 +45,7 @@ public:
     bool inside(ofVec2f _position);
     bool insideBoundingBox(ofVec2f _position);
     ofVec2f getClosestPoint(ofVec2f _position);
+    vector<ofPoint> getVertices();
 
     
 };

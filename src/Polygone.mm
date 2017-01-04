@@ -123,7 +123,11 @@ ofVec2f Polygone::getClosestPoint(ofVec2f _position){
 }
 
 
-
+vector<ofPoint> Polygone::getVertices(){
+    
+    return polygone.getVertices();
+    
+}
 
 //Private
 
