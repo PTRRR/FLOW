@@ -169,6 +169,9 @@ void Scene::initialize(){
     
     updateAllParticles();
     
+    saveSceneToXML("scene_1.xml");
+    
+    
 }
 
 //Where all the scene is rendered
@@ -526,17 +529,7 @@ void Scene::saveSceneToXML(string _fileName){
     
     xml.popTag();
     
-    xml.saveFile(ofxiOSGetDocumentsDirectory() + "level_1.xml");
-    
-    loadXML("level_1.xml", [&](ofxXmlSettings _xml){
-        
-        string content;
-        
-        _xml.copyXmlToString(content);
-        
-        cout << content << endl;
-        
-    });
+    xml.saveFile(ofxiOSGetDocumentsDirectory() + _fileName);
     
 }
 
@@ -587,6 +580,20 @@ void Scene::loadXML(string _xmlFile, function<void(ofxXmlSettings _XML)> _callba
         cout << message << endl;
         
     }
+    
+}
+
+void Scene::logXML(string _fileName){
+    
+    loadXML(_fileName, [&](ofxXmlSettings _xml){
+        
+        string content;
+        
+        _xml.copyXmlToString(content);
+        
+        cout << content << endl;
+        
+    });
     
 }
 
