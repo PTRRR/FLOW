@@ -294,3 +294,15 @@ int ParticleSystem::getMaxParticles(){
     return maxParticles;
     
 }
+
+ofVec2f ParticleSystem::getBoxSize(){
+    
+    return boxSize;
+    
+}
+
+int ParticleSystem::getMaxTailLength(){
+    
+    return maxTailLength;
+    
+}

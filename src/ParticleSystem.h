@@ -77,6 +77,8 @@ public:
     vector<shared_ptr<Particle>> getParticles();
     float getRate();
     int getMaxParticles();
+    ofVec2f getBoxSize();
+    int getMaxTailLength();
     
 };
 

@@ -55,9 +55,13 @@ private:
     
     //Actuators
     
-    static const int MAX_MAGNET_NUM = 10;
+    static const int MAX_ACTUATORS_NUM = 10;
     vector<shared_ptr<Actuator>> actuators;
     shared_ptr<Actuator> activeActuator;
+    
+    //Fixed actuators
+    
+    vector<shared_ptr<Actuator>> fixedActuators;
     
     //Polygones
     

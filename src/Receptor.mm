@@ -33,11 +33,27 @@ void Receptor::debugDraw(){
     
 }
 
+//Set
+
 void Receptor::addOneParticleToCount(){
     
     if(!filled) particlesCount ++;
     
 }
+
+void Receptor::setDecreasingFactor(float _decreasingFactor){
+    
+    decreasingFactor = _decreasingFactor;
+    
+}
+
+void Receptor::setMaxParticles(int _maxParticles){
+    
+    maxParticles = _maxParticles;
+    
+}
+
+//Get
 
 float Receptor::getPercentFill(){
     
@@ -54,5 +70,17 @@ int Receptor::getCount(){
 bool Receptor::isFilled(){
     
     return filled;
+    
+}
+
+float Receptor::getDecreasingFactor(){
+    
+    return decreasingFactor;
+    
+}
+
+int Receptor::getMaxParticles(){
+    
+    return maxParticles;
     
 }

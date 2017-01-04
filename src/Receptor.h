@@ -33,12 +33,16 @@ public:
     //Set
     
     void addOneParticleToCount();
+    void setDecreasingFactor(float _decreasingFactor);
+    void setMaxParticles(int _maxParticles);
     
     //Get
     
     float getPercentFill();
     int getCount();
     bool isFilled();
+    float getDecreasingFactor();
+    int getMaxParticles();
     
     
 };

@@ -121,6 +121,10 @@ void Scene::initialize(){
         
     }
     
+    //Fixed actuators
+    
+    
+    
     //Initialize some receptors
     
     receptors.empty();
@@ -170,7 +174,7 @@ void Scene::initialize(){
     updateAllParticles();
     
     saveSceneToXML("scene_1.xml");
-    
+    logXML("scene_1.xml");
     
 }
 
@@ -415,12 +419,6 @@ void Scene::onMouseDown(ofVec2f _position, function<void(string _text, string _a
             
         }
         
-        if(i == actuators.size() - 1 && activeActuator == nullptr){
-            
-//            particleSystem.empty();
-            
-        }
-        
     }
     
     interface.mouseDown(_position, [&](string _text, string _action){
@@ -457,19 +455,77 @@ void Scene::onEnd(function<void ()> _levelEndCallback){
     
 }
 
-//This function loads a scene from a XML file
-//All levels are contained in a XML file
+//Here we save all the scene settings in a XML file stored on the tablet.
+//All levels are going to be stored like that.
 
 void Scene::saveSceneToXML(string _fileName){
     
     ofxXmlSettings xml;
+    
+    //General
+    
+    xml.addTag("general");
+    xml.pushTag("general");
+    
+    xml.addValue("ORIGINAL_WIDTH", ofGetWidth());
+    xml.addValue("ORIGINAL_HEIGHT", ofGetHeight());
+    xml.addValue("MAX_PARTICLES", MAX_PARTICLES);
+    xml.addValue("MAX_TAIL_LENGTH", MAX_TAIL_LENGTH);
+    xml.addValue("MAX_ACTUATORS_NUM", MAX_ACTUATORS_NUM);
+    
+    xml.popTag();
+    
+    //Emitters
+    
+    xml.addTag("emitters");
+    xml.pushTag("emitters");
+    
+    for(int i = 0; i < emitters.size(); i++){
+        
+        xml.addTag("emitter");
+        xml.pushTag("emitter", i);
+
+        xml.addValue("X", emitters[i]->getPosition().x / ofGetWidth());
+        xml.addValue("Y", emitters[i]->getPosition().y / ofGetHeight());
+        xml.addValue("boxX", emitters[i]->getBoxSize().x / ofGetWidth());
+        xml.addValue("boxY", emitters[i]->getBoxSize().y / ofGetHeight());
+        xml.addValue("rate", emitters[i]->getRate());
+        xml.addValue("maxParticles", emitters[i]->getMaxParticles());
+        xml.addValue("maxTailLength", emitters[i]->getMaxTailLength());
+        
+        xml.popTag();
+
+    }
+    
+    xml.popTag();
     
     //Actuators
     
     xml.addTag("actuators");
     xml.pushTag("actuators");
     
-    xml.addValue("num", (int) actuators.size());
+    xml.addValue("MAX_ACTUATORS_NUM", MAX_ACTUATORS_NUM);
+    
+    xml.popTag();
+    
+    //Fixed actuators
+    
+    xml.addTag("fixedActuators");
+    xml.pushTag("fixedActuators");
+    
+    for(int i = 0; i < fixedActuators.size(); i++){
+        
+        xml.addTag("fixedActuator");
+        xml.pushTag("fixedActuator", i);
+        
+        xml.addValue("X", fixedActuators[i]->getPosition().x / ofGetWidth());
+        xml.addValue("Y", fixedActuators[i]->getPosition().y / ofGetHeight());
+        xml.addValue("radius", fixedActuators[i]->getRadius() / ofGetWidth());
+        xml.addValue("strength", fixedActuators[i]->getStrength());
+        
+        xml.popTag();
+        
+    }
     
     xml.popTag();
     
@@ -478,8 +534,6 @@ void Scene::saveSceneToXML(string _fileName){
     xml.addTag("receptors");
     xml.pushTag("receptors");
     
-    xml.addValue("num", (int) receptors.size());
-    
     for(int i = 0; i < receptors.size(); i++){
         
         xml.addTag("receptor");
@@ -487,8 +541,10 @@ void Scene::saveSceneToXML(string _fileName){
         
         xml.addValue("X", receptors[i]->getPosition().x / ofGetWidth());
         xml.addValue("Y", receptors[i]->getPosition().y / ofGetHeight());
+        xml.addValue("radius", receptors[i]->getRadius() / ofGetWidth());
         xml.addValue("strength", receptors[i]->getStrength());
-        xml.addValue("radius", receptors[i]->getRadius());
+        xml.addValue("maxParticles", receptors[i]->getMaxParticles());
+        xml.addValue("decreasingFactor", receptors[i]->getDecreasingFactor());
         
         xml.popTag();
         
@@ -558,6 +614,7 @@ void Scene::saveXML(string _name, ofxXmlSettings _XML){
 void Scene::loadXML(string _xmlFile, function<void(ofxXmlSettings _XML)> _callback){
     
     ofxXmlSettings XML;
+    
     string message = "";
     
     if( XML.loadFile(_xmlFile + "sdf") ){
@@ -599,16 +656,10 @@ void Scene::logXML(string _fileName){
 
 void Scene::XMLSetup(string _xmlFile){
     
-    string message = "";
+    loadXML(_xmlFile, [&](ofxXmlSettings _XML){
     
-    if( XML.loadFile(ofxiOSGetDocumentsDirectory() + _xmlFile + ".xml") ){
-        message = "mySettings.xml loaded from documents folder!";
-    }else if( XML.loadFile(_xmlFile) ){
-        message = "mySettings.xml loaded from data folder!";
-    }else{
-        message = "unable to load mySettings.xml check data/ folder";
-    }
-    
-    cout << message << endl;
+        logXML(_xmlFile);
+        
+    });
     
 }
