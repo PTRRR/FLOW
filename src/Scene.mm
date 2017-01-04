@@ -540,6 +540,56 @@ void Scene::saveSceneToXML(string _fileName){
     
 }
 
+void Scene::saveXML(string _name, ofxXmlSettings _XML){
+    
+    string message = "";
+    
+    if( _XML.saveFile(_name) ){
+        
+        message = _name + " saved in the data folder!";
+        
+    }else if( _XML.saveFile(ofxiOSGetDocumentsDirectory() + _name) ){
+        
+        message = _name + " saved in the documents folder!";
+        
+    }else{
+        
+        message = "Unable to save " + _name + " check data/ folder";
+        
+    }
+    
+    cout << message << endl;
+    
+}
+
+void Scene::loadXML(string _xmlFile, function<void(ofxXmlSettings _XML)> _callback){
+    
+    ofxXmlSettings XML;
+    string message = "";
+    
+    if( XML.loadFile(_xmlFile + "sdf") ){
+        
+        message = _xmlFile + " loaded from data folder!";
+        cout << message << endl;
+        
+        _callback(XML);
+        
+    }else if( XML.loadFile(ofxiOSGetDocumentsDirectory() + _xmlFile) ){
+        
+        message = _xmlFile + " loaded from documents folder!";
+        cout << message << endl;
+        
+        _callback(XML);
+        
+    }else{
+        
+        message = "unable to load " + _xmlFile + " check data/ folder";
+        cout << message << endl;
+        
+    }
+    
+}
+
 void Scene::XMLSetup(string _xmlFile){
     
     string message = "";
