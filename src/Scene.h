@@ -32,6 +32,12 @@ private:
     
     //Main
     
+    int ORIGINAL_WIDTH = ofGetWidth();
+    int ORIGINAL_HEIGHT = ofGetHeight();
+    int MAX_PARTICLES = 1000;
+    int MAX_TAIL_LENGTH = 10;
+    int MAX_ACTUATORS_NUM = 3;
+    
     ofVec2f touchPos;
     float time;
     void renderToScreen() override;
@@ -41,9 +47,7 @@ private:
     Interface interface;
     
     //Emitter
-    
-    const int MAX_PARTICLES = 1000;
-    const int MAX_TAIL_LENGTH = 10;
+
     vector<shared_ptr<ParticleSystem>> emitters;
     vector<shared_ptr<Particle>> allParticles;
     
@@ -54,8 +58,7 @@ private:
     vector<shared_ptr<Receptor>> receptors;
     
     //Actuators
-    
-    static const int MAX_ACTUATORS_NUM = 10;
+
     vector<shared_ptr<Actuator>> actuators;
     shared_ptr<Actuator> activeActuator;
     
@@ -112,7 +115,7 @@ public:
     Scene(shared_ptr<ofTrueTypeFont> _mainFont);
     
     void update() override;
-    void initialize();
+    void initializeGPUData();
     void onEnd(function<void()> _levelEndCallback);
     
     void XMLSetup(string _xmlFile);

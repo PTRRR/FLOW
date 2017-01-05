@@ -52,7 +52,7 @@ public:
     
     //Main
     
-    void init();
+    void reset();
     void GPUDraw();
     void debugDraw();
     void update();

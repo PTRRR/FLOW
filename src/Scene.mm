@@ -19,42 +19,11 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     interface = Interface(_mainFont);
     interface.addButton("MENU", "MENU", ofVec2f(ofGetWidth() - _mainFont->stringWidth("MENU"), 50));
     
-    initialize();
+    initializeGPUData();
     
 };
 
-void Scene::initialize(){
-    
-    //Initialize the emitter
-    
-    shared_ptr<ParticleSystem> particleSystem = shared_ptr<ParticleSystem>(new ParticleSystem());
-    
-    particleSystem->setPosition(ofVec2f(ofGetWidth() / 2 - 200, 200));
-    particleSystem->setBoxSize(ofVec2f(10, 1));
-    particleSystem->setRate(60);
-    
-    //These two parameters need a init call
-    
-    particleSystem->setMaxParticles(MAX_PARTICLES / 2);
-    particleSystem->setMaxTailLength(MAX_TAIL_LENGTH);
-    particleSystem->init(); //initialize the emitter with all new parameters
-    
-    emitters.push_back(particleSystem);
-    
-    shared_ptr<ParticleSystem> particleSystem1 = shared_ptr<ParticleSystem>(new ParticleSystem());
-    
-    particleSystem1->setPosition(ofVec2f(ofGetWidth() / 2 + 200, 200));
-    particleSystem1->setBoxSize(ofVec2f(10, 1));
-    particleSystem1->setRate(60);
-    
-    //These two parameters need a init call
-    
-    particleSystem1->setMaxParticles(MAX_PARTICLES / 2);
-    particleSystem1->setMaxTailLength(MAX_TAIL_LENGTH);
-    particleSystem1->init(); //initialize the emitter with all new parameters
-    
-    emitters.push_back(particleSystem1);
-    
+void Scene::initializeGPUData(){
     
     //GPU Rendering
     //Load custom shaders and create the program
@@ -99,82 +68,18 @@ void Scene::initialize(){
     
     particleImg.load("images/particleTex_1.png");
     
-    //Set up some actuators
-    
-    actuators.empty();
-    
-    for(int i = 0; i < 3; i++){
-        
-        shared_ptr<Actuator> newActuator = shared_ptr<Actuator>(new Actuator());
-        newActuator->setPosition(ofVec2f(ofRandom(ofGetWidth()), ofRandom(ofGetHeight())));
-        newActuator->setRadius(100 + ofRandom(350));
-        newActuator->setMass(20);
-        newActuator->setDamping(0.84);
-        newActuator->setMaxVelocity(100);
-        newActuator->setBox(0, 0, ofGetWidth(), ofGetHeight());
-        newActuator->setStrength(-5);
-        actuators.push_back(newActuator);
-        
-        for(int j = 0; j < emitters.size(); j++){
-            emitters[j]->addActuator(newActuator);
-        }
-        
-    }
-    
-    //Fixed actuators
-    
-    
-    
-    //Initialize some receptors
-    
-    receptors.empty();
-    
-    for(int i = 0; i < 1; i++){
-        
-        shared_ptr<Receptor> newReceptor = shared_ptr<Receptor>(new Receptor());
-        newReceptor->setPosition(ofVec2f(ofGetWidth() / 2, ofGetHeight()));
-        newReceptor->setRadius(200.0);
-        newReceptor->setStrength(5.0);
-        receptors.push_back(newReceptor);
-        
-        for(int j = 0; j < emitters.size(); j++){
-            emitters[j]->addReceptor(newReceptor);
-        }
-        
-    }
-    
-    //Initialize some polygones (obstacle)
-    
-    polygones.empty();
-    
-    shared_ptr<Polygone> polygone = shared_ptr<Polygone>(new Polygone());
-    polygone->addVertex(ofGetWidth() / 2, 600);
-    polygone->addVertex(ofGetWidth() / 2 + 200, 800);
-    polygone->addVertex(ofGetWidth() / 2 + 200, 1100);
-    polygone->addVertex(ofGetWidth() / 2 - 200, 1100);
-    polygone->addVertex(ofGetWidth() / 2 - 200, 800);
-    
-    polygones.push_back(polygone);
-    
-    shared_ptr<Polygone> polygone1 = shared_ptr<Polygone>(new Polygone());
-    polygone1->addVertex(100, 1000);
-    polygone1->addVertex(ofGetWidth() / 2 - 200, 1900);
-    polygone1->addVertex(100, 1900);
-    
-    polygones.push_back(polygone1);
-    
-    shared_ptr<Polygone> polygone2 = shared_ptr<Polygone>(new Polygone());
-    polygone2->addVertex(ofGetWidth() - 100, 1000);
-    polygone2->addVertex(ofGetWidth() / 2 + 200, 1900);
-    polygone2->addVertex(ofGetWidth() - 100, 1900);
-    
-    polygones.push_back(polygone2);
-
-    
     updateAllParticles();
     
-    saveSceneToXML("scene_1.xml");
-    logXML("scene_1.xml");
+    loadXML("scene_1.xml", [&](ofxXmlSettings _XML){
+    
+        saveXML("scene_1.xml", _XML);
+        
+        logXML("scene_1.xml");
+        
+    });
+
+//    logXML("scene_1.xml");
+    XMLSetup("scene_1.xml");
     
 }
 
@@ -352,7 +257,11 @@ void Scene::update(){
         if(!receptors[i]->isFilled()) allAreFilled = false;
     }
     
-    if(allAreFilled) initialize();
+    if(allAreFilled){
+    
+        XMLSetup("scene_1.xml");
+        
+    }
     
     checkForCollisions();
     
@@ -617,7 +526,7 @@ void Scene::loadXML(string _xmlFile, function<void(ofxXmlSettings _XML)> _callba
     
     string message = "";
     
-    if( XML.loadFile(_xmlFile + "sdf") ){
+    if( XML.loadFile(_xmlFile) ){
         
         message = _xmlFile + " loaded from data folder!";
         cout << message << endl;
@@ -660,6 +569,180 @@ void Scene::XMLSetup(string _xmlFile){
     
         logXML(_xmlFile);
         
+        //Main settings
+        
+        _XML.pushTag("general");
+        
+        ORIGINAL_WIDTH = _XML.getValue("ORIGINAL_WIDTH", 0);
+        ORIGINAL_HEIGHT = _XML.getValue("ORIGINAL_HEIGHT", 0);
+        MAX_PARTICLES = _XML.getValue("MAX_PARTICLES", 0);
+        MAX_TAIL_LENGTH = _XML.getValue("MAX_TAIL_LENGTH", 0);
+        MAX_ACTUATORS_NUM = _XML.getValue("MAX_ACTUATORS_NUM", 0);
+        
+        _XML.popTag();
+        
+        //Emitters
+        
+        //First reset emitters vector
+        
+        emitters.erase(emitters.begin(), emitters.end());
+        
+        //Get data from XML file
+        
+        _XML.pushTag("emitters");
+        
+        int numEmitters = _XML.getNumTags("emitter");
+        
+        for(int i = 0; i < numEmitters; i++){
+            
+            _XML.pushTag("emitter", i);
+            
+            ofVec2f position = ofVec2f(_XML.getValue("X", 0.0) * ofGetWidth(), _XML.getValue("Y", 0.0) * ofGetHeight());
+            ofVec2f boxSize = ofVec2f(_XML.getValue("boxX", 0.0) * ofGetWidth(), _XML.getValue("boxY", 0.0) * ofGetHeight());
+            float rate = _XML.getValue("rate", 0.0);
+            int maxParticles = _XML.getValue("maxParticles", 0);
+            int maxTailLength = _XML.getValue("maxTailLength", 0);
+            
+            shared_ptr<ParticleSystem> newEmitter = shared_ptr<ParticleSystem>(new ParticleSystem);
+            
+            newEmitter->setPosition(position);
+            newEmitter->setBoxSize(boxSize);
+            newEmitter->setRate(rate);
+            newEmitter->setMaxParticles(maxParticles);
+            newEmitter->setMaxTailLength(maxTailLength);
+            newEmitter->reset();
+            
+            emitters.push_back(newEmitter);
+            
+            _XML.popTag();
+            
+        }
+        
+        _XML.popTag();
+        
+        //Actuators
+        
+        actuators.erase(actuators.begin(), actuators.end());
+        
+        int numActuators = _XML.getValue("actuators:MAX_ACTUATORS_NUM", 0);
+        
+        for(int i = 0; i < numActuators; i++){
+            
+            shared_ptr<Actuator> newActuator = shared_ptr<Actuator>(new Actuator());
+            newActuator->setPosition(ofVec2f(ofRandom(ofGetWidth()), ofRandom(ofGetHeight())));
+            newActuator->setRadius(100 + ofRandom(350));
+            newActuator->setMass(20);
+            newActuator->setDamping(0.84);
+            newActuator->setMaxVelocity(100);
+            newActuator->setBox(0, 0, ofGetWidth(), ofGetHeight());
+            newActuator->setStrength(-5);
+            actuators.push_back(newActuator);
+            
+            for(int j = 0; j < emitters.size(); j++){
+                emitters[j]->addActuator(newActuator);
+            }
+            
+        }
+        
+        //Fixed actuators
+        
+        //Receptors
+        
+        receptors.erase(receptors.begin(), receptors.end());
+        
+        _XML.pushTag("receptors");
+        
+        int numReceptors = _XML.getNumTags("receptor");
+        
+        for(int i = 0; i < numReceptors; i++){
+            
+            _XML.pushTag("receptor", i);
+            
+            shared_ptr<Receptor> newReceptor = shared_ptr<Receptor>(new Receptor());
+            
+            ofVec2f position = ofVec2f(_XML.getValue("X", 0.0) * ofGetWidth(), _XML.getValue("Y", 0) * ofGetHeight());
+            float radius = _XML.getValue("radius", 0.0) * ofGetWidth();
+            float strength = _XML.getValue("strength", 0.0);
+            int maxParticles = _XML.getValue("maxParticles", 0);
+            float decreasingFactor = _XML.getValue("decreasingFactor", 0.0);
+            
+            newReceptor->setPosition(position);
+            newReceptor->setRadius(radius);
+            newReceptor->setStrength(strength);
+            newReceptor->setMaxParticles(maxParticles);
+            newReceptor->setDecreasingFactor(decreasingFactor);
+            
+            receptors.push_back(newReceptor);
+            
+            for(int j = 0; j < emitters.size(); j++){
+                emitters[j]->addReceptor(newReceptor);
+            }
+            
+            _XML.popTag();
+            
+        }
+        
+        _XML.popTag();
+        
+        //Polygones
+        
+        _XML.pushTag("polygones");
+        
+        int numPolygones = _XML.getNumTags("polygone");
+        
+        for(int i = 0; i < numPolygones; i++){
+            
+            _XML.pushTag("polygone", i);
+            
+            shared_ptr<Polygone> newPolygone = shared_ptr<Polygone>(new Polygone());
+            
+            _XML.pushTag("vertices");
+            
+            int numVertices = _XML.getNumTags("vertex");
+            
+            for(int j = 0; j < numVertices; j++){
+                
+                _XML.pushTag("vertex", j);
+                
+                newPolygone->addVertex(_XML.getValue("X", 0.0) * ofGetWidth(), _XML.getValue("Y", 0.0) * ofGetHeight());
+                
+                _XML.popTag();
+                
+            }
+            
+            _XML.popTag();
+            
+            polygones.push_back(newPolygone);
+            
+            _XML.popTag();
+            
+        }
+        
+        _XML.popTag();
+        
     });
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
