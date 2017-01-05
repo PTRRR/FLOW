@@ -24,7 +24,7 @@ private:
     
     //Timer utilitie
     
-    int initialTimeout = 3000; //millis
+    int initialTimeout = 5000; //millis
     bool initialTimeoutIsOver = false;
     
     //Screens

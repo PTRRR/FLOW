@@ -21,6 +21,9 @@ public:
     void gotFocus();
     void gotMemoryWarning();
     void deviceOrientationChanged(int newOrientation);
+    
+    float maxFrameRate = 0.0;
+    bool running = false;
 
     //Main font
     

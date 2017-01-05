@@ -12,6 +12,8 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    
+    if(!running) return;
 
     gameManager.update();
     
@@ -20,14 +22,25 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
-    ofEnableAlphaBlending();
+    ofClear(0, 0, 0);
     
-    gameManager.draw();
+    
+    if(ofGetElapsedTimeMillis() > 1500 && ofGetElapsedTimeMillis() < 2000){
+        running = true;
+    }
+    
+    if(running){
+      
+        ofEnableAlphaBlending();
+        
+        gameManager.draw();
+        
+        ofDisableAlphaBlending();
+        
+    };
     
     ofSetColor(255, 0, 0);
     ofDrawBitmapString("FPS: " + to_string((int) floor(ofGetFrameRate() * 10) / 10), 20, 20);
-    
-    ofDisableAlphaBlending();
     
 }
 
