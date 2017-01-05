@@ -45,6 +45,12 @@ void Actuator::setRadius(float _radius){
     
 }
 
+void Actuator::enable(bool _enable){
+    
+    enabled = _enable;
+    
+}
+
 //Get
 
 ofVec2f Actuator::getForceAtPoint(ofVec2f _position){
@@ -80,5 +86,11 @@ float Actuator::getStrength(){
 float Actuator::getRadius(){
     
     return radius;
+    
+}
+
+bool Actuator::getEnabled(){
+    
+    return enabled;
     
 }

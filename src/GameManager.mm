@@ -28,6 +28,7 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     //Set up the scene according to a XML file
     
     scene->XMLSetup("scene_1.xml");
+    scene->setPause(true);
 
     //Screen pipeline setup
 
@@ -43,7 +44,7 @@ void GameManager::update(){
     
     if(!initialTimeoutIsOver && ofGetElapsedTimeMillis() >= initialTimeout){
         
-        screenPipeline.setScreenActive(scene);
+        screenPipeline.setScreenActive(menu);
         initialTimeoutIsOver = true;
         
     }
@@ -84,14 +85,12 @@ void GameManager::mouseUp(ofVec2f _position){
         
         if(action == "PLAY"){
             
-            paused = !paused;
-            scene->setPause(paused);
+            scene->setPause(false);
             screenPipeline.setScreenActive(scene);
             
         }else if(action == "MENU"){
             
-            paused = !paused;
-            scene->setPause(paused);
+            scene->setPause(true);
             screenPipeline.setScreenActive(menu);
             
         }else if(action == "EXIT"){

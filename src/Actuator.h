@@ -16,6 +16,8 @@ class Actuator : public BaseElement{
 
 private:
     
+    bool enabled = true;
+    
     float strength;
     float radius;
     
@@ -33,7 +35,7 @@ public:
     
     void setStrength(float _strength);
     void setRadius(float _radius);
-    
+    void enable(bool _enable);
     void setOverRadius(float _overRadius);
     
     //Get
@@ -42,6 +44,7 @@ public:
     bool isOver(ofVec2f _position);
     float getStrength();
     float getRadius();
+    bool getEnabled();
     
 };
 

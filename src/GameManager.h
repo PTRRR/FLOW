@@ -36,7 +36,6 @@ private:
     
     //Scenes
     
-    bool paused = false;
     shared_ptr<Scene> scene;
     
 public:
