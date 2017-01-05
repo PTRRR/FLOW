@@ -41,6 +41,7 @@ private:
     
 protected:
     
+    bool disabled;
     float getDeltatime();
     
 public:
@@ -61,6 +62,8 @@ public:
     void setDamping(float _damping);
     void setMaxVelocity(float _maxVelocity);
     void setBox(float _x, float _y, float _width, float _height);
+    
+    void disable(bool _disable);
     
     //Get
     

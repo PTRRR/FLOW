@@ -20,8 +20,6 @@ ScreenPipeline::ScreenPipeline(shared_ptr<Screen> _firstScreen, shared_ptr<Scree
     this->activeScreen = _firstScreen;
     this->lastActiveScreen = _lastScreen;
     
-//    shader.load("shaders/fboShader.vert", "shaders/fboShader.frag");
-    
 };
 
 ScreenPipeline::~ScreenPipeline(){};
@@ -39,36 +37,6 @@ void ScreenPipeline::addScreen(shared_ptr<Screen> _screen){
     pipeline.push_back(_screen);
     
 }
-
-//void ScreenPipeline::updateRenderingOrder(){
-//    
-//    vector<shared_ptr<Screen>> newPipeline;
-//    
-//    //Sort the screens
-//    //Not wery well done.....
-//    while (pipeline.size() > 0) {
-//        
-//        int currentIndex = 0;
-//        int max = -1;
-//        
-//        for(int i = pipeline.size() - 1; i >= 0; i--){
-//            
-//            if(pipeline[i]->getIndex() > max){
-//                max = pipeline[i]->getIndex();
-//                currentIndex = i;
-//            }
-//            
-//        }
-//        
-//        newPipeline.push_back(pipeline[currentIndex]);
-//        pipeline.erase(pipeline.begin() + currentIndex);
-//        
-//    }
-//    
-//    //Move the data in the screens array back
-//    pipeline = newPipeline;
-//    
-//}
 
 void ScreenPipeline::setScreenActive(shared_ptr<Screen> _screen){
     

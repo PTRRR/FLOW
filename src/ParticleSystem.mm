@@ -9,6 +9,8 @@
 #include "ParticleSystem.h"
 
 ParticleSystem::ParticleSystem(){
+    
+    paused = false;
 
     boxSize = ofVec2f(0);
     rate = 1.0;
@@ -25,12 +27,6 @@ void ParticleSystem::reset(){
     particles.erase(particles.begin(), particles.end());
     actuators.erase(actuators.begin(), actuators.end());
     receptors.erase(receptors.begin(), receptors.end());
-    
-}
-
-void ParticleSystem::GPUDraw(){
-    
-    
     
 }
 
@@ -83,7 +79,7 @@ void ParticleSystem::update(){
         
         if(floor(toEmit) >= 1){
 
-            addParticles(floor(toEmit));
+            if(!paused) addParticles(floor(toEmit));
             toEmit -= floor(toEmit);
             
         }
@@ -119,42 +115,21 @@ void ParticleSystem::update(){
             
         }
         
-        //Apply that force
+        //Apply that force.
         
         particles[i]->applyForce(force);
         
-        //Apply random force to add some randomness to the movements
+        //Apply random force to add some randomness to the movements.
         
         particles[i]->applyForce(ofVec2f(ofRandomf() * 0.3));
         
-        //Separation algorithme --> very expensive
-        
-//        float maxDist = 15.0;
-//        
-//        for(int k = 0; k < particles.size(); k++){
-//            
-//            if(particles[i] != particles[k]){
-//                
-//                ofVec2f direction = particles[i]->getPosition() - particles[k]->getPosition();
-//                float dist = direction.length();
-//                
-//                if(dist < maxDist){
-//                    
-//                    ofVec2f repulsionForce = direction * (dist / maxDist) * 0.01f;
-//                    repulsionForce *= 0.1;
-//                    particles[i]->applyForce(repulsionForce);
-//                    
-//                }
-//                
-//            }
-//            
-//        }
+        //Update the current particle,
         
         particles[i]->update();
         
     }
     
-    //Check dead particles
+    //Check dead particles.
     
     for(int i = particles.size() - 1; i >= 0; i--){
         
@@ -164,7 +139,7 @@ void ParticleSystem::update(){
         
     }
     
-    //Update the physics of the particle system itself
+    //Update the physics of the particle system itself.
     
     ParticleSystem::BaseElement::update();
     
@@ -272,6 +247,16 @@ void ParticleSystem::setMaxParticles(int _maxParticles){
 void ParticleSystem::setMaxTailLength(int _length){
     
     maxTailLength = _length;
+    
+}
+
+void ParticleSystem::setPause(bool _pause){
+    
+    paused = _pause;
+    
+    for(int i = 0; i < particles.size(); i++){
+        particles[i]->disable(_pause);
+    }
     
 }
 

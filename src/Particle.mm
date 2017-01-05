@@ -49,6 +49,8 @@ void Particle::update(){
     
     Particle::BaseElement::update();
     
+    if(disabled) return;
+    
     //Update tail.
     //This takes care off adding points to the array of points composing the tail.
     //They can then be accessed by the function getPoints().
