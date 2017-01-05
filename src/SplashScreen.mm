@@ -66,41 +66,6 @@ void SplashScreen::renderToScreen(){
 void SplashScreen::setFont(shared_ptr<ofTrueTypeFont> _font){
     
     font = _font;
-    interface.setFont(_font);
-    
-}
-
-//Inputs
-
-void SplashScreen::onMouseDown(ofVec2f _position, function<void(string _text, string _action)> callback){
-    
-    interface.mouseDown(_position, [&](string text, string action){
-        callback(text, action);
-    });
-    
-}
-
-void SplashScreen::onMouseMove(ofVec2f _position, function<void(string _text, string _action)> callback){
-    
-    interface.mouseMove(_position, [&](string text, string action){
-        callback(text, action);
-    });
-    
-}
-
-void SplashScreen::onMouseDrag(ofVec2f _position, function<void(string _text, string _action)> callback){
-    
-    interface.mouseDrag(_position, [&](string text, string action){
-        callback(text, action);
-    });
-    
-}
-
-void SplashScreen::onMouseUp(ofVec2f _position, function<void(string _text, string _action)> callback){
-    
-    interface.mouseUp(_position, [&](string text, string action){
-        callback(text, action);
-    });
     
 }
 
