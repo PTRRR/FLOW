@@ -24,7 +24,7 @@ private:
     
     //Timer utilitie
     
-    int initialTimeout = 1000; //millis
+    int initialTimeout = 3000; //millis
     bool initialTimeoutIsOver = false;
     
     //Screens
@@ -33,6 +33,10 @@ private:
     
     shared_ptr<SplashScreen> splashScreen;
     shared_ptr<Menu> menu;
+    
+    //Scenes
+    
+    bool paused = false;
     shared_ptr<Scene> scene;
     
 public:

@@ -32,6 +32,7 @@ private:
     
     //Main
     
+    bool IS_PAUSED = false;
     int ORIGINAL_WIDTH = ofGetWidth();
     int ORIGINAL_HEIGHT = ofGetHeight();
     int MAX_PARTICLES = 1000;
@@ -116,6 +117,7 @@ public:
     
     void update() override;
     void initializeGPUData();
+    void setPause(bool _pause);
     void onEnd(function<void()> _levelEndCallback);
     
     void XMLSetup(string _xmlFile);

@@ -10,6 +10,8 @@
 
 BaseElement::BaseElement(){
     
+    disabled = false;
+    
     position = ofVec2f(0);
     velocity = ofVec2f(0);
     acceleration = ofVec2f(0);
@@ -35,39 +37,43 @@ BaseElement::BaseElement(){
 void BaseElement::update(){
     
     deltaTime = ofGetElapsedTimeMillis() - lastTime;
-    
+     
     //Scale the physics calculations according to the frame rate
     
     float FPSScaleFactor = deltaTime / targetDeltaTime;
     
-    velocity += acceleration * FPSScaleFactor;
-    velocity = velocity.limit(maxVelocity);
-    velocity *= damping;
-    
-    lastPosition = position;
-    position += velocity * FPSScaleFactor;
-    nextPosition = position + velocity * FPSScaleFactor;
-    
-    //Check if box is set
-    
-    float boxArea = box.z * box.w;
-    
-    if(position.x < box.x || position.x > box.x + box.z || position.y < box.y || position.y > box.y + box.w){
-        out = true;
-    }else{
-        out = false;
-    }
-    
-    if(boxArea > 0){
+    if(!disabled){
+     
+        velocity += acceleration * FPSScaleFactor;
+        velocity = velocity.limit(maxVelocity);
+        velocity *= damping;
         
-        position.x = ofClamp(position.x, box.x, box.x + box.z);
-        position.y = ofClamp(position.y, box.y, box.y + box.w);
+        lastPosition = position;
+        position += velocity * FPSScaleFactor;
+        nextPosition = position + velocity * FPSScaleFactor;
+        
+        //Check if box is set
+        
+        float boxArea = box.z * box.w;
+        
+        if(position.x < box.x || position.x > box.x + box.z || position.y < box.y || position.y > box.y + box.w){
+            out = true;
+        }else{
+            out = false;
+        }
+        
+        if(boxArea > 0){
+            
+            position.x = ofClamp(position.x, box.x, box.x + box.z);
+            position.y = ofClamp(position.y, box.y, box.y + box.w);
+            
+        }
+        
+        //Reset
+        
+        acceleration *= 0;
         
     }
-    
-    //Reset
-    
-    acceleration *= 0;
     
     lastTime = ofGetElapsedTimeMillis();
     
@@ -117,6 +123,12 @@ void BaseElement::setBox(float _x, float _y, float _width, float _height){
     box.y = _y;
     box.z = _width;
     box.w = _height;
+    
+}
+
+void BaseElement::disable(bool _disable){
+    
+    disabled = _disable;
     
 }
 
@@ -182,6 +194,8 @@ bool BaseElement::isOut(){
 //Physics
 
 void BaseElement::applyForce(ofVec2f _force){
+    
+    if(disabled) return;
     
     acceleration += _force / mass;
     

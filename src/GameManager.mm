@@ -24,6 +24,10 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     
     scene = shared_ptr<Scene>(new Scene(mainFont));
     scene->setName("SCENE");
+    
+    //Set up the scene according to a XML file
+    
+    scene->XMLSetup("scene_1.xml");
 
     //Screen pipeline setup
 
@@ -45,6 +49,12 @@ void GameManager::update(){
     }
     
     screenPipeline.getActiveScreen()->update();
+    
+    //Always update the scene to keep track of the elapsed time in base objects
+    
+    if(screenPipeline.getActiveScreen() != scene){
+        scene->update();
+    }
     
 }
 
@@ -74,10 +84,14 @@ void GameManager::mouseUp(ofVec2f _position){
         
         if(action == "PLAY"){
             
+            paused = !paused;
+            scene->setPause(paused);
             screenPipeline.setScreenActive(scene);
             
         }else if(action == "MENU"){
             
+            paused = !paused;
+            scene->setPause(paused);
             screenPipeline.setScreenActive(menu);
             
         }else if(action == "EXIT"){

@@ -19,6 +19,8 @@ class ParticleSystem : public BaseElement{
 
 private:
     
+    bool paused;
+    
     ofVec2f boxSize;
     
     float rate;
@@ -53,7 +55,6 @@ public:
     //Main
     
     void reset();
-    void GPUDraw();
     void debugDraw();
     void update();
     void applyGravity(ofVec2f _gravity);
@@ -71,6 +72,7 @@ public:
     void empty();
     void setMaxParticles(int _maxParticles);
     void setMaxTailLength(int _length);
+    void setPause(bool _pause);
     
     //Get
     

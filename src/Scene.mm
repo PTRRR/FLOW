@@ -70,20 +70,10 @@ void Scene::initializeGPUData(){
     
     updateAllParticles();
     
-    loadXML("scene_1.xml", [&](ofxXmlSettings _XML){
-    
-        saveXML("scene_1.xml", _XML);
-        
-        logXML("scene_1.xml");
-        
-    });
-
-//    logXML("scene_1.xml");
-    XMLSetup("scene_1.xml");
-    
 }
 
 //Where all the scene is rendered
+
 void Scene::renderToScreen(){
     
     //Draw background
@@ -91,15 +81,13 @@ void Scene::renderToScreen(){
     ofSetColor(0, 0, 0, getAlpha());
     ofDrawRectangle(0, 0, ofGetWidth() + 1, ofGetHeight());
     
-    //Update main particle container
-    
-//    updateAllParticles();
-    
     //Update GPU data
-    //This will update all the data related to the rendering of the particles
+    //This will update all the data related to the rendering of the particles.
+    //The vbos conataining all rendering data as : heads coords, tails coords, etc... will be updated.
     
     updateParticlesRenderingData();
     
+    //First draw call
     //Draw particles tail
     
     ofEnableBlendMode(OF_BLENDMODE_ADD);
@@ -111,6 +99,7 @@ void Scene::renderToScreen(){
     
     particleTailProgram.end();
     
+    //Second draw call
     //Draw particles head
 
     ofEnablePointSprites();
@@ -155,6 +144,9 @@ void Scene::renderToScreen(){
     updateAllParticles();
     
 }
+
+//Here we take all particles from all emitter end store them in a container to make rendering faster and dealing with them easier.
+//We'll draw only once all particles.
 
 void Scene::updateAllParticles(){
     
@@ -222,7 +214,11 @@ void Scene::updateParticlesRenderingData(){
     
 }
 
+//Update the scene
+
 void Scene::update(){
+    
+    //Here we update the main container of particles
     
     updateAllParticles();
     
@@ -255,12 +251,6 @@ void Scene::update(){
     for(int i = 0; i < receptors.size(); i++){
         receptors[i]->update();
         if(!receptors[i]->isFilled()) allAreFilled = false;
-    }
-    
-    if(allAreFilled){
-    
-        XMLSetup("scene_1.xml");
-        
     }
     
     checkForCollisions();
@@ -298,15 +288,23 @@ void Scene::checkForCollisions(){
                         
                     });
                     
-                    if(!intersectionDetected){
-                        //particles[i]->setLifeSpan(0);
-                    }
-                    
                 }
                 
             }
             
         }
+        
+    }
+    
+}
+
+void Scene::setPause(bool _pause){
+    
+    IS_PAUSED = _pause;
+    
+    for(int i = 0; i < emitters.size(); i++){
+        
+        emitters[i]->setPause(_pause);
         
     }
     
