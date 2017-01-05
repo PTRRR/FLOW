@@ -16,6 +16,39 @@ SplashScreen::SplashScreen(shared_ptr<ofTrueTypeFont> _font){
     interface.setFont(font);
     interface.addText("F L O W", ofVec2f(ofGetWindowWidth() / 2, ofGetWindowHeight() / 2));
     
+    
+    
+}
+
+void SplashScreen::update(){
+    
+    if(letterElements.size() == 0){
+        for(int i = 0; i < title.length(); i++){
+            
+            shared_ptr<BaseElement> newLetterElement = shared_ptr<BaseElement>(new BaseElement());
+            newLetterElement->setPosition(ofVec2f(ofRandom(ofGetWidth()), ofRandom(ofGetHeight())));
+            newLetterElement->setDamping(0.85);
+            newLetterElement->setMass(30);
+            newLetterElement->setMaxVelocity(100);
+            letterElements.push_back(newLetterElement);
+            
+        }
+    }
+    
+    for(int i = 0; i < letterElements.size(); i++){
+        
+        string letter(1, title[i]);
+        float width = ofGetWidth() * 0.2;
+        ofVec2f targetPosition;
+        targetPosition.x = (ofGetWidth() / 2) - (width / 2) + i * (width / (letterElements.size() - 1)) - font->stringWidth(letter) / 2;
+        targetPosition.y = (ofGetHeight() / 2) + font->stringHeight(letter) / 2;
+        ofVec2f force = targetPosition - letterElements[i]->getPosition();
+        letterElements[i]->applyForce(force);
+        
+        letterElements[i]->update();
+        
+    }
+    
 }
 
 void SplashScreen::renderToScreen(){
@@ -24,7 +57,15 @@ void SplashScreen::renderToScreen(){
     ofDrawRectangle(0, 0, ofGetWidth() + 1, ofGetHeight());
     
     ofSetColor(255, 255, 255, getAlpha());
-    interface.draw();
+    
+    for(int i = 0; i < letterElements.size(); i++){
+        
+        string letter(1, title[i]);
+        font->drawString(letter, letterElements[i]->getPosition().x, letterElements[i]->getPosition().y);
+        
+    }
+    
+//    interface.draw();
     
 }
 

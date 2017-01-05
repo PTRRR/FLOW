@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "Screen.h"
 #include "Interface.h"
+#include "BaseElement.h"
 
 class SplashScreen : public Screen{
 
@@ -24,6 +25,11 @@ private:
     //Interface
     
     Interface interface;
+    
+    //Title
+    
+    string title = "FLOW";
+    vector<shared_ptr<BaseElement>> letterElements;
     
     //Rendering
     
@@ -40,6 +46,8 @@ public:
     
     SplashScreen();
     SplashScreen(shared_ptr<ofTrueTypeFont> _font);
+    
+    void update() override;
     
     //Utils
     
