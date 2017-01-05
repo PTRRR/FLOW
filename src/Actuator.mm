@@ -51,9 +51,17 @@ void Actuator::enable(bool _enable){
     
 }
 
+void Actuator::setOverRadius(float _overRadius){
+    
+    overRadius = _overRadius;
+    
+}
+
 //Get
 
 ofVec2f Actuator::getForceAtPoint(ofVec2f _position){
+    
+    if(!enabled) return ofVec2f(0);
     
     ofVec2f force = ofVec2f(0);
     ofVec2f direction = getPosition() - _position;
