@@ -20,11 +20,11 @@ ParticleSystem::ParticleSystem(){
 
 }
 
-void ParticleSystem::init(){
+void ParticleSystem::reset(){
     
-    particles.empty();
-    actuators.empty();
-    receptors.empty();
+    particles.erase(particles.begin(), particles.end());
+    actuators.erase(actuators.begin(), actuators.end());
+    receptors.erase(receptors.begin(), receptors.end());
     
 }
 
