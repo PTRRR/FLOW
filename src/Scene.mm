@@ -19,6 +19,10 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     interface = Interface(_mainFont);
     interface.addButton("MENU", "MENU", ofVec2f(ofGetWidth() - _mainFont->stringWidth("MENU"), 50));
     
+    //Create the actuator box, where the player can take the actuators
+    
+    actuatorBox.set(-1, -1, ofGetWidth() + 10, 0.0488281 * ofGetHeight());
+    
     initializeGPUData();
     
 };
@@ -91,7 +95,6 @@ void Scene::renderToScreen(){
     //Draw particles tail
     
     ofEnableBlendMode(OF_BLENDMODE_ADD);
-    ofEnableAlphaBlending();
     
     particleTailProgram.begin();
     
@@ -113,16 +116,16 @@ void Scene::renderToScreen(){
     particleHeadProgram.end();
     
     ofDisablePointSprites();
-    
-    ofDisableAlphaBlending();
     ofDisableBlendMode();
+    
+    ofEnableAlphaBlending();
     
     ofSetColor(255, 255, 255, getAlpha());
     
     //Draw actuators
     
     for(int i = 0; i < actuators.size(); i++){
-        actuators[i]->debugDraw();
+        if(actuators[i]->getEnabled()) actuators[i]->debugDraw();
     }
     
     //Draw receptors
@@ -135,6 +138,23 @@ void Scene::renderToScreen(){
     
     for(int i = 0; i < polygones.size(); i++){
         polygones[i]->debugDraw();
+    }
+    
+    //Draw actuator box
+    
+    ofSetColor(0, 0, 0, getAlpha() * 0.8);
+    ofFill();
+    ofDrawRectangle(actuatorBox.x, actuatorBox.y, actuatorBox.x + actuatorBox.width, actuatorBox.y + actuatorBox.height);
+    ofSetColor(255, 255, 255, getAlpha());
+    ofNoFill();
+    ofDrawRectangle(actuatorBox.x, actuatorBox.y, actuatorBox.x + actuatorBox.width, actuatorBox.y + actuatorBox.height);
+    
+    //Draw disabled actuators
+    
+    for(int i = 0; i < actuators.size(); i++){
+        if(!actuators[i]->getEnabled()){
+            ofDrawCircle(actuators[i]->getPosition(), 20);
+        }
     }
     
     //Draw interface
@@ -235,13 +255,31 @@ void Scene::update(){
     
     if(activeActuator != nullptr){
         
-        ofVec2f force = touchPos - activeActuator->getPosition();
+        ofVec2f force = (touchPos - activeActuator->getPosition()) * 1.4;
         activeActuator->applyForce(force);
         
     }
     
     for(int i = 0; i < actuators.size(); i++){
+        
         actuators[i]->update();
+        
+        //Make actuators stick to teir initial position
+        
+        if (actuatorBox.inside(actuators[i]->getPosition())) {
+
+            actuators[i]->enable(false);
+            
+            ofVec2f position = ofVec2f((ofGetWidth() / 2) - (ofGetWidth() / 4) + i * ((ofGetWidth() / 2) / (actuators.size() - 1)), 50);
+            
+            ofVec2f force = (position - actuators[i]->getPosition());
+            actuators[i]->applyForce(force);
+            
+        }else{
+            
+            actuators[i]->enable(true);
+            
+        }
     }
     
     //Update receptors
@@ -626,14 +664,18 @@ void Scene::XMLSetup(string _xmlFile){
         
         for(int i = 0; i < numActuators; i++){
             
+            ofVec2f position = ofVec2f((ofGetWidth() / 2) - (ofGetWidth() / 2 / numActuators - 1) + i * ((ofGetWidth() / 2) / numActuators), 0);
+            
             shared_ptr<Actuator> newActuator = shared_ptr<Actuator>(new Actuator());
-            newActuator->setPosition(ofVec2f(ofRandom(ofGetWidth()), ofRandom(ofGetHeight())));
+            newActuator->setPosition(position);
             newActuator->setRadius(100 + ofRandom(350));
+            newActuator->setOverRadius(100);
             newActuator->setMass(20);
-            newActuator->setDamping(0.84);
+            newActuator->setDamping(0.83);
             newActuator->setMaxVelocity(100);
             newActuator->setBox(0, 0, ofGetWidth(), ofGetHeight());
             newActuator->setStrength(-5);
+            newActuator->enable(false);
             actuators.push_back(newActuator);
             
             for(int j = 0; j < emitters.size(); j++){

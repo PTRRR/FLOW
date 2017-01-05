@@ -20,10 +20,14 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
+    ofEnableAlphaBlending();
+    
     gameManager.draw();
     
     ofSetColor(255, 0, 0);
     ofDrawBitmapString("FPS: " + to_string((int) floor(ofGetFrameRate() * 10) / 10), 20, 20);
+    
+    ofDisableAlphaBlending();
     
 }
 

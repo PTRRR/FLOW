@@ -60,6 +60,8 @@ private:
     
     //Actuators
 
+    ofRectangle actuatorBox;
+    
     vector<shared_ptr<Actuator>> actuators;
     shared_ptr<Actuator> activeActuator;
     
