@@ -15,6 +15,7 @@
 #include "SplashScreen.h"
 #include "Menu.h"
 #include "Scene.h"
+#include "Levels.h"
 
 class GameManager {
 
@@ -33,10 +34,13 @@ private:
     
     shared_ptr<SplashScreen> splashScreen;
     shared_ptr<Menu> menu;
+    shared_ptr<Levels> levels;
     
     //Scenes
     
-    shared_ptr<Scene> scene;
+    shared_ptr<Scene> currentScene;
+//    vector<shared_ptr<Scene>> scenes;
+    shared_ptr<Scene> createNewScene(string _name, string _xmlFile);
     
 public:
     

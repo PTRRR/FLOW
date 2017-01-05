@@ -8,7 +8,11 @@
 
 #include "Scene.h"
 
-Scene::Scene(){}
+Scene::Scene(){
+
+    initializeGPUData();
+    
+}
 
 Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     

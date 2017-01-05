@@ -38,6 +38,21 @@ void ScreenPipeline::addScreen(shared_ptr<Screen> _screen){
     
 }
 
+void ScreenPipeline::removeScreen(shared_ptr<Screen> _screen){
+    
+    for(int i = 0; i < pipeline.size(); i++){
+
+        if(_screen == pipeline[i]){
+        
+            pipeline.erase(pipeline.begin() + i);
+            break;
+            
+        }
+        
+    }
+    
+}
+
 void ScreenPipeline::setScreenActive(shared_ptr<Screen> _screen){
     
     if(activeScreen != nullptr) lastActiveScreen = activeScreen;

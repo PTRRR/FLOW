@@ -29,6 +29,7 @@ public:
     void draw();
     
     void addScreen(shared_ptr<Screen> _screen);
+    void removeScreen(shared_ptr<Screen> _screen);
     
     void setScreenActive(shared_ptr<Screen> _screen);
     
