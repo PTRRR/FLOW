@@ -22,10 +22,6 @@ private:
     
     shared_ptr<ofTrueTypeFont> font;
     
-    //Interface
-    
-    Interface interface;
-    
     //Title
     
     string title = "FLOW";

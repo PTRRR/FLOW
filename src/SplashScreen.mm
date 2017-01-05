@@ -13,10 +13,6 @@ SplashScreen::SplashScreen(){}
 SplashScreen::SplashScreen(shared_ptr<ofTrueTypeFont> _font){
     
     font = _font;
-    interface.setFont(font);
-    interface.addText("F L O W", ofVec2f(ofGetWindowWidth() / 2, ofGetWindowHeight() / 2));
-    
-    
     
 }
 
@@ -64,8 +60,6 @@ void SplashScreen::renderToScreen(){
         font->drawString(letter, letterElements[i]->getPosition().x, letterElements[i]->getPosition().y);
         
     }
-    
-//    interface.draw();
     
 }
 
