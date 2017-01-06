@@ -13,8 +13,9 @@
 #include "ofxiOS.h"
 #include "Button.h"
 #include "Text.h"
+#include "BaseElement.h"
 
-class Interface {
+class Interface : public BaseElement{
 
 private:
     
@@ -24,6 +25,7 @@ private:
     
     vector<shared_ptr<Button>> buttons;
     vector<shared_ptr<Text>> texts;
+    vector<shared_ptr<BaseElement>> elements;
     
 public:
     
@@ -31,8 +33,8 @@ public:
     Interface(shared_ptr<ofTrueTypeFont> _font);
     
     void draw();
-    void addButton(string _text, string _action, ofVec2f _position);
-    void addText(string _text, ofVec2f _position);
+    shared_ptr<Button> addButton(string _text, string _action, ofVec2f _position);
+    shared_ptr<Text> addText(string _text, ofVec2f _position);
     
     //Inputs
     

@@ -8,7 +8,11 @@
 
 #include "Scene.h"
 
-Scene::Scene(){}
+Scene::Scene(){
+
+    initializeGPUData();
+    
+}
 
 Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     
@@ -270,7 +274,7 @@ void Scene::update(){
 
             actuators[i]->enable(false);
             
-            ofVec2f position = ofVec2f((ofGetWidth() / 2) - (ofGetWidth() / 4) + i * ((ofGetWidth() / 2) / (actuators.size() - 1)), 50);
+            ofVec2f position = ofVec2f((ofGetWidth() / 2) - (ofGetWidth() / 4) + i * ((ofGetWidth() / 2) / (actuators.size() - 1)), 0.0488281 * ofGetHeight() / 2);
             
             ofVec2f force = (position - actuators[i]->getPosition());
             actuators[i]->applyForce(force);
@@ -664,7 +668,7 @@ void Scene::XMLSetup(string _xmlFile){
         
         for(int i = 0; i < numActuators; i++){
             
-            ofVec2f position = ofVec2f((ofGetWidth() / 2) - (ofGetWidth() / 2 / numActuators - 1) + i * ((ofGetWidth() / 2) / numActuators), 0);
+            ofVec2f position = ofVec2f(0, 0.0488281 * ofGetHeight() / 2);
             
             shared_ptr<Actuator> newActuator = shared_ptr<Actuator>(new Actuator());
             newActuator->setPosition(position);

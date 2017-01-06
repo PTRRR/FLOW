@@ -1,19 +1,21 @@
 //
-//  Menu.h
-//  ofMagnet
+//  Levels.h
+//  FLOW
 //
-//  Created by Pietro Alberti on 17.12.16.
+//  Created by Pietro Alberti on 05.01.17.
 //
 //
 
-#ifndef Menu_h
-#define Menu_h
+#ifndef Levels_h
+#define Levels_h
 
 #include <stdio.h>
 #include "Screen.h"
 #include "Interface.h"
+#include "ofxXmlSettings.h"
+#include "Button.h"
 
-class Menu : public Screen{
+class Levels : public Screen{
 
 private:
     
@@ -23,7 +25,12 @@ private:
     
     //Interface
     
+    vector<shared_ptr<Button>> buttons;
+    float lineHeightMultiplier = 0.06;
+    ofVec2f lastPos = ofVec2f(0);
+    ofVec2f deltaMove = ofVec2f(0);
     Interface interface;
+    bool XMLExists(string _xmlName);
     
     //Rendering
     
@@ -37,9 +44,11 @@ private:
     void onMouseUp(ofVec2f _position, function<void(string _text, string _action)> callback) override;
     
 public:
-
-    Menu();
-    Menu(shared_ptr<ofTrueTypeFont> _font);
+    
+    Levels();
+    Levels(shared_ptr<ofTrueTypeFont> _font);
+    
+    void update() override;
     
     //Utils
     
@@ -47,4 +56,4 @@ public:
     
 };
 
-#endif /* Menu_h */
+#endif /* Levels_h */

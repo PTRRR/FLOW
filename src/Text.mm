@@ -23,7 +23,7 @@ void Text::draw(){
     ofPushStyle();
     ofSetLineWidth(1);
     ofNoFill();
-    font->drawString(text, position.x - dimensions.x / 2, position.y + dimensions.y / 2);
+    font->drawString(text, getPosition().x - dimensions.x / 2, getPosition().y + dimensions.y / 2);
     ofPopStyle();
     
 }
@@ -33,12 +33,6 @@ void Text::draw(){
 void Text::setFont(shared_ptr<ofTrueTypeFont> _font){
     
     font = _font;
-    
-}
-
-void Text::setPosition(ofVec2f _position){
-    
-    position = _position;
     
 }
 
@@ -52,12 +46,6 @@ void Text::setText(string _text){
 }
 
 //Get
-
-ofVec2f Text::getPosition(){
-    
-    return position;
-    
-}
 
 ofVec2f Text::getDimensions(){
     
