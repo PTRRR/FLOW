@@ -11,14 +11,14 @@
 
 #include <stdio.h>
 #include "ofxiOS.h"
+#include "BaseElement.h"
 
-class Text {
+class Text : public BaseElement{
 
 private:
     
     shared_ptr<ofTrueTypeFont> font;
     
-    ofVec2f position;
     ofVec2f dimensions;
     
     string text;
@@ -33,12 +33,10 @@ public:
     //Set
     
     void setFont(shared_ptr<ofTrueTypeFont> _font);
-    void setPosition(ofVec2f _position);
     void setText(string _text);
     
     //Get
     
-    ofVec2f getPosition();
     ofVec2f getDimensions();
     
     string getText();

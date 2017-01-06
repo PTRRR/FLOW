@@ -20,12 +20,14 @@ void Button::draw(){
     
     if(font == nullptr) return;
     
-//    float left = position.x - dimensions.x / 2;
-//    float top = position.y - dimensions.y / 2;
-//    ofDrawCircle(position.x, position.y, 2);
-//    ofDrawRectangle(left, top, dimensions.x, dimensions.y);
+    float left = getPosition().x - dimensions.x / 2 - offset;
+    float top = getPosition().y - dimensions.y / 2 - offset;
+    
+//    ofNoFill();
+//    ofDrawRectangle(left, top, dimensions.x + offset * 2 + 5, dimensions.y + offset * 2 + 5);
+//    ofFill();
 
-    font->drawString(text, position.x - dimensions.x / 2, position.y + dimensions.y / 2);
+    font->drawString(text, getPosition().x - dimensions.x / 2, getPosition().y + dimensions.y / 2);
     
 }
 
@@ -34,12 +36,6 @@ void Button::draw(){
 void Button::setFont(shared_ptr<ofTrueTypeFont> _font){
     
     font = _font;
-    
-}
-
-void Button::setPosition(ofVec2f _position){
-    
-    position = _position;
     
 }
 
@@ -59,12 +55,6 @@ void Button::setAction(string _action){
 }
 
 //Get
-
-ofVec2f Button::getPosition(){
-    
-    return position;
-    
-}
 
 ofVec2f Button::getDimensions(){
     
@@ -86,10 +76,10 @@ string Button::getAction(){
 
 bool Button::isOver(ofVec2f _position){
     
-    float left = position.x - dimensions.x / 2;
-    float top = position.y - dimensions.y / 2;
-    float right = left + dimensions.x;
-    float down = top + dimensions.y;
+    float left = getPosition().x - dimensions.x / 2 - offset;
+    float top = getPosition().y - dimensions.y / 2 - offset;
+    float right = left + dimensions.x + offset * 2 + 5;
+    float down = top + dimensions.y + offset * 2 + 5;
     
     if(_position.x >= left && _position.x <= right && _position.y >= top && _position.y <= down){
         return true;

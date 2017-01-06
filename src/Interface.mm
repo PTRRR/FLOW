@@ -19,16 +19,28 @@ Interface::Interface(shared_ptr<ofTrueTypeFont> _font){
 void Interface::draw(){
 
     for(int i = 0; i < buttons.size(); i++){
+        
+        ofVec2f buttonOriginalPosition = buttons[i]->getPosition();
+        
+        buttons[i]->setPosition(buttonOriginalPosition + getPosition());
         buttons[i]->draw();
+        buttons[i]->setPosition(buttonOriginalPosition);
+        
     }
     
     for(int i = 0; i < texts.size(); i++){
+        
+        ofVec2f textOriginalPosition = texts[i]->getPosition();
+        
+        texts[i]->setPosition(textOriginalPosition + getPosition());
         texts[i]->draw();
+        texts[i]->setPosition(textOriginalPosition);
+        
     }
     
 }
 
-void Interface::addButton(string _text, string _action, ofVec2f _position){
+shared_ptr<Button> Interface::addButton(string _text, string _action, ofVec2f _position){
     
     shared_ptr<Button> newButton = shared_ptr<Button>(new Button());
     
@@ -38,10 +50,12 @@ void Interface::addButton(string _text, string _action, ofVec2f _position){
     newButton->setPosition(_position);
     
     buttons.push_back(newButton);
+
+    return newButton;
     
 }
 
-void Interface::addText(string _text, ofVec2f _position){
+shared_ptr<Text> Interface::addText(string _text, ofVec2f _position){
     
     shared_ptr<Text> newText = shared_ptr<Text>(new Text(font));
     
@@ -49,6 +63,8 @@ void Interface::addText(string _text, ofVec2f _position){
     newText->setPosition(_position);
     
     texts.push_back(newText);
+    
+    return newText;
     
 }
 

@@ -11,16 +11,17 @@
 
 #include <stdio.h>
 #include "ofxiOS.h"
+#include "BaseElement.h"
 
-class Button {
+class Button : public BaseElement{
 
 private:
     
     //Settings
     
     shared_ptr<ofTrueTypeFont> font;
-    ofVec2f position, dimensions;
-    float offset = 5;
+    ofVec2f dimensions;
+    float offset = 25;
     
     //Content
     
@@ -36,13 +37,11 @@ public:
     //Set
     
     void setFont(shared_ptr<ofTrueTypeFont> _font);
-    void setPosition(ofVec2f _position);
     void setText(string _text);
     void setAction(string _action);
     
     //Get
     
-    ofVec2f getPosition();
     ofVec2f getDimensions();
     
     string getText();

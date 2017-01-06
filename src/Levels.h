@@ -13,6 +13,7 @@
 #include "Screen.h"
 #include "Interface.h"
 #include "ofxXmlSettings.h"
+#include "Button.h"
 
 class Levels : public Screen{
 
@@ -24,6 +25,10 @@ private:
     
     //Interface
     
+    vector<shared_ptr<Button>> buttons;
+    float lineHeightMultiplier = 0.06;
+    ofVec2f lastPos = ofVec2f(0);
+    ofVec2f deltaMove = ofVec2f(0);
     Interface interface;
     bool XMLExists(string _xmlName);
     
@@ -42,6 +47,8 @@ public:
     
     Levels();
     Levels(shared_ptr<ofTrueTypeFont> _font);
+    
+    void update() override;
     
     //Utils
     
