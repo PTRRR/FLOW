@@ -356,9 +356,9 @@ void Scene::setPause(bool _pause){
 //Player inputs
 //These inputs will only fire when this screen is active
 
-void Scene::onMouseDown(ofVec2f _position, function<void(string _text, string _action)> _callback){
+void Scene::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){
 
-    touchPos = ofVec2f(_position.x, _position.y);
+    touchPos = ofVec2f(_touch.x, _touch.y);
     
     for(int i = 0; i < actuators.size(); i++){
         
@@ -371,31 +371,25 @@ void Scene::onMouseDown(ofVec2f _position, function<void(string _text, string _a
         
     }
     
-    interface.mouseDown(_position, [&](string _text, string _action){
+    interface.mouseDown(_touch, [&](string _text, string _action){
         _callback(_text, _action);
     });
     
 }
 
-void Scene::onMouseUp(ofVec2f _position, function<void(string _text, string _action)> _callback){
+void Scene::onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){
     
     activeActuator = nullptr;
     
-    interface.mouseUp(_position, [&](string _text, string _action){
+    interface.mouseUp(_touch, [&](string _text, string _action){
         _callback(_text, _action);
     });
     
 }
 
-void Scene::onMouseMove(ofVec2f _position, function<void(string _text, string _action)> _callback){
+void Scene::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){
     
-    touchPos = ofVec2f(_position.x, _position.y);
-    
-}
-
-void Scene::onMouseDrag(ofVec2f _position, function<void(string _text, string _action)> _callback){
-    
-    
+    touchPos = ofVec2f(_touch.x, _touch.y);
     
 }
 

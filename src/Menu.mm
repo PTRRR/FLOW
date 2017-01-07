@@ -39,33 +39,25 @@ void Menu::setFont(shared_ptr<ofTrueTypeFont> _font){
 
 //Inputs
 
-void Menu::onMouseDown(ofVec2f _position, function<void(string _text, string _action)> callback){
+void Menu::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
     
-    interface.mouseDown(_position, [&](string text, string action){
+    interface.mouseDown(_touch, [&](string text, string action){
         callback(text, action);
     });
     
 }
 
-void Menu::onMouseMove(ofVec2f _position, function<void(string _text, string _action)> callback){
+void Menu::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
     
-    interface.mouseMove(_position, [&](string text, string action){
+    interface.mouseMove(_touch, [&](string text, string action){
         callback(text, action);
     });
     
 }
 
-void Menu::onMouseDrag(ofVec2f _position, function<void(string _text, string _action)> callback){
+void Menu::onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
     
-    interface.mouseDrag(_position, [&](string text, string action){
-        callback(text, action);
-    });
-    
-}
-
-void Menu::onMouseUp(ofVec2f _position, function<void(string _text, string _action)> callback){
-    
-    interface.mouseUp(_position, [&](string text, string action){
+    interface.mouseUp(_touch, [&](string text, string action){
         callback(text, action);
     });
     

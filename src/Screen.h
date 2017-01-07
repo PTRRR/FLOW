@@ -31,10 +31,10 @@ private:
     
     //Virtual inputs
     
-    virtual void onMouseDown(ofVec2f _position, function<void(string _text, string _action)> _callback){};
-    virtual void onMouseMove(ofVec2f _position, function<void(string _text, string _action)> _callback){};
-    virtual void onMouseDrag(ofVec2f _position, function<void(string _text, string _action)> _callback){};
-    virtual void onMouseUp(ofVec2f _position, function<void(string _text, string _action)> _callback){};
+    virtual void onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){};
+    virtual void onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){};
+    virtual void onMouseDrag(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){};
+    virtual void onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){};
     
     ofFbo fbo;
     
@@ -47,10 +47,10 @@ public:
     
     //Inputs
     
-    void mouseDown(ofVec2f _position, function<void(string _text, string _action)> _callback);
-    void mouseMove(ofVec2f _position, function<void(string _text, string _action)> _callback);
-    void mouseDrag(ofVec2f _position, function<void(string _text, string _action)> _callback);
-    void mouseUp(ofVec2f _position, function<void(string _text, string _action)> _callback);
+    void mouseDown(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback);
+    void mouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback);
+    void mouseDrag(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback);
+    void mouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback);
     
     //Set
     void setAlpha(float _alpha);

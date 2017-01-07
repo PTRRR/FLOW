@@ -54,10 +54,10 @@ void Screen::draw(){
 
 //Inputs
 
-void Screen::mouseDown(ofVec2f _position, function<void (string _text, string _action)> _callback){
+void Screen::mouseDown(ofTouchEventArgs & _touch, function<void (string _text, string _action)> _callback){
     
     if(isActive()){
-        onMouseDown(_position, [&](string text, string action){
+        onMouseDown(_touch, [&](string text, string action){
             
             _callback(text, action);
             
@@ -66,10 +66,10 @@ void Screen::mouseDown(ofVec2f _position, function<void (string _text, string _a
     
 }
 
-void Screen::mouseMove(ofVec2f _position, function<void (string _text, string _action)> _callback){
+void Screen::mouseMove(ofTouchEventArgs & _touch, function<void (string _text, string _action)> _callback){
     
     if(isActive()){
-        onMouseMove(_position, [&](string text, string action){
+        onMouseMove(_touch, [&](string text, string action){
             
             _callback(text, action);
             
@@ -78,10 +78,10 @@ void Screen::mouseMove(ofVec2f _position, function<void (string _text, string _a
     
 }
 
-void Screen::mouseDrag(ofVec2f _position, function<void (string _text, string _action)> _callback){
+void Screen::mouseDrag(ofTouchEventArgs & _touch, function<void (string _text, string _action)> _callback){
     
     if(isActive()){
-        onMouseDrag(_position, [&](string text, string action){
+        onMouseDrag(_touch, [&](string text, string action){
             
             _callback(text, action);
             
@@ -90,10 +90,10 @@ void Screen::mouseDrag(ofVec2f _position, function<void (string _text, string _a
     
 }
 
-void Screen::mouseUp(ofVec2f _position, function<void (string _text, string _action)> _callback){
+void Screen::mouseUp(ofTouchEventArgs & _touch, function<void (string _text, string _action)> _callback){
     
     if(isActive()){
-        onMouseUp(_position, [&](string text, string action){
+        onMouseUp(_touch, [&](string text, string action){
             
             _callback(text, action);
             

@@ -51,22 +51,22 @@ void ofApp::exit(){
 
 //--------------------------------------------------------------
 void ofApp::touchDown(ofTouchEventArgs & touch){
-
-    gameManager.mouseDown(ofVec2f(touch.x, touch.y));
+    
+    gameManager.mouseDown(touch);
     
 }
 
 //--------------------------------------------------------------
 void ofApp::touchMoved(ofTouchEventArgs & touch){
 
-    gameManager.mouseMove(ofVec2f(touch.x, touch.y));
+    gameManager.mouseMove(touch);
     
 }
 
 //--------------------------------------------------------------
 void ofApp::touchUp(ofTouchEventArgs & touch){
 
-    gameManager.mouseUp(ofVec2f(touch.x, touch.y));
+    gameManager.mouseUp(touch);
     
 }
 

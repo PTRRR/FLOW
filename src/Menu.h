@@ -31,10 +31,9 @@ private:
     
     //Inputs
     
-    void onMouseDown(ofVec2f _position, function<void(string _text, string _action)> callback) override;
-    void onMouseMove(ofVec2f _position, function<void(string _text, string _action)> callback) override;
-    void onMouseDrag(ofVec2f _position, function<void(string _text, string _action)> callback) override;
-    void onMouseUp(ofVec2f _position, function<void(string _text, string _action)> callback) override;
+    void onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback) override;
+    void onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback) override;
+    void onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback) override;
     
 public:
 

@@ -80,21 +80,21 @@ shared_ptr<Scene> GameManager::createNewScene(string _name, string _xmlFile){
 
 //Input
 
-void GameManager::mouseDown(ofVec2f _position){
+void GameManager::mouseDown(ofTouchEventArgs & _touch){
     
     string currentScreen = screenPipeline.getActiveScreen()->getName();
     cout << "mouse down on: " + currentScreen << endl;
-
-    screenPipeline.getActiveScreen()->mouseDown(_position, [&](string text, string action){});
+    
+    screenPipeline.getActiveScreen()->mouseDown(_touch, [&](string text, string action){});
     
 }
 
-void GameManager::mouseUp(ofVec2f _position){
+void GameManager::mouseUp(ofTouchEventArgs & _touch){
     
     string currentScreen = screenPipeline.getActiveScreen()->getName();
     cout << "mouse up on: " + currentScreen << endl;
     
-    screenPipeline.getActiveScreen()->mouseUp(_position, [&](string text, string action){
+    screenPipeline.getActiveScreen()->mouseUp(_touch, [&](string text, string action){
         
         //Check if we are on the levels screen.
         //On the level screen we take directly the action variable as the xml file name used to setup
@@ -155,12 +155,12 @@ void GameManager::mouseUp(ofVec2f _position){
     
 }
 
-void GameManager::mouseMove(ofVec2f _position){
+void GameManager::mouseMove(ofTouchEventArgs & _touch){
     
     string currentScreen = screenPipeline.getActiveScreen()->getName();
     cout << "mouse move on: " + currentScreen << endl;
     
-    screenPipeline.getActiveScreen()->mouseMove(_position, [&](string text, string action){});
+    screenPipeline.getActiveScreen()->mouseMove(_touch, [&](string text, string action){});
     
 }
 
