@@ -149,33 +149,37 @@ void Levels::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, 
         callback(text, action);
     });
     
-    lastPos = _touch;
-    movement = 0;
+    if(_touch.id == 0){
+     
+        lastPos = _touch;
+        movement = 0;
+        
+    }
     
 }
 
 void Levels::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
     
-    deltaMove = ofVec2f(0, _touch.y - _touch.y);
-    
-    movement += deltaMove.y;
-    
-    cout << movement << endl;
-    
     interface.mouseMove(_touch, [&](string text, string action){
         callback(text, action);
     });
     
-    lastPos = _touch;
+    if(_touch.id == 0){
+     
+        deltaMove = ofVec2f(0, _touch.y - lastPos.y);
+        
+        movement += deltaMove.y;
+        
+        lastPos = _touch;
+        
+    }
     
 }
 
 void Levels::onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
     
-    cout << movement << endl;
-    
     interface.mouseUp(_touch, [&](string text, string action){
-        if(abs(movement) < 5) callback(text, action);
+        if(abs(movement) < 5 && _touch.id == 0) callback(text, action);
     });
     
 }
