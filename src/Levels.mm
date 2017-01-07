@@ -143,47 +143,43 @@ void Levels::setFont(shared_ptr<ofTrueTypeFont> _font){
 
 //Inputs
 
-void Levels::onMouseDown(ofVec2f _position, function<void(string _text, string _action)> callback){
+void Levels::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
     
-    interface.mouseDown(_position, [&](string text, string action){
+    interface.mouseDown(_touch, [&](string text, string action){
         callback(text, action);
     });
     
-    lastPos = _position;
-    movement = 0;
+    if(_touch.id == 0){
+     
+        lastPos = _touch;
+        movement = 0;
+        
+    }
     
 }
 
-void Levels::onMouseMove(ofVec2f _position, function<void(string _text, string _action)> callback){
+void Levels::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
     
-    deltaMove = ofVec2f(0, _position.y - lastPos.y);
-    
-    movement += deltaMove.y;
-    
-    cout << movement << endl;
-    
-    interface.mouseMove(_position, [&](string text, string action){
+    interface.mouseMove(_touch, [&](string text, string action){
         callback(text, action);
     });
     
-    lastPos = _position;
+    if(_touch.id == 0){
+     
+        deltaMove = ofVec2f(0, _touch.y - lastPos.y);
+        
+        movement += deltaMove.y;
+        
+        lastPos = _touch;
+        
+    }
     
 }
 
-void Levels::onMouseDrag(ofVec2f _position, function<void(string _text, string _action)> callback){
+void Levels::onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
     
-    interface.mouseDrag(_position, [&](string text, string action){
-        callback(text, action);
-    });
-    
-}
-
-void Levels::onMouseUp(ofVec2f _position, function<void(string _text, string _action)> callback){
-    
-    cout << movement << endl;
-    
-    interface.mouseUp(_position, [&](string text, string action){
-        if(abs(movement) < 5) callback(text, action);
+    interface.mouseUp(_touch, [&](string text, string action){
+        if(abs(movement) < 5 && _touch.id == 0) callback(text, action);
     });
     
 }

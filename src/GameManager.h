@@ -52,9 +52,9 @@ public:
     
     //Input
     
-    void mouseDown(ofVec2f _position);
-    void mouseUp(ofVec2f _position);
-    void mouseMove(ofVec2f _position);
+    void mouseDown(ofTouchEventArgs & _touch);
+    void mouseUp(ofTouchEventArgs & _touch);
+    void mouseMove(ofTouchEventArgs & _touch);
     
 };
 
