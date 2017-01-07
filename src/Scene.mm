@@ -27,7 +27,6 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     
     actuatorBox.set(-1, -1, ofGetWidth() + 10, 0.0488281 * ofGetHeight());
     
-    
     initializeGPUData();
     
 };
@@ -258,11 +257,13 @@ void Scene::update(){
         
     //Update actuators
     
-    if(activeActuator != nullptr){
+    for(int i = 0; i < touches.size(); i++){
         
-        ofVec2f force = (touchPos - activeActuator->getPosition()) * 1.4;
-        activeActuator->applyForce(force);
-        
+        if(activeActuators[i] != nullptr && i < activeActuators.size()){
+            ofVec2f force = (touches[i] - activeActuators[i]->getPosition()) * 1.4;
+            activeActuators[i]->applyForce(force);
+        }
+    
     }
     
     for(int i = 0; i < actuators.size(); i++){
@@ -358,14 +359,20 @@ void Scene::setPause(bool _pause){
 
 void Scene::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){
 
-    touchPos = ofVec2f(_touch.x, _touch.y);
+    if(_touch.id < touches.size()){
+        touches[_touch.id] = _touch;
+    }
     
-    for(int i = 0; i < actuators.size(); i++){
-        
-        if(actuators[i]->isOver(touchPos)){
+    if(_touch.id < activeActuators.size()){
+     
+        for(int i = 0; i < actuators.size(); i++){
             
-            activeActuator = actuators[i];
-            break;
+            if(actuators[i]->isOver(_touch)){
+                
+                activeActuators[_touch.id] = actuators[i];
+                break;
+                
+            }
             
         }
         
@@ -379,17 +386,33 @@ void Scene::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, s
 
 void Scene::onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){
     
-    activeActuator = nullptr;
-    
     interface.mouseUp(_touch, [&](string _text, string _action){
         _callback(_text, _action);
     });
+    
+    //Reset the active actuator
+    
+    if(_touch.id < activeActuators.size()){
+        
+        activeActuators[_touch.id] = nullptr;
+        
+    }
+    
+    //Reset touch
+    
+    if(_touch.id < touches.size()){
+        
+        touches[_touch.id] = ofVec2f(INFINITY);
+        
+    }
     
 }
 
 void Scene::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){
     
-    touchPos = ofVec2f(_touch.x, _touch.y);
+    if(_touch.id < touches.size()){
+        touches[_touch.id] = _touch;
+    }
     
 }
 
@@ -598,11 +621,18 @@ void Scene::logXML(string _fileName){
     
 }
 
+//This function sets up the scene with a xml file.
+
 void Scene::XMLSetup(string _xmlFile){
     
     loadXML(_xmlFile, [&](ofxXmlSettings _XML){
     
         logXML(_xmlFile);
+        
+        //Multitouch
+        
+        touches.erase(touches.begin(), touches.end());
+        touches = vector<ofVec2f>(10, ofVec2f(INFINITY));
         
         //Main settings
         
@@ -660,6 +690,9 @@ void Scene::XMLSetup(string _xmlFile){
         actuators.erase(actuators.begin(), actuators.end());
         
         int numActuators = _XML.getValue("actuators:MAX_ACTUATORS_NUM", 0);
+        
+        activeActuators.erase(activeActuators.begin(), activeActuators.end());
+        activeActuators = vector<shared_ptr<Actuator>>(numActuators, nullptr);
         
         for(int i = 0; i < numActuators; i++){
             

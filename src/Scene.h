@@ -40,7 +40,7 @@ private:
     int MAX_TAIL_LENGTH = 10;
     int MAX_ACTUATORS_NUM = 3;
     
-    ofVec2f touchPos;
+    vector<ofVec2f> touches;
     float time;
     void renderToScreen() override;
     
@@ -64,7 +64,7 @@ private:
     ofRectangle actuatorBox;
     
     vector<shared_ptr<Actuator>> actuators;
-    shared_ptr<Actuator> activeActuator;
+    vector<shared_ptr<Actuator>> activeActuators;
     
     //Fixed actuators
     
