@@ -163,6 +163,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E4C31E81E1FFF25006B5AE4 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Sounds;
+			sourceTree = "<group>";
+		};
 		0E9BFF941E043DFB007F9857 /* GUI */ = {
 			isa = PBXGroup;
 			children = (
@@ -369,6 +376,7 @@
 				0E9BFF9C1E053BFD007F9857 /* Screens */,
 				0E9BFF941E043DFB007F9857 /* GUI */,
 				0E9BFF9B1E053B0E007F9857 /* Utils */,
+				0E4C31E81E1FFF25006B5AE4 /* Sounds */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;

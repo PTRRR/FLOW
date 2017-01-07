@@ -81,7 +81,7 @@ void Levels::update(){
                 if(i > 0){
                     
                     ofVec2f offset = ofVec2f(0, ofGetHeight() * lineHeightMultiplier);
-                    ofVec2f newPosition = buttons[i]->getPosition() + (buttons[i - 1]->getPosition() + offset - buttons[i]->getPosition()) * 0.5;
+                    ofVec2f newPosition = buttons[i]->getPosition() + (buttons[i - 1]->getPosition() + offset - buttons[i]->getPosition()) * 0.7;
                     
                     buttons[i]->setPosition(newPosition);
                     
@@ -92,7 +92,7 @@ void Levels::update(){
                 if(i < buttons.size() - 1){
                     
                     ofVec2f offset = ofVec2f(0, ofGetHeight() * lineHeightMultiplier);
-                    ofVec2f newPosition = buttons[i]->getPosition() + (buttons[i + 1]->getPosition() - offset - buttons[i]->getPosition()) * 0.5;
+                    ofVec2f newPosition = buttons[i]->getPosition() + (buttons[i + 1]->getPosition() - offset - buttons[i]->getPosition()) * 0.7;
                     
                     buttons[i]->setPosition(newPosition);
                     
@@ -111,13 +111,13 @@ void Levels::update(){
     if(buttons[buttons.size() - 1]->getPosition().y > ofGetHeight() / 2 + ofGetHeight() * lineHeightMultiplier * (buttons.size() - 1)){
         
         ofVec2f targetPosition = ofVec2f(buttons[buttons.size() - 1]->getPosition().x, ofGetHeight() / 2 + ofGetHeight() * lineHeightMultiplier * (buttons.size() - 1));
-        ofVec2f newPosition = buttons[buttons.size() - 1]->getPosition() + (targetPosition - buttons[buttons.size() - 1]->getPosition()) * 0.5;
+        ofVec2f newPosition = buttons[buttons.size() - 1]->getPosition() + (targetPosition - buttons[buttons.size() - 1]->getPosition()) * 0.3;
         buttons[buttons.size() - 1]->setPosition(newPosition);
         
     }else if(buttons[0]->getPosition().y < ofGetHeight() / 2 - ofGetHeight() * lineHeightMultiplier * (buttons.size() - 1)){
         
         ofVec2f targetPosition = ofVec2f(buttons[0]->getPosition().x, ofGetHeight() / 2 - ofGetHeight() * lineHeightMultiplier * (buttons.size() - 1));
-        ofVec2f newPosition = buttons[0]->getPosition() + (targetPosition - buttons[0]->getPosition()) * 0.5;
+        ofVec2f newPosition = buttons[0]->getPosition() + (targetPosition - buttons[0]->getPosition()) * 0.3;
         buttons[0]->setPosition(newPosition);
         
     }
@@ -150,12 +150,17 @@ void Levels::onMouseDown(ofVec2f _position, function<void(string _text, string _
     });
     
     lastPos = _position;
+    movement = 0;
     
 }
 
 void Levels::onMouseMove(ofVec2f _position, function<void(string _text, string _action)> callback){
     
     deltaMove = ofVec2f(0, _position.y - lastPos.y);
+    
+    movement += deltaMove.y;
+    
+    cout << movement << endl;
     
     interface.mouseMove(_position, [&](string text, string action){
         callback(text, action);
@@ -175,8 +180,10 @@ void Levels::onMouseDrag(ofVec2f _position, function<void(string _text, string _
 
 void Levels::onMouseUp(ofVec2f _position, function<void(string _text, string _action)> callback){
     
+    cout << movement << endl;
+    
     interface.mouseUp(_position, [&](string text, string action){
-        callback(text, action);
+        if(abs(movement) < 5) callback(text, action);
     });
     
 }

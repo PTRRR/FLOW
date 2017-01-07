@@ -4,7 +4,7 @@
 void ofApp::setup(){	
 
     mainFont = shared_ptr<ofTrueTypeFont>(new ofTrueTypeFont());
-    mainFont->load("GT-Cinetype-Trial-Regular.otf", 35);
+    mainFont->load("GT-Cinetype-Trial-Regular.otf", 30);
     
     gameManager = GameManager(mainFont);
     

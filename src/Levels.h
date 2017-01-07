@@ -29,6 +29,8 @@ private:
     float lineHeightMultiplier = 0.06;
     ofVec2f lastPos = ofVec2f(0);
     ofVec2f deltaMove = ofVec2f(0);
+    bool hasMoved = false;
+    float movement = 0;
     Interface interface;
     bool XMLExists(string _xmlName);
     

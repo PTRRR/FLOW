@@ -141,7 +141,7 @@ void GameManager::mouseUp(ofVec2f _position){
                     currentScene->setPause(true);
                 }
                 
-                screenPipeline.setScreenActive(menu);
+                screenPipeline.setScreenActive(levels);
                 
             }else if(action == "EXIT"){
                 

@@ -27,6 +27,7 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     
     actuatorBox.set(-1, -1, ofGetWidth() + 10, 0.0488281 * ofGetHeight());
     
+    
     initializeGPUData();
     
 };

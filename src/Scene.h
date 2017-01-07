@@ -21,6 +21,7 @@
 #include "Actuator.h"
 #include "Polygone.h"
 #include "ofxXmlSettings.h"
+#include "ofxOpenALSoundPlayer.h"
 
 class Scene : public Screen{
 
@@ -104,6 +105,9 @@ private:
     vector<ofIndexType> tailIndices;
     
     void updateParticlesRenderingData();
+    
+    //Sounds
+
     
     //XML files
     
