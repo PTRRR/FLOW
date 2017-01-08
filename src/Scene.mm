@@ -27,6 +27,8 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     
     actuatorBox.set(-1, -1, ofGetWidth() + 10, 0.0488281 * ofGetHeight());
     
+    actuatorImg.load("images/actuator.png");
+    
     initializeGPUData();
     
 };
@@ -139,10 +141,16 @@ void Scene::renderToScreen(){
     }
     
     //Draw polygones
+
+    ofPushStyle();
     
-    for(int i = 0; i < polygones.size(); i++){
-        polygones[i]->debugDraw();
-    }
+    polygonesVbo.drawElements(GL_TRIANGLES, (int) polygonesIndices.size());
+    
+    ofPopStyle();
+    
+//    for(int i = 0; i < polygones.size(); i++){
+//        polygones[i]->debugDraw();
+//    }
     
     //Draw actuator box
     
@@ -150,14 +158,14 @@ void Scene::renderToScreen(){
     ofFill();
     ofDrawRectangle(actuatorBox.x, actuatorBox.y, actuatorBox.x + actuatorBox.width, actuatorBox.y + actuatorBox.height);
     ofSetColor(255, 255, 255, getAlpha());
-    ofNoFill();
-    ofDrawRectangle(actuatorBox.x, actuatorBox.y, actuatorBox.x + actuatorBox.width, actuatorBox.y + actuatorBox.height);
+//    ofNoFill();
+//    ofDrawRectangle(actuatorBox.x, actuatorBox.y, actuatorBox.x + actuatorBox.width, actuatorBox.y + actuatorBox.height);
     
     //Draw disabled actuators
     
     for(int i = 0; i < actuators.size(); i++){
         if(!actuators[i]->getEnabled()){
-            ofDrawCircle(actuators[i]->getPosition(), 20);
+            actuatorImg.draw(actuators[i]->getPosition() - 20 , 40, 40);
         }
     }
     
@@ -235,6 +243,48 @@ void Scene::updateParticlesRenderingData(){
     
     particlesTailVbo.updateVertexData(&tailPoints[0], (int) tailPoints.size());
     particlesTailVbo.updateColorData(&tailColors[0], (int) tailColors.size());
+    
+}
+
+void Scene::updatePolygonesRenderingData(){
+    
+    //Static data
+    
+    polygonesVertices.erase(polygonesVertices.begin(), polygonesVertices.end());
+    polygonesIndices.erase(polygonesIndices.begin(), polygonesIndices.end());
+    
+    int offsetIndices = 0;
+    
+    for(int i = 0; i < polygones.size(); i++){
+        
+        cout << polygones[i]->getVertices().size() << endl;
+        cout << polygones[i]->getIndices().size() << endl;
+       
+        //Set vertices
+        
+        for(int j = 0; j < polygones[i]->getVertices().size(); j++){
+            
+            polygonesVertices.push_back(polygones[i]->getVertices()[j]);
+            float cValue = ofRandom(1);
+            polygoneVerticesColor.push_back(ofFloatColor(cValue, cValue, cValue, 1));
+            
+        }
+
+        //Set indices
+      
+        for(int j = 0; j < polygones[i]->getIndices().size(); j++){
+        
+            polygonesIndices.push_back(ofIndexType(polygones[i]->getIndices()[j] + offsetIndices));
+            
+        }
+
+        offsetIndices += polygones[i]->getVertices().size();
+        
+    }
+    
+    polygonesVbo.setVertexData(&polygonesVertices[0], (int) polygonesVertices.size(), GL_STATIC_DRAW);
+    polygonesVbo.setIndexData(&polygonesIndices[0], (int) polygonesIndices.size(), GL_STATIC_DRAW);
+    polygonesVbo.setColorData(&polygoneVerticesColor[0], (int) polygoneVerticesColor.size(), GL_STATIC_DRAW);
     
 }
 
@@ -546,6 +596,17 @@ void Scene::saveSceneToXML(string _fileName){
             
         }
         
+        xml.addTag("indices");
+        xml.pushTag("indices");
+        
+        for(int j = 0; j < polygones[i]->getIndices().size(); j++){
+            
+            xml.addValue("index", polygones[i]->getIndices()[j]);
+            
+        }
+        
+        xml.popTag();
+        
         xml.popTag(); //vertice
         xml.popTag(); //vertices
     }
@@ -778,6 +839,8 @@ void Scene::XMLSetup(string _xmlFile){
                 
                 newPolygone->addVertex(_XML.getValue("X", 0.0) * ofGetWidth(), _XML.getValue("Y", 0.0) * ofGetHeight());
                 
+                polygonesVertices.push_back(ofVec3f(_XML.getValue("X", 0.0) * ofGetWidth(), _XML.getValue("Y", 0.0) * ofGetHeight(), 0));
+                
                 _XML.popTag();
                 
             }
@@ -790,9 +853,13 @@ void Scene::XMLSetup(string _xmlFile){
             
         }
         
+        updatePolygonesRenderingData();
+        
         _XML.popTag();
         
     });
+    
+    saveSceneToXML(_xmlFile);
     
 }
 

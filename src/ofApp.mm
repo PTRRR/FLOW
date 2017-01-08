@@ -4,7 +4,8 @@
 void ofApp::setup(){	
 
     mainFont = shared_ptr<ofTrueTypeFont>(new ofTrueTypeFont());
-    mainFont->load("GT-Cinetype-Trial-Regular.otf", 30);
+    mainFont->load("futura_book.otf", 30);
+//    mainFont->setLetterSpacing(1.3);
     
     gameManager = GameManager(mainFont);
     

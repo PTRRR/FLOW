@@ -37,14 +37,29 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
 
     screenPipeline.setScreenActive(splashScreen);
     
+    //Main sound
+    
+    mainSound.load("sounds/main.mp3");
+    mainSound.setLoop(true);
+    mainSound.setVolume(0);
+    mainSound.play();
+    
 };
 
 void GameManager::update(){
     
     if(!initialTimeoutIsOver && ofGetElapsedTimeMillis() >= initialTimeout){
         
-        screenPipeline.setScreenActive(menu);
+        screenPipeline.setScreenActive(createNewScene("SCENE", "scene_2.xml"));
         initialTimeoutIsOver = true;
+        
+    }
+    
+    //First fade in volume.
+    
+    if(mainSound.getVolume() < 1){
+     
+        mainSound.setVolume(mainSound.getVolume() + 0.003);
         
     }
     
