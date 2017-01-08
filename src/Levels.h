@@ -33,7 +33,6 @@ private:
     bool hasMoved = false;
     float movement = 0;
     Interface interface;
-    bool XMLExists(string _xmlName);
     
     //Rendering
     

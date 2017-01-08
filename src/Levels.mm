@@ -49,28 +49,6 @@ Levels::Levels(shared_ptr<ofTrueTypeFont> _font){
     
 }
 
-//Private
-
-bool Levels::XMLExists(string _xmlName){
-    
-    ofxXmlSettings XML;
-    
-    if( XML.loadFile(_xmlName) ){
-        
-        return true;
-        
-    }else if( XML.loadFile(ofxiOSGetDocumentsDirectory() + _xmlName) ){
-        
-        return true;
-        
-    }else{
-        
-        return false;
-        
-    }
-    
-}
-
 //Public
 
 void Levels::update(){

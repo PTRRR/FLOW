@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "ofxiOS.h"
+#include "ofxXmlSettings.h"
 
 class Screen {
 
@@ -65,6 +66,13 @@ public:
     int getIndex();
     bool isActive();
     string getName();
+    
+    //XML
+    
+    void saveXML(string _name, ofxXmlSettings _XML);
+    void loadXML(string _xmlFile, function<void(ofxXmlSettings _XML)> _callback);
+    void logXML(string _fileName);
+    bool XMLExists(string _xmlName);
     
 };
 

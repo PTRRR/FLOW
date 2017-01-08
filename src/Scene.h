@@ -134,10 +134,7 @@ private:
 
     
     //XML files
-    
-    void loadXML(string _xmlFile, function<void(ofxXmlSettings _XML)> _callback);
-    void saveXML(string _xmlFile, ofxXmlSettings _XML);
-    void logXML(string _fileName);
+
     void saveSceneToXML(string _fileName);
     
 public:
