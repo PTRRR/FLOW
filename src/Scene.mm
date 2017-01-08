@@ -16,11 +16,11 @@ Scene::Scene(){
 
 Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     
-    time = 0.0f;
-    
-    //Create the user interface : MENU button
+    //Create the user interface
     
     interface = Interface(_mainFont);
+
+    //Loade the image that will represend the button
     
     backButtonImg.load("images/backButton.png");
     
@@ -29,6 +29,8 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     shared_ptr<Button> backButton = interface.addButton("SCENE-MENU", "SCENE-MENU", ofVec2f(0.0390625 * ofGetWidth()));
     backButton->setDimensions(ofVec2f(0.0390625 * ofGetWidth()));
     backButton->setImage(backButtonImg);
+    
+    //Loade the image that will represend the button
     
     optionsButtonImg.load("images/options.png");
     
@@ -39,17 +41,28 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     optionsButton->setImage(optionsButtonImg);
     
     //Create the actuator box, where the player can take the actuators
+    //This is useful to detect whether the actuators are active or not.
+    //The player can drag them from the box to make them become active.
+    //Actuators activity is defined in the update function.
     
     actuatorBox.set(-1, -1, ofGetWidth() + 10, 0.05859375 * ofGetHeight());
     
-    //Load the images used to render
+    //Load all textures useful to render the differents objects of the game.
     
     actuatorImg.load("images/actuator.png");
     receptorImg.load("images/receptor.png");
     emitterImg.load("images/emitter.png");
     activeActuatorImg.load("images/activeActuator.png");
+    particleImg.load("images/particleTex_1.png");
+    
+    //Load the font that will be used to display informations on the scene
+    
+    infosFont.load("GT-Cinetype-Mono.ttf", 0.009765625 * ofGetWidth());
     
 };
+
+//This function is called once at the set up of the scene, at the end of the XMLSetup function.
+//This takes care of allocating enough space for data used for rendering the scene.
 
 void Scene::initializeGPUData(){
     
@@ -61,7 +74,9 @@ void Scene::initializeGPUData(){
     polygoneProgram.load("shaders/polygoneShader");
     polygoneWireframeProgram.load("shaders/polygoneShaderWireframe");
     
-    //Set un vbo for rendering the particles head
+    //HEADS.
+    //Set un vbo for rendering the particles head.
+    //We allocate the maximum space so we don't need to change it afterwards.
     
     positions = vector<ofVec3f>(MAX_PARTICLES, ofVec3f(0));
     attributes = vector<ofVec3f>(MAX_PARTICLES, ofVec3f(0));
@@ -69,11 +84,14 @@ void Scene::initializeGPUData(){
     particlesHeadVbo.setVertexData(&positions[0], (int) positions.size(), GL_DYNAMIC_DRAW);
     particlesHeadVbo.setNormalData(&attributes[0], (int) attributes.size(), GL_STATIC_DRAW);
     
-    //Set un vbo for rendering the particles tail
-    //20 is the max number of points composing the particle tail
+    //TAILS.
+    //Set un vbo for rendering the particles tail.
+    //MAX_TAIL_LENGTH is the max number of points composing the particle tail.
     
     tailPoints = vector<ofVec3f>(MAX_PARTICLES * MAX_TAIL_LENGTH, ofVec3f(0));
     tailColors = vector<ofFloatColor>(MAX_PARTICLES * MAX_TAIL_LENGTH, ofFloatColor(1.0, 1.0, 1.0, 0.0));
+    
+    //Create the indices that will tell the graphic card witch segments to draw.
     
     for(int i = 0; i < MAX_PARTICLES; i++){
         
@@ -86,17 +104,18 @@ void Scene::initializeGPUData(){
         
     }
     
+    //Allocate all the date computed above in the particleTailVbo.
+    
     particlesTailVbo.setVertexData(&tailPoints[0], (int) tailPoints.size(), GL_STREAM_DRAW);
     particlesTailVbo.setColorData(&tailColors[0], (int) tailColors.size(), GL_STREAM_DRAW);
     particlesTailVbo.setIndexData(&tailIndices[0], (int) tailIndices.size(), GL_STATIC_DRAW);
     
     //Update GPU data
+    //Here we calculate and update the first time all the data that will be stored in the objects declared just before.
     
     updateParticlesRenderingData();
     
-    //Load particle texture
-    
-    particleImg.load("images/particleTex_1.png");
+    //Here we update the container of all particles present in the scene to simplify rendering pipeline.
     
     updateAllParticles();
     
@@ -106,7 +125,8 @@ void Scene::initializeGPUData(){
 
 void Scene::renderToScreen(){
     
-    //Draw background
+    //Draw background.
+    //This clears the last frame.
     
     ofSetColor(0, 0, 0, getAlpha());
     ofDrawRectangle(0, 0, ofGetWidth() + 1, ofGetHeight());
@@ -117,23 +137,20 @@ void Scene::renderToScreen(){
     
     updateParticlesRenderingData();
     
-    //First draw call
-    //Draw particles tail
+    //1 - Draw call
+    //Draw particles tail.
     
     ofEnableBlendMode(OF_BLENDMODE_ADD);
     
     glLineWidth(2);
-    glEnable(GL_LINE_SMOOTH);
-    glHint(GL_LINE_SMOOTH_HINT,  GL_NICEST);
-    
     particleTailProgram.begin();
     
     particlesTailVbo.drawElements(GL_LINES, (int) tailIndices.size());
     
     particleTailProgram.end();
     
-    //Second draw call
-    //Draw particles head
+    //2 - Draw call
+    //Draw all particles head.
 
     ofEnablePointSprites();
     
@@ -168,7 +185,7 @@ void Scene::renderToScreen(){
         
         float alpha = ((actuators[i]->getPosition().y - actuatorBox.height / 2) / (actuatorBox.height / 2)) * 255;
         
-        ofSetColor(255, 255, 255, ofClamp(alpha, 0, 255) * getAlpha());
+        ofSetColor(255, 255, 255, ofClamp(alpha, 0, getAlpha()));
         activeActuatorImg.draw(actuators[i]->getPosition() - activeActuatorImg.getWidth() / 2);
         actuators[i]->debugDraw();
         ofPopStyle();

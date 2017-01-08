@@ -33,6 +33,8 @@ private:
     
     //Main
     
+    ofTrueTypeFont infosFont;
+    
     bool IS_PAUSED = false;
     int ORIGINAL_WIDTH = ofGetWidth();
     int ORIGINAL_HEIGHT = ofGetHeight();
@@ -41,7 +43,7 @@ private:
     int MAX_ACTUATORS_NUM = 3;
     
     vector<ofVec2f> touches;
-    float time;
+    float time = 0;
     void renderToScreen() override;
     
     //GUI
