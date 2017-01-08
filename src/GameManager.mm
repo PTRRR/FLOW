@@ -50,7 +50,7 @@ void GameManager::update(){
     
     if(!initialTimeoutIsOver && ofGetElapsedTimeMillis() >= initialTimeout){
         
-        screenPipeline.setScreenActive(createNewScene("SCENE", "scene_2.xml"));
+        screenPipeline.setScreenActive(createNewScene("SCENE", "scene_1.xml"));
         initialTimeoutIsOver = true;
         
     }

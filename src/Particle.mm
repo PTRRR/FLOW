@@ -12,7 +12,7 @@ Particle::Particle(){
 
     //Initialize some variables
     
-    updateRate = 4;
+    updateRate = 3;
     numPoints = 20;
     points = vector<ofVec2f>(numPoints, getPosition());
     
@@ -30,7 +30,7 @@ Particle::Particle(ofVec2f _position){
     
     //Initialize some variables
     
-    updateRate = 4; //More hight is the update rate longer will be the tail
+    updateRate = 1; //More hight is the update rate longer will be the tail
     numPoints = 10;
     points = vector<ofVec2f>(numPoints, getPosition());
     

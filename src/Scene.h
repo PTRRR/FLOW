@@ -74,6 +74,7 @@ private:
     vector<ofVec3f> tailPoints;
     vector<ofFloatColor> tailColors;
     vector<ofIndexType> tailIndices;
+    vector<ofVec3f> baricentricCoords;
     
     void updateParticlesRenderingData();
     
@@ -103,7 +104,11 @@ private:
     
     //Polygones rendering
     
+    ofShader polygoneProgram;
+    ofShader polygoneWireframeProgram;
+    
     ofVbo polygonesVbo;
+    ofMesh polygonesMesh;
     vector<ofVec3f> polygonesVertices;
     vector<ofIndexType> polygonesIndices;
     vector<ofFloatColor> polygoneVerticesColor;

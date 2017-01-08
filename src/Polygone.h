@@ -25,6 +25,7 @@ private:
     vector<ofPoint> triangulatedVertices;
     vector<ofPoint> vertices;
     vector<ofIndexType> indices;
+    vector<ofVec3f> baricentricCoords;
     
     ofPolyline boundingBoxDebug;
     
@@ -41,6 +42,7 @@ public:
     //Main
     
     void debugDraw();
+    void drawWireframe();
     void addVertex(float _x, float y);
     
     //Set
@@ -56,6 +58,8 @@ public:
     ofVec2f getClosestPoint(ofVec2f _position);
     vector<ofPoint> getVertices();
     vector<ofIndexType> getIndices();
+    ofxTriangle getTriangulatedPolygone();
+    vector<ofVec3f> getBaricentricCoords();
 
     
 };

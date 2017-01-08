@@ -45,6 +45,31 @@ void Polygone::debugDraw(){
     
 }
 
+void Polygone::drawWireframe(){
+    
+    ofSetColor(255, 255, 255);
+    
+    for(int i = 0; i < triangulatedPoligone.nTriangles; i++){
+        
+        float aX = triangulatedPoligone.triangles[i].a.x;
+        float aY = triangulatedPoligone.triangles[i].a.y;
+        
+        float bX = triangulatedPoligone.triangles[i].b.x;
+        float bY = triangulatedPoligone.triangles[i].b.y;
+        
+        float cX = triangulatedPoligone.triangles[i].c.x;
+        float cY = triangulatedPoligone.triangles[i].c.y;
+        
+        ofDrawLine(aX, aY, bX, bY);
+        ofDrawLine(bX, bY, cX, cY);
+        ofDrawLine(cX, cY, aX, aY);
+        
+    }
+    
+    
+    
+}
+
 void Polygone::addVertex(float _x, float _y){
     
     vertices.push_back(ofPoint(_x, _y));
@@ -65,11 +90,24 @@ void Polygone::addVertex(float _x, float _y){
             ofPoint b = ofPoint(triangulatedPoligone.triangles[j].b.x, triangulatedPoligone.triangles[j].b.y);
             ofPoint c = ofPoint(triangulatedPoligone.triangles[j].c.x, triangulatedPoligone.triangles[j].c.y);
             
+            baricentricCoords.push_back(ofVec3f(1, 0, 0));
+            baricentricCoords.push_back(ofVec3f(0, 0, 1));
+            baricentricCoords.push_back(ofVec3f(0, 1, 0));
+            
             for(int i = 0; i < vertices.size(); i++){
                 
-                if(a == vertices[i]) indices.push_back(i);
-                if(b == vertices[i]) indices.push_back(i);
-                if(c == vertices[i]) indices.push_back(i);
+                if(a == vertices[i]){
+                    indices.push_back(i);
+                    
+                }
+                if(b == vertices[i]){
+                    indices.push_back(i);
+                    
+                }
+                if(c == vertices[i]){
+                    indices.push_back(i);
+                    
+                }
                 
             }
             
@@ -177,6 +215,18 @@ vector<ofPoint> Polygone::getVertices(){
 vector<ofIndexType> Polygone::getIndices(){
     
     return indices;
+    
+}
+
+ofxTriangle Polygone::getTriangulatedPolygone(){
+    
+    return triangulatedPoligone;
+    
+}
+
+vector<ofVec3f> Polygone::getBaricentricCoords(){
+    
+    return baricentricCoords;
     
 }
 
