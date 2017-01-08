@@ -21,7 +21,10 @@ private:
     
     shared_ptr<ofTrueTypeFont> font;
     ofVec2f dimensions;
+    ofImage img;
     float offset = 25;
+    ofVec2f size;
+    
     
     //Content
     
@@ -39,6 +42,8 @@ public:
     void setFont(shared_ptr<ofTrueTypeFont> _font);
     void setText(string _text);
     void setAction(string _action);
+    void setImage(ofImage _image);
+    void setDimensions(ofVec2f _dimensions);
     
     //Get
     

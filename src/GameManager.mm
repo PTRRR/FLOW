@@ -28,12 +28,24 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     
     levels = shared_ptr<Levels>(new Levels(mainFont));
     levels->setName("LEVELS");
+    
+    //Options screen
+    
+    options = shared_ptr<Options>(new Options(mainFont));
+    options->setName("OPTIONS");
+    
+    //Scene menu screen
+    
+    sceneMenu = shared_ptr<SceneMenu>(new SceneMenu(mainFont));
+    sceneMenu->setName("SCENE-MENU");
 
     //Screen pipeline setup
 
     screenPipeline.addScreen(splashScreen);
     screenPipeline.addScreen(menu);
     screenPipeline.addScreen(levels);
+    screenPipeline.addScreen(sceneMenu);
+    screenPipeline.addScreen(options);
 
     screenPipeline.setScreenActive(splashScreen);
     
@@ -50,7 +62,7 @@ void GameManager::update(){
     
     if(!initialTimeoutIsOver && ofGetElapsedTimeMillis() >= initialTimeout){
         
-        screenPipeline.setScreenActive(createNewScene("SCENE", "scene_1.xml"));
+        screenPipeline.setScreenActive(menu);
         initialTimeoutIsOver = true;
         
     }
@@ -117,32 +129,39 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
         
         if (screenPipeline.getActiveScreen() == levels) {
             
-            //First we check if some scenes already exists.
-            //If not we create one with the level selected by the user.
-            //If some scenes already exists then we check if the level selected by the user is alread
-            //loaded. If yes juste set that scene active. If not create a new scene and set it active.
-            
-            if (currentScene != nullptr) {
+            if(action == "BACK"){
                 
-                if(currentScene->getName() == text){
+                screenPipeline.setScreenActive(screenPipeline.getLastActiveScreen());
+                
+            }else{
+                
+                //First we check if some scenes already exists.
+                //If not we create one with the level selected by the user.
+                //If some scenes already exists then we check if the level selected by the user is alread
+                //loaded. If yes juste set that scene active. If not create a new scene and set it active.
+                
+                if (currentScene != nullptr) {
                     
-                    currentScene->setPause(false);
-                    screenPipeline.setScreenActive(currentScene);
+                    if(currentScene->getName() == text){
+                        
+                        currentScene->setPause(false);
+                        screenPipeline.setScreenActive(currentScene);
+                        
+                    }else{
+                        
+                        screenPipeline.removeScreen(currentScene);
+                        currentScene = nullptr;
+                        screenPipeline.setScreenActive(createNewScene(text, action));
+                        
+                    }
                     
                 }else{
                     
-                    screenPipeline.removeScreen(currentScene);
-                    currentScene = nullptr;
                     screenPipeline.setScreenActive(createNewScene(text, action));
                     
                 }
                 
-            }else{
-                
-                screenPipeline.setScreenActive(createNewScene(text, action));
-                
             }
-            
             
         }else{
             
@@ -162,6 +181,29 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
                 
                 ofExit();
                 exit(0);
+                
+            }else if(action == "BACK"){
+                
+                screenPipeline.setScreenActive(menu);
+                
+            }else if(action == "SCENE-MENU"){
+                
+                currentScene->setPause(true);
+                screenPipeline.setScreenActive(sceneMenu);
+                
+            }else if(action == "OPTIONS"){
+                
+                currentScene->setPause(true);
+                screenPipeline.setScreenActive(options);
+                
+            }else if(action == "RESUME"){
+                
+                if (currentScene != nullptr) {
+                    
+                    currentScene->setPause(false);
+                    screenPipeline.setScreenActive(currentScene);
+                    
+                }
                 
             }
             

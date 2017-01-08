@@ -13,21 +13,26 @@ Button::Button(){};
 Button::Button(shared_ptr<ofTrueTypeFont> _font){
 
     font = _font;
+    size = ofVec2f(0);
 
 };
 
 void Button::draw(){
     
-    if(font == nullptr) return;
-    
-    float left = getPosition().x - dimensions.x / 2 - offset;
-    float top = getPosition().y - dimensions.y / 2 - offset;
-    
-//    ofNoFill();
-//    ofDrawRectangle(left, top, dimensions.x + offset * 2 + 5, dimensions.y + offset * 2 + 5);
-//    ofFill();
-
-    font->drawString(text, getPosition().x - dimensions.x / 2, getPosition().y + dimensions.y / 2);
+    if(img.isAllocated()){
+        
+        img.draw(getPosition().x - dimensions.x / 2, getPosition().y - dimensions.y / 2, dimensions.x, dimensions.y);
+        
+    }else{
+     
+        if(font == nullptr) return;
+        
+//        float left = getPosition().x - dimensions.x / 2 - offset;
+//        float top = getPosition().y - dimensions.y / 2 - offset;
+        
+        font->drawString(text, getPosition().x - dimensions.x / 2, getPosition().y + dimensions.y / 2);
+        
+    }
     
 }
 
@@ -51,6 +56,18 @@ void Button::setText(string _text){
 void Button::setAction(string _action){
     
     action = _action;
+    
+}
+
+void Button::setImage(ofImage _image){
+    
+    img = _image;
+    
+}
+
+void Button::setDimensions(ofVec2f _dimensions){
+    
+    dimensions = _dimensions;
     
 }
 

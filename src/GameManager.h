@@ -16,6 +16,8 @@
 #include "Menu.h"
 #include "Scene.h"
 #include "Levels.h"
+#include "Options.h"
+#include "SceneMenu.h"
 
 class GameManager {
 
@@ -25,7 +27,7 @@ private:
     
     //Timer utilitie
     
-    int initialTimeout = 1000; //millis
+    int initialTimeout = 5000; //millis
     bool initialTimeoutIsOver = false;
     
     //Screens
@@ -35,6 +37,8 @@ private:
     shared_ptr<SplashScreen> splashScreen;
     shared_ptr<Menu> menu;
     shared_ptr<Levels> levels;
+    shared_ptr<Options> options;
+    shared_ptr<SceneMenu> sceneMenu;
     
     //Scenes
     

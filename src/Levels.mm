@@ -20,9 +20,16 @@ Levels::Levels(shared_ptr<ofTrueTypeFont> _font){
     
     int levelIndex = 1;
     
+    interface.addText("- LEVELS -", ofVec2f(ofGetWidth() / 2, ofGetHeight() * 0.06 / 2));
+    
+    backButtonImg.load("images/backButton.png");
+    shared_ptr<Button> backButton = interface.addButton("BACK", "BACK", ofVec2f(0.0390625 * ofGetWidth()));
+    backButton->setDimensions(ofVec2f(0.0390625 * ofGetWidth()));
+    backButton->setImage(backButtonImg);
+    
     while (XMLExists("scene_" + to_string(levelIndex) + ".xml")) {
      
-        shared_ptr<Button> newButton =  interface.addButton("[ " + to_string(levelIndex) + " ]", "scene_" + to_string(levelIndex) + ".xml", ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2 + ofGetHeight() * lineHeightMultiplier * (levelIndex - 1)));
+        shared_ptr<Button> newButton = interface.addButton("[ " + to_string(levelIndex) + " ]", "scene_" + to_string(levelIndex) + ".xml", ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2 + ofGetHeight() * lineHeightMultiplier * (levelIndex - 1)));
 
         newButton->setMass(10);
         newButton->setDamping(0.4);

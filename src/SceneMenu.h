@@ -1,22 +1,20 @@
 //
-//  Levels.h
+//  SceneMenu.h
 //  FLOW
 //
-//  Created by Pietro Alberti on 05.01.17.
+//  Created by Pietro Alberti on 08.01.17.
 //
 //
 
-#ifndef Levels_h
-#define Levels_h
+#ifndef SceneMenu_h
+#define SceneMenu_h
 
 #include <stdio.h>
 #include "Screen.h"
 #include "Interface.h"
-#include "ofxXmlSettings.h"
-#include "Button.h"
 
-class Levels : public Screen{
-
+class SceneMenu : public Screen{
+    
 private:
     
     //Font
@@ -25,15 +23,7 @@ private:
     
     //Interface
     
-    ofImage backButtonImg;
-    vector<shared_ptr<Button>> buttons;
-    float lineHeightMultiplier = 0.06;
-    ofVec2f lastPos = ofVec2f(0);
-    ofVec2f deltaMove = ofVec2f(0);
-    bool hasMoved = false;
-    float movement = 0;
     Interface interface;
-    bool XMLExists(string _xmlName);
     
     //Rendering
     
@@ -47,10 +37,8 @@ private:
     
 public:
     
-    Levels();
-    Levels(shared_ptr<ofTrueTypeFont> _font);
-    
-    void update() override;
+    SceneMenu();
+    SceneMenu(shared_ptr<ofTrueTypeFont> _font);
     
     //Utils
     
@@ -58,4 +46,4 @@ public:
     
 };
 
-#endif /* Levels_h */
+#endif /* SceneMenu_h */

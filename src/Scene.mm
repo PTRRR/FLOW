@@ -21,11 +21,28 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     //Create the user interface : MENU button
     
     interface = Interface(_mainFont);
-    interface.addButton("MENU", "MENU", ofVec2f(ofGetWidth() - _mainFont->stringWidth("MENU"), 50));
+    
+    backButtonImg.load("images/backButton.png");
+    
+    //This keeps a reference to the button created so that we can change its settings.
+    
+    shared_ptr<Button> backButton = interface.addButton("SCENE-MENU", "SCENE-MENU", ofVec2f(0.0390625 * ofGetWidth()));
+    backButton->setDimensions(ofVec2f(0.0390625 * ofGetWidth()));
+    backButton->setImage(backButtonImg);
+    
+    optionsButtonImg.load("images/options.png");
+    
+    //This keeps a reference to the button created so that we can change its settings.
+    
+    shared_ptr<Button> optionsButton = interface.addButton("OPTIONS", "OPTIONS", ofVec2f(ofGetWidth() - 0.0490625 * ofGetWidth(), 0.0390625 * ofGetWidth()));
+    optionsButton->setDimensions(ofVec2f(0.0390625 * ofGetWidth()));
+    optionsButton->setImage(optionsButtonImg);
     
     //Create the actuator box, where the player can take the actuators
     
-    actuatorBox.set(-1, -1, ofGetWidth() + 10, 0.0488281 * ofGetHeight());
+    actuatorBox.set(-1, -1, ofGetWidth() + 10, 0.05859375 * ofGetHeight());
+    
+    //Load the images used to render actuators
     
     actuatorImg.load("images/actuator.png");
     
@@ -161,15 +178,6 @@ void Scene::renderToScreen(){
     }
     
     polygoneWireframeProgram.end();
-    
-    //Draw actuator box
-    
-    ofSetColor(0, 0, 0, getAlpha() * 0.8);
-    ofFill();
-    ofDrawRectangle(actuatorBox.x, actuatorBox.y, actuatorBox.x + actuatorBox.width, actuatorBox.y + actuatorBox.height);
-    ofSetColor(255, 255, 255, getAlpha());
-//    ofNoFill();
-//    ofDrawRectangle(actuatorBox.x, actuatorBox.y, actuatorBox.x + actuatorBox.width, actuatorBox.y + actuatorBox.height);
     
     //Draw disabled actuators
     
@@ -344,7 +352,7 @@ void Scene::update(){
 
             actuators[i]->enable(false);
             
-            ofVec2f position = ofVec2f((ofGetWidth() / 2) - (ofGetWidth() / 4) + i * ((ofGetWidth() / 2) / (actuators.size() - 1)), 0.0488281 * ofGetHeight() / 2);
+            ofVec2f position = ofVec2f((ofGetWidth() / 2) - (ofGetWidth() / 4) + i * ((ofGetWidth() / 2) / (actuators.size() - 1)), actuatorBox.height / 2);
             
             ofVec2f force = (position - actuators[i]->getPosition());
             actuators[i]->applyForce(force);

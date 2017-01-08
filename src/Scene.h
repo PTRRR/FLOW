@@ -46,6 +46,8 @@ private:
     
     //GUI
     
+    ofImage backButtonImg;
+    ofImage optionsButtonImg;
     Interface interface;
     
     //Emitter
