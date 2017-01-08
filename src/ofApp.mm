@@ -4,7 +4,8 @@
 void ofApp::setup(){	
 
     mainFont = shared_ptr<ofTrueTypeFont>(new ofTrueTypeFont());
-    mainFont->load("GT-Cinetype-Trial-Regular.otf", 30);
+    mainFont->load("GT-Cinetype-Mono.ttf", 30);
+    mainFont->setLetterSpacing(1.5);
     
     gameManager = GameManager(mainFont);
     

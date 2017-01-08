@@ -22,7 +22,7 @@ Levels::Levels(shared_ptr<ofTrueTypeFont> _font){
     
     while (XMLExists("scene_" + to_string(levelIndex) + ".xml")) {
      
-        shared_ptr<Button> newButton =  interface.addButton("LEVEL " + to_string(levelIndex), "scene_" + to_string(levelIndex) + ".xml", ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2 + ofGetHeight() * lineHeightMultiplier * (levelIndex - 1)));
+        shared_ptr<Button> newButton =  interface.addButton("[ " + to_string(levelIndex) + " ]", "scene_" + to_string(levelIndex) + ".xml", ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2 + ofGetHeight() * lineHeightMultiplier * (levelIndex - 1)));
 
         newButton->setMass(10);
         newButton->setDamping(0.4);
