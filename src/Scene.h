@@ -51,6 +51,8 @@ private:
     Interface interface;
     
     //Emitter
+    
+    ofImage emitterImg;
 
     vector<shared_ptr<ParticleSystem>> emitters;
     vector<shared_ptr<Particle>> allParticles;
@@ -82,6 +84,8 @@ private:
     
     //Receptor
     
+    ofImage receptorImg;
+    
     vector<shared_ptr<Receptor>> receptors;
     
     //Actuators
@@ -89,6 +93,7 @@ private:
     ofRectangle actuatorBox;
     
     ofImage actuatorImg;
+    ofImage activeActuatorImg;
     
     vector<shared_ptr<Actuator>> actuators;
     vector<shared_ptr<Actuator>> activeActuators;

@@ -15,7 +15,7 @@ Menu::Menu(shared_ptr<ofTrueTypeFont> _font){
     font = _font;
     interface.setFont(font);
     
-    interface.addText("- MENU -", ofVec2f(ofGetWidth() / 2, ofGetHeight() * 0.06 / 2));
+    interface.addText("MENU", ofVec2f(ofGetWidth() / 2, ofGetHeight() * 0.06 / 2));
     interface.addButton("[ PLAY ]", "PLAY", ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2));
     interface.addButton("[ EXIT ]", "EXIT", ofVec2f(ofGetWidth() / 2, ofGetHeight() - ofGetHeight() * 0.06 / 2));
     

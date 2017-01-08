@@ -15,7 +15,7 @@ Options::Options(shared_ptr<ofTrueTypeFont> _font){
     font = _font;
     interface.setFont(font);
     
-    interface.addText("- OPTIONS -", ofVec2f(ofGetWidth() / 2, ofGetHeight() * 0.06 / 2));
+    interface.addText("OPTIONS", ofVec2f(ofGetWidth() / 2, ofGetHeight() * 0.06 / 2));
     
     backButtonImg.load("images/backButton.png");
     

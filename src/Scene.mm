@@ -42,9 +42,12 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     
     actuatorBox.set(-1, -1, ofGetWidth() + 10, 0.05859375 * ofGetHeight());
     
-    //Load the images used to render actuators
+    //Load the images used to render
     
     actuatorImg.load("images/actuator.png");
+    receptorImg.load("images/receptor.png");
+    emitterImg.load("images/emitter.png");
+    activeActuatorImg.load("images/activeActuator.png");
     
 };
 
@@ -119,7 +122,6 @@ void Scene::renderToScreen(){
     
     ofEnableBlendMode(OF_BLENDMODE_ADD);
     
-    ofEnableAntiAliasing();
     glLineWidth(2);
     glEnable(GL_LINE_SMOOTH);
     glHint(GL_LINE_SMOOTH_HINT,  GL_NICEST);
@@ -129,7 +131,6 @@ void Scene::renderToScreen(){
     particlesTailVbo.drawElements(GL_LINES, (int) tailIndices.size());
     
     particleTailProgram.end();
-    ofDisableAntiAliasing();
     
     //Second draw call
     //Draw particles head
@@ -145,22 +146,39 @@ void Scene::renderToScreen(){
     particleHeadProgram.end();
     
     ofDisablePointSprites();
+    
     ofDisableBlendMode();
+    ofEnableAlphaBlending();
     
     ofEnableAlphaBlending();
     
     ofSetColor(255, 255, 255, getAlpha());
     
+    //Draw emitters
+    
+    for(int i = 0; i < emitters.size(); i++){
+        emitterImg.draw(emitters[i]->getPosition() - emitterImg.getWidth() / 2);
+    }
+    
     //Draw actuators
     
     for(int i = 0; i < actuators.size(); i++){
-        if(actuators[i]->getEnabled()) actuators[i]->debugDraw();
+        
+        ofPushStyle();
+        
+        float alpha = ((actuators[i]->getPosition().y - actuatorBox.height / 2) / (actuatorBox.height / 2)) * 255;
+        
+        ofSetColor(255, 255, 255, ofClamp(alpha, 0, 255) * getAlpha());
+        activeActuatorImg.draw(actuators[i]->getPosition() - activeActuatorImg.getWidth() / 2);
+        actuators[i]->debugDraw();
+        ofPopStyle();
+        
     }
     
     //Draw receptors
     
     for(int i = 0; i < receptors.size(); i++){
-        receptors[i]->debugDraw();
+        receptorImg.draw(receptors[i]->getPosition() - receptorImg.getWidth() / 2);
     }
     
     //Draw polygones
@@ -179,6 +197,8 @@ void Scene::renderToScreen(){
     
     polygoneWireframeProgram.end();
     
+    ofSetColor(255, 255, 255, getAlpha());
+    
     //Draw disabled actuators
     
     for(int i = 0; i < actuators.size(); i++){
@@ -190,6 +210,8 @@ void Scene::renderToScreen(){
     //Draw interface
     
     interface.draw();
+    
+    ofDisableAlphaBlending();
     
     updateAllParticles();
     
@@ -218,7 +240,7 @@ void Scene::updateParticlesRenderingData(){
         if(i < allParticles.size()){
             
             positions[i] = allParticles[i]->getPosition();
-            attributes[i].x = allParticles[i]->getMass() * 10; //Radius
+            attributes[i].x = allParticles[i]->getMass() * 6; //Radius
             attributes[i].z = allParticles[i]->getLifeLeft() / allParticles[i]->getLifeSpan() * getAlpha() / 255.0; //Alpha
             
             vector<ofVec2f> points = allParticles[i]->getPoints();
@@ -819,7 +841,7 @@ void Scene::XMLSetup(string _xmlFile){
             
             shared_ptr<Receptor> newReceptor = shared_ptr<Receptor>(new Receptor());
             
-            ofVec2f position = ofVec2f(_XML.getValue("X", 0.0) * ofGetWidth(), _XML.getValue("Y", 0) * ofGetHeight());
+            ofVec2f position = ofVec2f(_XML.getValue("X", 0.0) * ofGetWidth(), _XML.getValue("Y", 0.0) * ofGetHeight());
             float radius = _XML.getValue("radius", 0.0) * ofGetWidth();
             float strength = _XML.getValue("strength", 0.0);
             int maxParticles = _XML.getValue("maxParticles", 0);
