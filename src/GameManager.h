@@ -25,7 +25,7 @@ private:
     
     //Timer utilitie
     
-    int initialTimeout = 5000; //millis
+    int initialTimeout = 1000; //millis
     bool initialTimeoutIsOver = false;
     
     //Screens
@@ -41,6 +41,10 @@ private:
     shared_ptr<Scene> currentScene;
 //    vector<shared_ptr<Scene>> scenes;
     shared_ptr<Scene> createNewScene(string _name, string _xmlFile);
+    
+    //Main sound
+    
+    ofSoundPlayer mainSound;
     
 public:
     

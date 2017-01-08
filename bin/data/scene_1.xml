@@ -2,7 +2,7 @@
     <ORIGINAL_WIDTH>1536</ORIGINAL_WIDTH>
     <ORIGINAL_HEIGHT>2048</ORIGINAL_HEIGHT>
     <MAX_PARTICLES>1000</MAX_PARTICLES>
-    <MAX_TAIL_LENGTH>10</MAX_TAIL_LENGTH>
+    <MAX_TAIL_LENGTH>20</MAX_TAIL_LENGTH>
     <MAX_ACTUATORS_NUM>4</MAX_ACTUATORS_NUM>
 </general>
 <emitters>
@@ -13,7 +13,7 @@
         <boxY>0.000488281</boxY>
         <rate>60.000000000</rate>
         <maxParticles>500</maxParticles>
-        <maxTailLength>10</maxTailLength>
+        <maxTailLength>20</maxTailLength>
     </emitter>
     <emitter>
         <X>0.630208313</X>
@@ -22,7 +22,7 @@
         <boxY>0.000488281</boxY>
         <rate>60.000000000</rate>
         <maxParticles>500</maxParticles>
-        <maxTailLength>10</maxTailLength>
+        <maxTailLength>20</maxTailLength>
     </emitter>
 </emitters>
 <actuators>
@@ -54,12 +54,22 @@
             </vertex>
             <vertex>
                 <X>0.630208313</X>
+                <Y>0.440625012</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                <X>0.630208313</X>
                 <Y>0.537109375</Y>
                 <Z>0.000000000</Z>
             </vertex>
             <vertex>
                 <X>0.369791657</X>
                 <Y>0.537109375</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                <X>0.369791657</X>
+                <Y>0.457109362</Y>
                 <Z>0.000000000</Z>
             </vertex>
             <vertex>
@@ -67,44 +77,24 @@
                 <Y>0.390625000</Y>
                 <Z>0.000000000</Z>
             </vertex>
+            <indices>
+                <index>2</index>
+                <index>5</index>
+                <index>6</index>
+                <index>3</index>
+                <index>4</index>
+                <index>5</index>
+                <index>1</index>
+                <index>2</index>
+                <index>6</index>
+                <index>2</index>
+                <index>3</index>
+                <index>5</index>
+                <index>0</index>
+                <index>1</index>
+                <index>6</index>
+            </indices>
         </vertices>
     </polygone>
-    <polygone>
-        <vertices>
-            <vertex>
-                <X>0.065104164</X>
-                <Y>0.488281250</Y>
-                <Z>0.000000000</Z>
-            </vertex>
-            <vertex>
-                <X>0.369791657</X>
-                <Y>0.927734375</Y>
-                <Z>0.000000000</Z>
-            </vertex>
-            <vertex>
-                <X>0.065104164</X>
-                <Y>0.927734375</Y>
-                <Z>0.000000000</Z>
-            </vertex>
-        </vertices>
-    </polygone>
-    <polygone>
-        <vertices>
-            <vertex>
-                <X>0.934895813</X>
-                <Y>0.488281250</Y>
-                <Z>0.000000000</Z>
-            </vertex>
-            <vertex>
-                <X>0.630208313</X>
-                <Y>0.927734375</Y>
-                <Z>0.000000000</Z>
-            </vertex>
-            <vertex>
-                <X>0.934895813</X>
-                <Y>0.927734375</Y>
-                <Z>0.000000000</Z>
-            </vertex>
-        </vertices>
-    </polygone>
+    
 </polygones>

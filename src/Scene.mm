@@ -27,17 +27,19 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     
     actuatorBox.set(-1, -1, ofGetWidth() + 10, 0.0488281 * ofGetHeight());
     
-    initializeGPUData();
+    actuatorImg.load("images/actuator.png");
     
 };
 
 void Scene::initializeGPUData(){
     
     //GPU Rendering
-    //Load custom shaders and create the program
+    //Load custom shaders and create the programs
     
     particleHeadProgram.load("shaders/particleHead");
     particleTailProgram.load("shaders/particleTail");
+    polygoneProgram.load("shaders/polygoneShader");
+    polygoneWireframeProgram.load("shaders/polygoneShaderWireframe");
     
     //Set un vbo for rendering the particles head
     
@@ -100,11 +102,17 @@ void Scene::renderToScreen(){
     
     ofEnableBlendMode(OF_BLENDMODE_ADD);
     
+    ofEnableAntiAliasing();
+    glLineWidth(2);
+    glEnable(GL_LINE_SMOOTH);
+    glHint(GL_LINE_SMOOTH_HINT,  GL_NICEST);
+    
     particleTailProgram.begin();
     
     particlesTailVbo.drawElements(GL_LINES, (int) tailIndices.size());
     
     particleTailProgram.end();
+    ofDisableAntiAliasing();
     
     //Second draw call
     //Draw particles head
@@ -139,10 +147,20 @@ void Scene::renderToScreen(){
     }
     
     //Draw polygones
+
+    polygoneProgram.begin();
+    polygonesVbo.drawElements(GL_TRIANGLES, (int) polygonesIndices.size());
+    polygoneProgram.end();
+    
+    polygoneWireframeProgram.begin();
     
     for(int i = 0; i < polygones.size(); i++){
-        polygones[i]->debugDraw();
+        
+        polygones[i]->drawWireframe();
+        
     }
+    
+    polygoneWireframeProgram.end();
     
     //Draw actuator box
     
@@ -150,14 +168,14 @@ void Scene::renderToScreen(){
     ofFill();
     ofDrawRectangle(actuatorBox.x, actuatorBox.y, actuatorBox.x + actuatorBox.width, actuatorBox.y + actuatorBox.height);
     ofSetColor(255, 255, 255, getAlpha());
-    ofNoFill();
-    ofDrawRectangle(actuatorBox.x, actuatorBox.y, actuatorBox.x + actuatorBox.width, actuatorBox.y + actuatorBox.height);
+//    ofNoFill();
+//    ofDrawRectangle(actuatorBox.x, actuatorBox.y, actuatorBox.x + actuatorBox.width, actuatorBox.y + actuatorBox.height);
     
     //Draw disabled actuators
     
     for(int i = 0; i < actuators.size(); i++){
         if(!actuators[i]->getEnabled()){
-            ofDrawCircle(actuators[i]->getPosition(), 20);
+            actuatorImg.draw(actuators[i]->getPosition() - 20 , 40, 40);
         }
     }
     
@@ -235,6 +253,56 @@ void Scene::updateParticlesRenderingData(){
     
     particlesTailVbo.updateVertexData(&tailPoints[0], (int) tailPoints.size());
     particlesTailVbo.updateColorData(&tailColors[0], (int) tailColors.size());
+    
+}
+
+void Scene::updatePolygonesRenderingData(){
+    
+    //Static data
+    
+    polygonesVertices.erase(polygonesVertices.begin(), polygonesVertices.end());
+    polygonesIndices.erase(polygonesIndices.begin(), polygonesIndices.end());
+    baricentricCoords.erase(baricentricCoords.begin(), baricentricCoords.end());
+    
+    int offsetIndices = 0;
+    
+    for(int i = 0; i < polygones.size(); i++){
+        
+        cout << polygones[i]->getVertices().size() << endl;
+        cout << polygones[i]->getIndices().size() << endl;
+       
+        //Set vertices
+        
+        for(int j = 0; j < polygones[i]->getVertices().size(); j++){
+            
+            polygonesVertices.push_back(polygones[i]->getVertices()[j]);
+            float cValue = ofRandom(1);
+            polygoneVerticesColor.push_back(ofFloatColor(cValue, cValue, cValue, 1));
+            
+        }
+
+        //Set indices
+      
+        for(int j = 0; j < polygones[i]->getIndices().size(); j++){
+        
+            polygonesIndices.push_back(ofIndexType(polygones[i]->getIndices()[j] + offsetIndices));
+            
+        }
+        
+        for(int j = 0; j < polygones[i]->getBaricentricCoords().size(); j++){
+            
+            baricentricCoords.push_back(polygones[i]->getBaricentricCoords()[j]);
+            
+        }
+
+        offsetIndices += polygones[i]->getVertices().size();
+        
+    }
+    
+    polygonesVbo.setVertexData(&polygonesVertices[0], (int) polygonesVertices.size(), GL_STATIC_DRAW);
+    polygonesVbo.setIndexData(&polygonesIndices[0], (int) polygonesIndices.size(), GL_STATIC_DRAW);
+    polygonesVbo.setColorData(&polygoneVerticesColor[0], (int) polygoneVerticesColor.size(), GL_STATIC_DRAW);
+    polygonesVbo.setNormalData(&baricentricCoords[0], (int) baricentricCoords.size(), GL_STATIC_DRAW);
     
 }
 
@@ -546,6 +614,17 @@ void Scene::saveSceneToXML(string _fileName){
             
         }
         
+        xml.addTag("indices");
+        xml.pushTag("indices");
+        
+        for(int j = 0; j < polygones[i]->getIndices().size(); j++){
+            
+            xml.addValue("index", polygones[i]->getIndices()[j]);
+            
+        }
+        
+        xml.popTag();
+        
         xml.popTag(); //vertice
         xml.popTag(); //vertices
     }
@@ -778,6 +857,8 @@ void Scene::XMLSetup(string _xmlFile){
                 
                 newPolygone->addVertex(_XML.getValue("X", 0.0) * ofGetWidth(), _XML.getValue("Y", 0.0) * ofGetHeight());
                 
+                polygonesVertices.push_back(ofVec3f(_XML.getValue("X", 0.0) * ofGetWidth(), _XML.getValue("Y", 0.0) * ofGetHeight(), 0));
+                
                 _XML.popTag();
                 
             }
@@ -790,9 +871,15 @@ void Scene::XMLSetup(string _xmlFile){
             
         }
         
+        updatePolygonesRenderingData();
+        
         _XML.popTag();
         
     });
+    
+    initializeGPUData();
+    
+    saveSceneToXML(_xmlFile);
     
 }
 

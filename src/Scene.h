@@ -55,34 +55,6 @@ private:
     
     void updateAllParticles();
     
-    //Receptor
-    
-    vector<shared_ptr<Receptor>> receptors;
-    
-    //Actuators
-
-    ofRectangle actuatorBox;
-    
-    vector<shared_ptr<Actuator>> actuators;
-    vector<shared_ptr<Actuator>> activeActuators;
-    
-    //Fixed actuators
-    
-    vector<shared_ptr<Actuator>> fixedActuators;
-    
-    //Polygones
-    
-    vector<shared_ptr<Polygone>> polygones;
-    void checkForCollisions();
-    
-    //User inputs callbacks
-    void onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback) override;
-    void onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback) override;
-    void onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback) override;
-    
-    //Other callbacks
-    function<void()> levelEndCallback = nullptr;
-    
     //Particles rendering
     //Head
     //This variables are related to the rendering of the head of the particle
@@ -102,8 +74,52 @@ private:
     vector<ofVec3f> tailPoints;
     vector<ofFloatColor> tailColors;
     vector<ofIndexType> tailIndices;
+    vector<ofVec3f> baricentricCoords;
     
     void updateParticlesRenderingData();
+    
+    //Receptor
+    
+    vector<shared_ptr<Receptor>> receptors;
+    
+    //Actuators
+
+    ofRectangle actuatorBox;
+    
+    ofImage actuatorImg;
+    
+    vector<shared_ptr<Actuator>> actuators;
+    vector<shared_ptr<Actuator>> activeActuators;
+    
+    void updatePolygonesRenderingData();
+    
+    //Fixed actuators
+    
+    vector<shared_ptr<Actuator>> fixedActuators;
+    
+    //Polygones
+    
+    vector<shared_ptr<Polygone>> polygones;
+    void checkForCollisions();
+    
+    //Polygones rendering
+    
+    ofShader polygoneProgram;
+    ofShader polygoneWireframeProgram;
+    
+    ofVbo polygonesVbo;
+    ofMesh polygonesMesh;
+    vector<ofVec3f> polygonesVertices;
+    vector<ofIndexType> polygonesIndices;
+    vector<ofFloatColor> polygoneVerticesColor;
+    
+    //User inputs callbacks
+    void onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback) override;
+    void onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback) override;
+    void onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback) override;
+    
+    //Other callbacks
+    function<void()> levelEndCallback = nullptr;
     
     //Sounds
 

@@ -11,12 +11,22 @@
 
 #include <stdio.h>
 #include "ofxiOS.h"
+#include "ofxTriangle.h"
 
 class Polygone {
 
 private:
     
     ofPolyline polygone;
+    ofxTriangle triangulatedPoligone;
+    ofPolyline line;
+    
+    //For GPU Rendering
+    vector<ofPoint> triangulatedVertices;
+    vector<ofPoint> vertices;
+    vector<ofIndexType> indices;
+    vector<ofVec3f> baricentricCoords;
+    
     ofPolyline boundingBoxDebug;
     
     float offsetBoundingBox;
@@ -32,6 +42,7 @@ public:
     //Main
     
     void debugDraw();
+    void drawWireframe();
     void addVertex(float _x, float y);
     
     //Set
@@ -46,6 +57,9 @@ public:
     bool insideBoundingBox(ofVec2f _position);
     ofVec2f getClosestPoint(ofVec2f _position);
     vector<ofPoint> getVertices();
+    vector<ofIndexType> getIndices();
+    ofxTriangle getTriangulatedPolygone();
+    vector<ofVec3f> getBaricentricCoords();
 
     
 };

@@ -4,8 +4,13 @@
 void ofApp::setup(){	
 
     mainFont = shared_ptr<ofTrueTypeFont>(new ofTrueTypeFont());
+<<<<<<< HEAD
     mainFont->load("GT-Cinetype-Mono.ttf", 30);
     mainFont->setLetterSpacing(1.5);
+=======
+    mainFont->load("futura_book.otf", 30);
+//    mainFont->setLetterSpacing(1.3);
+>>>>>>> triangulate_polygones
     
     gameManager = GameManager(mainFont);
     
