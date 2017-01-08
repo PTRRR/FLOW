@@ -41,6 +41,12 @@ Levels::Levels(shared_ptr<ofTrueTypeFont> _font){
         
     }
     
+    for(int i = 0; i < buttons.size(); i++){
+        
+        buttons[i]->setPosition(ofVec2f(ofGetWidth() / 2, (ofGetHeight() / 2) + (ofGetHeight() * lineHeightMultiplier * i) - ((ofGetHeight() * lineHeightMultiplier * (buttons.size() - 1) ) / 2) ));
+        
+    }
+    
 }
 
 //Private
@@ -173,9 +179,9 @@ void Levels::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, 
     
     if(_touch.id == 0){
      
-        deltaMove = ofVec2f(0, _touch.y - lastPos.y);
+//        deltaMove = ofVec2f(0, _touch.y - lastPos.y);
         
-        movement += deltaMove.y;
+//        movement += deltaMove.y;
         
         lastPos = _touch;
         

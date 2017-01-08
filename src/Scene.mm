@@ -157,7 +157,7 @@ void Scene::renderToScreen(){
     particleHeadProgram.begin();
     particleImg.bind();
     
-    particlesHeadVbo.draw(GL_POINTS, 0, (int) positions.size());
+//    particlesHeadVbo.draw(GL_POINTS, 0, (int) positions.size());
     
     particleImg.unbind();
     particleHeadProgram.end();
@@ -195,7 +195,46 @@ void Scene::renderToScreen(){
     //Draw receptors
     
     for(int i = 0; i < receptors.size(); i++){
+        
         receptorImg.draw(receptors[i]->getPosition() - receptorImg.getWidth() / 2);
+        string info = "[" + to_string((int) receptors[i]->getPercentFill()) + "/100]";
+        infosFont.drawString(info, receptors[i]->getPosition().x - infosFont.stringWidth(info) / 2, receptors[i]->getPosition().y + receptors[i]->getRadius() + 20);
+        
+        //Draw a circle around the receptor that tells the player how much left to complete.
+        
+        int circleDef = 150;
+        
+        ofPushStyle();
+        ofBeginShape();
+        ofNoFill();
+        
+        for(int j = 0; j < (int) floor((circleDef + 1) * (receptors[i]->getPercentFill() / 100)); j++){
+            
+            float angle = ((2 * M_PI) / circleDef) * j - (M_PI * 0.5);
+            float radius = receptors[i]->getRadius() - 40;
+            
+            ofVertex(cos(angle) * radius + receptors[i]->getPosition().x, sin(angle) * radius + receptors[i]->getPosition().y);
+            
+        }
+        
+        ofEndShape();
+        
+        ofBeginShape();
+        ofNoFill();
+        
+        for(int j = 0; j < (int) floor((circleDef + 1) * (receptors[i]->getPercentFill() / 100)); j++){
+            
+            float angle = ((2 * M_PI) / circleDef) * j - (M_PI * 0.5);
+            float radius = receptors[i]->getRadius() - 55;
+            
+            ofVertex(cos(angle) * radius + receptors[i]->getPosition().x, sin(angle) * radius + receptors[i]->getPosition().y);
+            
+        }
+        
+        ofEndShape();
+        
+        ofPopStyle();
+        
     }
     
     //Draw polygones

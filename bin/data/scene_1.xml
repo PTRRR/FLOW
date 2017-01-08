@@ -2,7 +2,7 @@
     <ORIGINAL_WIDTH>1536</ORIGINAL_WIDTH>
     <ORIGINAL_HEIGHT>2048</ORIGINAL_HEIGHT>
     <MAX_PARTICLES>1000</MAX_PARTICLES>
-    <MAX_TAIL_LENGTH>20</MAX_TAIL_LENGTH>
+    <MAX_TAIL_LENGTH>25</MAX_TAIL_LENGTH>
     <MAX_ACTUATORS_NUM>4</MAX_ACTUATORS_NUM>
 </general>
 <emitters>
@@ -11,9 +11,9 @@
         <Y>0.15</Y>
         <boxX>0.006510417</boxX>
         <boxY>0.000488281</boxY>
-        <rate>60.000000000</rate>
+        <rate>90.000000000</rate>
         <maxParticles>1000</maxParticles>
-        <maxTailLength>20</maxTailLength>
+        <maxTailLength>25</maxTailLength>
     </emitter>
 </emitters>
 <actuators>
