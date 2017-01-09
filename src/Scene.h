@@ -98,6 +98,11 @@ private:
     
     ofImage actuatorImg;
     ofImage activeActuatorImg;
+
+    //How much time the user have to stay still until he update the radius of the actuator.
+    
+    float timeToChange = 2000;
+    vector<float> actuatorsTimer;
     
     vector<shared_ptr<Actuator>> actuators;
     vector<shared_ptr<Actuator>> activeActuators;
@@ -148,7 +153,6 @@ public:
     void initializeGPUData();
     void setPause(bool _pause);
     void onEnd(function<void()> _levelEndCallback);
-    string getNextLevelFile();
     
     void XMLSetup(string _xmlFile);
     

@@ -24,7 +24,7 @@ Levels::Levels(shared_ptr<ofTrueTypeFont> _font){
     backButton->setDimensions(ofVec2f(0.0390625 * ofGetWidth()));
     backButton->setImage(backButtonImg);
     
-//    downloadLevelsToIOSDirectory();
+    downloadLevelsToIOSDirectory();
 
 }
 
@@ -80,7 +80,7 @@ void Levels::setup(){
         
         if(XMLTemp.getValue("general:UNLOCKED", 0) == 0){
             
-            newButton->setActive(false);
+            newButton->setActive(true);
             
         }else{
             

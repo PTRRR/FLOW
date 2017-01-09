@@ -20,6 +20,7 @@ private:
     
     float strength;
     float radius;
+    float radiusTarget;
     
     float overRadius;
     
@@ -30,6 +31,7 @@ public:
     //Main
     
     void debugDraw();
+    void update();
     
     //Set
     

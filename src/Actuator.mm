@@ -12,6 +12,7 @@ Actuator::Actuator(){
 
     strength = 0.0;
     radius = 100.0;
+    radiusTarget = radius;
     
     overRadius = 50.0;
 
@@ -30,6 +31,14 @@ void Actuator::debugDraw(){
     
 }
 
+void Actuator::update(){
+    
+    Actuator::BaseElement::update();
+    
+    radius += (radiusTarget - radius) * 0.2;
+    
+}
+
 //Set
 
 void Actuator::setStrength(float _strength){
@@ -40,7 +49,7 @@ void Actuator::setStrength(float _strength){
 
 void Actuator::setRadius(float _radius){
     
-    radius = _radius;
+    radiusTarget = _radius;
     
 }
 

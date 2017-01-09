@@ -179,18 +179,24 @@ void Scene::renderToScreen(){
     
     //Draw actuators
     
-    for(int i = 0; i < actuators.size(); i++){
-        
-        ofPushStyle();
+    ofPushStyle();
+    
+    for(int i = 0; i < activeActuators.size(); i++){
         
         float alpha = ((actuators[i]->getPosition().y - actuatorBox.height / 2) / (actuatorBox.height / 2)) * 255;
-        
         ofSetColor(255, 255, 255, ofClamp(alpha, 0, getAlpha()));
         activeActuatorImg.draw(actuators[i]->getPosition() - activeActuatorImg.getWidth() / 2);
-        actuators[i]->debugDraw();
-        ofPopStyle();
+        
+        if(activeActuators[i] != nullptr && actuatorsTimer[i] + timeToChange < ofGetElapsedTimeMillis()){
+            
+            ofSetColor(255, 0, 0);
+            activeActuators[i]->debugDraw();
+            
+        }
         
     }
+    
+    ofPopStyle();
     
     //Draw receptors
     
@@ -518,12 +524,6 @@ void Scene::setPause(bool _pause){
     
 }
 
-string Scene::getNextLevelFile(){
-    
-    
-    
-}
-
 //Player inputs
 //These inputs will only fire when this screen is active
 
@@ -539,6 +539,7 @@ void Scene::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, s
             
             if(actuators[i]->isOver(_touch)){
                 
+                actuatorsTimer[_touch.id] = ofGetElapsedTimeMillis();
                 activeActuators[_touch.id] = actuators[i];
                 break;
                 
@@ -581,7 +582,31 @@ void Scene::onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, str
 void Scene::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){
     
     if(_touch.id < touches.size()){
-        touches[_touch.id] = _touch;
+        
+        if((_touch - touches[_touch.id]).length() > 1 && actuatorsTimer[_touch.id] + timeToChange >= ofGetElapsedTimeMillis()) actuatorsTimer[_touch.id] = ofGetElapsedTimeMillis();
+        if(actuatorsTimer[_touch.id] + timeToChange >= ofGetElapsedTimeMillis()){
+            
+            if(activeActuators[_touch.id]->isDisabled()){
+                activeActuators[_touch.id]->disable(false);
+            }
+            
+            touches[_touch.id] = _touch;
+            
+        }else{
+        
+            float distance = (activeActuators[_touch.id]->getPosition() - touches[_touch.id]).length();
+            
+            if(!activeActuators[_touch.id]->isDisabled()){
+                activeActuators[_touch.id]->disable(true);
+            }
+            
+            activeActuators[_touch.id]->setRadius(distance + 100);
+            
+            
+            touches[_touch.id] = _touch;
+            
+        }
+        
     }
     
 }
@@ -810,6 +835,7 @@ void Scene::XMLSetup(string _xmlFile){
         
         activeActuators.erase(activeActuators.begin(), activeActuators.end());
         activeActuators = vector<shared_ptr<Actuator>>(numActuators, nullptr);
+        actuatorsTimer = vector<float>(numActuators, ofGetElapsedTimeMillis());
         
         for(int i = 0; i < numActuators; i++){
             
