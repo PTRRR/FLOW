@@ -31,6 +31,7 @@ private:
     
     ofxXmlSettings XML;
     
+    
     //Main
     
     ofTrueTypeFont infosFont;
@@ -86,6 +87,7 @@ private:
     
     //Receptor
     
+    bool allAreFilled = false;
     ofImage receptorImg;
     
     vector<shared_ptr<Receptor>> receptors;
@@ -146,6 +148,7 @@ public:
     void initializeGPUData();
     void setPause(bool _pause);
     void onEnd(function<void()> _levelEndCallback);
+    string getNextLevelFile();
     
     void XMLSetup(string _xmlFile);
     

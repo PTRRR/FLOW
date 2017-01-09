@@ -442,13 +442,23 @@ void Scene::update(){
         }
     }
     
-    //Update receptors
+    //Check if receptors are filled
     
-    bool allAreFilled = true;
-    
-    for(int i = 0; i < receptors.size(); i++){
-        receptors[i]->update();
-        if(!receptors[i]->isFilled()) allAreFilled = false;
+    if(!allAreFilled){
+        
+        allAreFilled = true;
+        
+        for(int i = 0; i < receptors.size(); i++){
+            receptors[i]->update();
+            if(!receptors[i]->isFilled()) allAreFilled = false;
+        }
+        
+        if(allAreFilled){
+            
+            levelEndCallback();
+            
+        }
+        
     }
     
     checkForCollisions();
@@ -505,6 +515,12 @@ void Scene::setPause(bool _pause){
         emitters[i]->setPause(_pause);
         
     }
+    
+}
+
+string Scene::getNextLevelFile(){
+    
+    
     
 }
 
@@ -728,6 +744,7 @@ void Scene::XMLSetup(string _xmlFile){
     loadXML(_xmlFile, [&](ofxXmlSettings _XML){
     
         logXML(_xmlFile);
+        XML = _XML;
         
         //Multitouch
         
@@ -898,9 +915,9 @@ void Scene::XMLSetup(string _xmlFile){
         
     });
     
-    initializeGPUData();
+    //Set up all the GPU data needed for rendering the scene once we loaded all our game components.
     
-    saveSceneToXML(_xmlFile);
+    initializeGPUData();
     
 }
 

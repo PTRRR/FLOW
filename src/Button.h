@@ -24,6 +24,7 @@ private:
     ofImage img;
     float offset = 25;
     ofVec2f size;
+    bool active = true;
     
     
     //Content
@@ -44,6 +45,7 @@ public:
     void setAction(string _action);
     void setImage(ofImage _image);
     void setDimensions(ofVec2f _dimensions);
+    void setActive(bool _active);
     
     //Get
     
@@ -51,6 +53,7 @@ public:
     
     string getText();
     string getAction();
+    bool isActive();
     
     bool isOver(ofVec2f _position);
     

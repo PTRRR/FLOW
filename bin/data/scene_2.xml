@@ -1,4 +1,5 @@
 <general>
+    <UNLOCKED>0</UNLOCKED>
     <ORIGINAL_WIDTH>1536</ORIGINAL_WIDTH>
     <ORIGINAL_HEIGHT>2048</ORIGINAL_HEIGHT>
     <MAX_PARTICLES>1000</MAX_PARTICLES>
@@ -11,8 +12,17 @@
         <Y>0.097656250</Y>
         <boxX>0.006510417</boxX>
         <boxY>0.000488281</boxY>
-        <rate>60.000000000</rate>
-        <maxParticles>500</maxParticles>
+        <rate>100.000000000</rate>
+        <maxParticles>100</maxParticles>
+        <maxTailLength>10</maxTailLength>
+    </emitter>
+    <emitter>
+        <X>0.630208313</X>
+        <Y>0.097656250</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>100.000000000</rate>
+        <maxParticles>100</maxParticles>
         <maxTailLength>10</maxTailLength>
     </emitter>
 </emitters>

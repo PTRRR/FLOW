@@ -71,6 +71,12 @@ void Button::setDimensions(ofVec2f _dimensions){
     
 }
 
+void Button::setActive(bool _active){
+    
+    active = _active;
+    
+}
+
 //Get
 
 ofVec2f Button::getDimensions(){
@@ -91,7 +97,15 @@ string Button::getAction(){
     
 }
 
+bool Button::isActive(){
+    
+    return active;
+    
+}
+
 bool Button::isOver(ofVec2f _position){
+    
+    if(!active) return false;
     
     float left = getPosition().x - dimensions.x / 2 - offset;
     float top = getPosition().y - dimensions.y / 2 - offset;

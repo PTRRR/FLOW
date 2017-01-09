@@ -19,7 +19,7 @@
 #include "Options.h"
 #include "SceneMenu.h"
 
-class GameManager {
+class GameManager{
 
 private:
     
@@ -42,8 +42,10 @@ private:
     
     //Scenes
     
+    string currentLevelFile;
+    vector<string> levelsList;
+    
     shared_ptr<Scene> currentScene;
-//    vector<shared_ptr<Scene>> scenes;
     shared_ptr<Scene> createNewScene(string _name, string _xmlFile);
     
     //Main sound

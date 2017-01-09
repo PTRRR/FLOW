@@ -71,7 +71,9 @@ public:
     
     void saveXML(string _name, ofxXmlSettings _XML);
     void loadXML(string _xmlFile, function<void(ofxXmlSettings _XML)> _callback);
+    void loadXML(string _xmlFile, function<void(ofxXmlSettings _XML)> _callback, bool _directory);
     void logXML(string _fileName);
+    void logXML(ofxXmlSettings _XML);
     bool XMLExists(string _xmlName);
     
 };

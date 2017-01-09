@@ -250,6 +250,35 @@ void Screen::loadXML(string _xmlFile, function<void(ofxXmlSettings _XML)> _callb
     
 }
 
+void Screen::loadXML(string _xmlFile, function<void(ofxXmlSettings _XML)> _callback, bool _directory){
+    
+    ofxXmlSettings XML;
+    
+    string message = "";
+    
+    if( XML.loadFile(_xmlFile) && !_directory ){
+        
+        message = _xmlFile + " loaded from data folder!";
+        cout << message << endl;
+        
+        _callback(XML);
+        
+    }else if( XML.loadFile(ofxiOSGetDocumentsDirectory() + _xmlFile) && _directory ){
+        
+        message = _xmlFile + " loaded from documents folder!";
+        cout << message << endl;
+        
+        _callback(XML);
+        
+    }else{
+        
+        message = "unable to load " + _xmlFile + " check data/ folder";
+        cout << message << endl;
+        
+    }
+    
+}
+
 void Screen::logXML(string _fileName){
     
     loadXML(_fileName, [&](ofxXmlSettings _xml){
@@ -261,6 +290,16 @@ void Screen::logXML(string _fileName){
         cout << content << endl;
         
     });
+    
+}
+
+void Screen::logXML(ofxXmlSettings _XML){
+        
+    string content;
+    
+    _XML.copyXmlToString(content);
+    
+    cout << content << endl;
     
 }
 

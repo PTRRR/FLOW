@@ -151,13 +151,65 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
                         
                         screenPipeline.removeScreen(currentScene);
                         currentScene = nullptr;
+                        
+                        currentLevelFile = action;
                         screenPipeline.setScreenActive(createNewScene(text, action));
+                        
+                        //If the scene is completed return to levels.
+                        
+                        currentScene->onEnd([&](){
+                            
+                            
+                            levelsList = levels->getLevels();
+                            
+                            for(int i = 0; i < levelsList.size(); i++){
+                                
+                                if (levelsList[i] == currentLevelFile && i < levelsList.size() - 1) {
+                                    
+                                    string nextLevelFile = levelsList[i + 1];
+                                    levels->setUnlocked(nextLevelFile);
+                                    break;
+                                    
+                                }
+                                
+                            }
+                            
+                            levels->setup();
+                            screenPipeline.setScreenActive(levels);
+                            currentScene = nullptr;
+                            
+                        });
                         
                     }
                     
                 }else{
                     
+                    currentLevelFile = action;
                     screenPipeline.setScreenActive(createNewScene(text, action));
+                    
+                    //If the scene is completed return to levels.
+                    
+                    currentScene->onEnd([&](){
+                        
+                        levelsList = levels->getLevels();
+                        
+                        for(int i = 0; i < levelsList.size(); i++){
+                            
+                            if (levelsList[i] == currentLevelFile && i < levelsList.size() - 1) {
+                                
+                                string nextLevelFile = levelsList[i + 1];
+                                levels->setUnlocked(nextLevelFile);
+                                break;
+                                
+                            }
+                            
+                        }
+                        
+                        levels->setup();
+                        screenPipeline.setScreenActive(levels);
+                        currentScene = nullptr;
+                        
+                    });
                     
                 }
                 
@@ -167,6 +219,9 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
             
             if(action == "PLAY"){
                 
+                //This check is others levels have been unlocked.
+                
+                levels->setup();
                 screenPipeline.setScreenActive(levels);
                 
             }else if(action == "MENU"){
