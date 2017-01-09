@@ -17,6 +17,11 @@
 		0E22F05E1E0A8A8500197899 /* Text.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E22F05C1E0A8A8500197899 /* Text.mm */; };
 		0E2775A91E196FC200A9BD2D /* data in Resources */ = {isa = PBXBuildFile; fileRef = 0E2775A81E196FC200A9BD2D /* data */; };
 		0E4C31DF1E1EC7B0006B5AE4 /* Levels.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C31DD1E1EC7B0006B5AE4 /* Levels.mm */; };
+		0E4C31FC1E2196EA006B5AE4 /* assert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C31F71E2196EA006B5AE4 /* assert.cpp */; };
+		0E4C31FD1E2196EA006B5AE4 /* del_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C31F81E2196EA006B5AE4 /* del_impl.cpp */; };
+		0E4C31FE1E2196EA006B5AE4 /* ofxTriangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C31FA1E2196EA006B5AE4 /* ofxTriangle.cpp */; };
+		0E4C320A1E229D6D006B5AE4 /* Options.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C32081E229D6D006B5AE4 /* Options.mm */; };
+		0E4C320D1E229DDA006B5AE4 /* SceneMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C320B1E229DDA006B5AE4 /* SceneMenu.mm */; };
 		0E9BFF901E043B97007F9857 /* GameManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF8E1E043B97007F9857 /* GameManager.mm */; };
 		0E9BFF931E043DF1007F9857 /* Button.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF911E043DF1007F9857 /* Button.mm */; };
 		0E9BFF971E0442A3007F9857 /* Interface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF951E0442A3007F9857 /* Interface.mm */; };
@@ -87,6 +92,19 @@
 		0E2775A81E196FC200A9BD2D /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = bin/data; sourceTree = "<group>"; };
 		0E4C31DD1E1EC7B0006B5AE4 /* Levels.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Levels.mm; sourceTree = "<group>"; };
 		0E4C31DE1E1EC7B0006B5AE4 /* Levels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Levels.h; sourceTree = "<group>"; };
+		0E4C31F11E2196EA006B5AE4 /* assert.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = assert.hpp; sourceTree = "<group>"; };
+		0E4C31F21E2196EA006B5AE4 /* del_interface.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = del_interface.hpp; sourceTree = "<group>"; };
+		0E4C31F31E2196EA006B5AE4 /* dpoint.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = dpoint.hpp; sourceTree = "<group>"; };
+		0E4C31F41E2196EA006B5AE4 /* triangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangle.h; sourceTree = "<group>"; };
+		0E4C31F51E2196EA006B5AE4 /* triangle_impl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = triangle_impl.hpp; sourceTree = "<group>"; };
+		0E4C31F71E2196EA006B5AE4 /* assert.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = assert.cpp; sourceTree = "<group>"; };
+		0E4C31F81E2196EA006B5AE4 /* del_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = del_impl.cpp; sourceTree = "<group>"; };
+		0E4C31FA1E2196EA006B5AE4 /* ofxTriangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxTriangle.cpp; sourceTree = "<group>"; };
+		0E4C31FB1E2196EA006B5AE4 /* ofxTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTriangle.h; sourceTree = "<group>"; };
+		0E4C32081E229D6D006B5AE4 /* Options.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Options.mm; sourceTree = "<group>"; };
+		0E4C32091E229D6D006B5AE4 /* Options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Options.h; sourceTree = "<group>"; };
+		0E4C320B1E229DDA006B5AE4 /* SceneMenu.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SceneMenu.mm; sourceTree = "<group>"; };
+		0E4C320C1E229DDA006B5AE4 /* SceneMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneMenu.h; sourceTree = "<group>"; };
 		0E9BFF8E1E043B97007F9857 /* GameManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameManager.mm; sourceTree = "<group>"; };
 		0E9BFF8F1E043B97007F9857 /* GameManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameManager.h; sourceTree = "<group>"; };
 		0E9BFF911E043DF1007F9857 /* Button.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Button.mm; sourceTree = "<group>"; };
@@ -170,6 +188,64 @@
 			name = Sounds;
 			sourceTree = "<group>";
 		};
+		0E4C31EE1E2196EA006B5AE4 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				0E4C31EF1E2196EA006B5AE4 /* Triangle */,
+			);
+			name = libs;
+			path = "../../../../../../Code/OpenFrameworks/of_v0.9.8_ios_release/addons/ofxTriangle-master/libs";
+			sourceTree = "<group>";
+		};
+		0E4C31EF1E2196EA006B5AE4 /* Triangle */ = {
+			isa = PBXGroup;
+			children = (
+				0E4C31F01E2196EA006B5AE4 /* include */,
+				0E4C31F61E2196EA006B5AE4 /* src */,
+			);
+			path = Triangle;
+			sourceTree = "<group>";
+		};
+		0E4C31F01E2196EA006B5AE4 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				0E4C31F11E2196EA006B5AE4 /* assert.hpp */,
+				0E4C31F21E2196EA006B5AE4 /* del_interface.hpp */,
+				0E4C31F31E2196EA006B5AE4 /* dpoint.hpp */,
+				0E4C31F41E2196EA006B5AE4 /* triangle.h */,
+				0E4C31F51E2196EA006B5AE4 /* triangle_impl.hpp */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		0E4C31F61E2196EA006B5AE4 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				0E4C31F71E2196EA006B5AE4 /* assert.cpp */,
+				0E4C31F81E2196EA006B5AE4 /* del_impl.cpp */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		0E4C31F91E2196EA006B5AE4 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				0E4C31FA1E2196EA006B5AE4 /* ofxTriangle.cpp */,
+				0E4C31FB1E2196EA006B5AE4 /* ofxTriangle.h */,
+			);
+			name = src;
+			path = "../../../../../../Code/OpenFrameworks/of_v0.9.8_ios_release/addons/ofxTriangle-master/src";
+			sourceTree = "<group>";
+		};
+		0E4C32001E2196FA006B5AE4 /* ofxTriangle-master */ = {
+			isa = PBXGroup;
+			children = (
+				0E4C31EE1E2196EA006B5AE4 /* libs */,
+				0E4C31F91E2196EA006B5AE4 /* src */,
+			);
+			name = "ofxTriangle-master";
+			sourceTree = "<group>";
+		};
 		0E9BFF941E043DFB007F9857 /* GUI */ = {
 			isa = PBXGroup;
 			children = (
@@ -203,6 +279,10 @@
 				0E9BFFA61E0553D9007F9857 /* SplashScreen.h */,
 				0E4C31DD1E1EC7B0006B5AE4 /* Levels.mm */,
 				0E4C31DE1E1EC7B0006B5AE4 /* Levels.h */,
+				0E4C32081E229D6D006B5AE4 /* Options.mm */,
+				0E4C32091E229D6D006B5AE4 /* Options.h */,
+				0E4C320B1E229DDA006B5AE4 /* SceneMenu.mm */,
+				0E4C320C1E229DDA006B5AE4 /* SceneMenu.h */,
 			);
 			name = Screens;
 			sourceTree = "<group>";
@@ -329,6 +409,7 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				0E4C32001E2196FA006B5AE4 /* ofxTriangle-master */,
 				1F4FB5C423662B96ADFDCC0B /* ofxXmlSettings */,
 			);
 			name = addons;
@@ -493,16 +574,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E4C320D1E229DDA006B5AE4 /* SceneMenu.mm in Sources */,
+				0E4C31FE1E2196EA006B5AE4 /* ofxTriangle.cpp in Sources */,
 				0E9BFF901E043B97007F9857 /* GameManager.mm in Sources */,
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
 				E4D8936F11527B74007E1F53 /* ofApp.mm in Sources */,
+				0E4C320A1E229D6D006B5AE4 /* Options.mm in Sources */,
 				0E9BFFAF1E055958007F9857 /* Scene.mm in Sources */,
 				0E4C31DF1E1EC7B0006B5AE4 /* Levels.mm in Sources */,
 				0E9BFF971E0442A3007F9857 /* Interface.mm in Sources */,
 				DDA2E262B07659E1DBBB4D5E /* ofxXmlSettings.cpp in Sources */,
 				0E9BFFA21E055051007F9857 /* ScreenPipeline.mm in Sources */,
 				0E9BFF9F1E053C25007F9857 /* Menu.mm in Sources */,
+				0E4C31FC1E2196EA006B5AE4 /* assert.cpp in Sources */,
 				0E078B801E16772F004595EF /* ParticleSystem.mm in Sources */,
+				0E4C31FD1E2196EA006B5AE4 /* del_impl.cpp in Sources */,
 				0E078B7F1E16772F004595EF /* Particle.mm in Sources */,
 				0E078B831E16772F004595EF /* Polygone.mm in Sources */,
 				0E078B891E168984004595EF /* Receptor.mm in Sources */,

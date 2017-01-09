@@ -23,13 +23,98 @@ void Polygone::debugDraw(){
     ofSetColor(255, 0, 255);
 //    boundingBoxDebug.draw();
     
+    for(int i = 0; i < triangulatedPoligone.nTriangles; i++){
+        ofBeginShape();
+        
+        ofSetColor(ofRandom(255), ofRandom(255), ofRandom(255));
+        
+        ofVertex(triangulatedPoligone.triangles[i].a.x, triangulatedPoligone.triangles[i].a.y);
+        ofVertex(triangulatedPoligone.triangles[i].b.x, triangulatedPoligone.triangles[i].b.y);
+        ofVertex(triangulatedPoligone.triangles[i].c.x, triangulatedPoligone.triangles[i].c.y);
+        
+        ofEndShape();
+    }
+    
+    for(int i = 0; i < indices.size(); i++){
+        
+        ofDrawCircle(vertices[indices[i]].x, vertices[indices[i]].y, 10);
+        
+    }
+    
     ofPopStyle();
+    
+}
+
+void Polygone::drawWireframe(){
+    
+    ofSetColor(255, 255, 255);
+    
+    for(int i = 0; i < triangulatedPoligone.nTriangles; i++){
+        
+        float aX = triangulatedPoligone.triangles[i].a.x;
+        float aY = triangulatedPoligone.triangles[i].a.y;
+        
+        float bX = triangulatedPoligone.triangles[i].b.x;
+        float bY = triangulatedPoligone.triangles[i].b.y;
+        
+        float cX = triangulatedPoligone.triangles[i].c.x;
+        float cY = triangulatedPoligone.triangles[i].c.y;
+        
+        ofDrawLine(aX, aY, bX, bY);
+        ofDrawLine(bX, bY, cX, cY);
+        ofDrawLine(cX, cY, aX, aY);
+        
+    }
+    
+    
     
 }
 
 void Polygone::addVertex(float _x, float _y){
     
+    vertices.push_back(ofPoint(_x, _y));
     polygone.addVertex(_x, _y);
+    
+    if(vertices.size() >= 3){
+     
+        triangulatedPoligone.clear();
+        triangulatedPoligone.triangulate(polygone.getVertices());
+        
+        //Update indices
+        
+        indices.erase(indices.begin(), indices.end());
+            
+        for(int j = 0; j < triangulatedPoligone.nTriangles; j++){
+            
+            ofPoint a = ofPoint(triangulatedPoligone.triangles[j].a.x, triangulatedPoligone.triangles[j].a.y);
+            ofPoint b = ofPoint(triangulatedPoligone.triangles[j].b.x, triangulatedPoligone.triangles[j].b.y);
+            ofPoint c = ofPoint(triangulatedPoligone.triangles[j].c.x, triangulatedPoligone.triangles[j].c.y);
+            
+            baricentricCoords.push_back(ofVec3f(1, 0, 0));
+            baricentricCoords.push_back(ofVec3f(0, 0, 1));
+            baricentricCoords.push_back(ofVec3f(0, 1, 0));
+            
+            for(int i = 0; i < vertices.size(); i++){
+                
+                if(a == vertices[i]){
+                    indices.push_back(i);
+                    
+                }
+                if(b == vertices[i]){
+                    indices.push_back(i);
+                    
+                }
+                if(c == vertices[i]){
+                    indices.push_back(i);
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    
     polygone.close();
     
     boundingBox = polygone.getBoundingBox();
@@ -37,8 +122,6 @@ void Polygone::addVertex(float _x, float _y){
     boundingBox.width += 2 * offsetBoundingBox;
     boundingBox.y -= offsetBoundingBox;
     boundingBox.height += 2 * offsetBoundingBox;
-    
-    
     
     boundingBoxDebug.clear();
     boundingBoxDebug.addVertex(boundingBox.x, boundingBox.y);
@@ -126,6 +209,24 @@ ofVec2f Polygone::getClosestPoint(ofVec2f _position){
 vector<ofPoint> Polygone::getVertices(){
     
     return polygone.getVertices();
+    
+}
+
+vector<ofIndexType> Polygone::getIndices(){
+    
+    return indices;
+    
+}
+
+ofxTriangle Polygone::getTriangulatedPolygone(){
+    
+    return triangulatedPoligone;
+    
+}
+
+vector<ofVec3f> Polygone::getBaricentricCoords(){
+    
+    return baricentricCoords;
     
 }
 

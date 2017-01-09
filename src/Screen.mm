@@ -177,3 +177,129 @@ string Screen::getName(){
     
 }
 
+//XML
+
+bool Screen::XMLExists(string _xmlName){
+    
+    ofxXmlSettings XML;
+    
+    if( XML.loadFile(_xmlName) ){
+        
+        return true;
+        
+    }else if( XML.loadFile(ofxiOSGetDocumentsDirectory() + _xmlName) ){
+        
+        return true;
+        
+    }else{
+        
+        return false;
+        
+    }
+    
+}
+
+void Screen::saveXML(string _name, ofxXmlSettings _XML){
+    
+    string message = "";
+    
+    if( _XML.saveFile(_name) ){
+        
+        message = _name + " saved in the data folder!";
+        
+    }else if( _XML.saveFile(ofxiOSGetDocumentsDirectory() + _name) ){
+        
+        message = _name + " saved in the documents folder!";
+        
+    }else{
+        
+        message = "Unable to save " + _name + " check data/ folder";
+        
+    }
+    
+    cout << message << endl;
+    
+}
+
+void Screen::loadXML(string _xmlFile, function<void(ofxXmlSettings _XML)> _callback){
+    
+    ofxXmlSettings XML;
+    
+    string message = "";
+    
+    if( XML.loadFile(_xmlFile) ){
+        
+        message = _xmlFile + " loaded from data folder!";
+        cout << message << endl;
+        
+        _callback(XML);
+        
+    }else if( XML.loadFile(ofxiOSGetDocumentsDirectory() + _xmlFile) ){
+        
+        message = _xmlFile + " loaded from documents folder!";
+        cout << message << endl;
+        
+        _callback(XML);
+        
+    }else{
+        
+        message = "unable to load " + _xmlFile + " check data/ folder";
+        cout << message << endl;
+        
+    }
+    
+}
+
+void Screen::loadXML(string _xmlFile, function<void(ofxXmlSettings _XML)> _callback, bool _directory){
+    
+    ofxXmlSettings XML;
+    
+    string message = "";
+    
+    if( XML.loadFile(_xmlFile) && !_directory ){
+        
+        message = _xmlFile + " loaded from data folder!";
+        cout << message << endl;
+        
+        _callback(XML);
+        
+    }else if( XML.loadFile(ofxiOSGetDocumentsDirectory() + _xmlFile) && _directory ){
+        
+        message = _xmlFile + " loaded from documents folder!";
+        cout << message << endl;
+        
+        _callback(XML);
+        
+    }else{
+        
+        message = "unable to load " + _xmlFile + " check data/ folder";
+        cout << message << endl;
+        
+    }
+    
+}
+
+void Screen::logXML(string _fileName){
+    
+    loadXML(_fileName, [&](ofxXmlSettings _xml){
+        
+        string content;
+        
+        _xml.copyXmlToString(content);
+        
+        cout << content << endl;
+        
+    });
+    
+}
+
+void Screen::logXML(ofxXmlSettings _XML){
+        
+    string content;
+    
+    _XML.copyXmlToString(content);
+    
+    cout << content << endl;
+    
+}
+

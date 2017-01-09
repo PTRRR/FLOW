@@ -100,6 +100,8 @@ void ParticleSystem::update(){
             
         }
         
+        //Check if particle is eaten by the receptor.
+        
         for(int j = 0; j < receptors.size(); j++){
             
             force += receptors[j]->getForceAtPoint(particles[i]->getPosition());
@@ -111,6 +113,13 @@ void ParticleSystem::update(){
             if(distance < 20){
                 particles.erase(particles.begin() + i);
                 receptors[j]->addOneParticleToCount();
+            }
+            
+            //Check if the receptor is full.
+            
+            if(receptors[j]->isFilled() && receptors[j]->getEnabled()){
+                receptors[j]->disable(true);
+                receptors[j]->enable(false);
             }
             
         }

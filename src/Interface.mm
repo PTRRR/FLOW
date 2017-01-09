@@ -68,6 +68,21 @@ shared_ptr<Text> Interface::addText(string _text, ofVec2f _position){
     
 }
 
+void Interface::removeButton(shared_ptr<Button> _button){
+    
+    for(int i = 0; i < buttons.size(); i++){
+        
+        if(buttons[i] == _button){
+            
+            buttons.erase(buttons.begin() + i);
+            break;
+            
+        }
+        
+    }
+    
+}
+
 //Inputs
 
 void Interface::mouseDown(ofVec2f _position, function<void(string _text, string _action)> callback){

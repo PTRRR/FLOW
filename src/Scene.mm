@@ -16,30 +16,69 @@ Scene::Scene(){
 
 Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     
-    time = 0.0f;
-    
-    //Create the user interface : MENU button
+    //Create the user interface
     
     interface = Interface(_mainFont);
-    interface.addButton("MENU", "MENU", ofVec2f(ofGetWidth() - _mainFont->stringWidth("MENU"), 50));
+
+    //Loade the image that will represend the button
+    
+    backButtonImg.load("images/backButton.png");
+    
+    //This keeps a reference to the button created so that we can change its settings.
+    
+    shared_ptr<Button> backButton = interface.addButton("SCENE-MENU", "SCENE-MENU", ofVec2f(0.0390625 * ofGetWidth()));
+    backButton->setDimensions(ofVec2f(0.0390625 * ofGetWidth()));
+    backButton->setImage(backButtonImg);
+    
+    //Loade the image that will represend the button
+    
+    optionsButtonImg.load("images/options.png");
+    
+    //This keeps a reference to the button created so that we can change its settings.
+    
+    shared_ptr<Button> optionsButton = interface.addButton("OPTIONS", "OPTIONS", ofVec2f(ofGetWidth() - 0.0490625 * ofGetWidth(), 0.0390625 * ofGetWidth()));
+    optionsButton->setDimensions(ofVec2f(0.0390625 * ofGetWidth()));
+    optionsButton->setImage(optionsButtonImg);
     
     //Create the actuator box, where the player can take the actuators
+    //This is useful to detect whether the actuators are active or not.
+    //The player can drag them from the box to make them become active.
+    //Actuators activity is defined in the update function.
     
-    actuatorBox.set(-1, -1, ofGetWidth() + 10, 0.0488281 * ofGetHeight());
+    actuatorBox.set(-1, -1, ofGetWidth() + 10, 0.05859375 * ofGetHeight());
     
-    initializeGPUData();
+    //Load all textures useful to render the differents objects of the game.
+    
+    actuatorImg.load("images/actuator.png");
+    receptorImg.load("images/receptor.png");
+    emitterImg.load("images/emitter.png");
+    activeActuatorImg.load("images/activeActuator.png");
+    particleImg.load("images/particleTex_1.png");
+    
+    //Load the font that will be used to display informations on the scene
+    
+    infosFont.load("GT-Cinetype-Mono.ttf", 0.009765625 * ofGetWidth());
     
 };
+
+//This function is called once at the set up of the scene, at the end of the XMLSetup function.
+//This takes care of allocating enough space for data used for rendering the scene.
 
 void Scene::initializeGPUData(){
     
     //GPU Rendering
-    //Load custom shaders and create the program
+    //Load custom shaders and create the programs
     
     particleHeadProgram.load("shaders/particleHead");
     particleTailProgram.load("shaders/particleTail");
+    polygoneProgram.load("shaders/polygoneShader");
+    polygoneWireframeProgram.load("shaders/polygoneShaderWireframe");
+    actuatorsProgram.load("shaders/actuatorShader");
+    receptorProgram.load("shaders/receptorShader");
     
-    //Set un vbo for rendering the particles head
+    //HEADS.
+    //Set un vbo for rendering the particles head.
+    //We allocate the maximum space so we don't need to change it afterwards.
     
     positions = vector<ofVec3f>(MAX_PARTICLES, ofVec3f(0));
     attributes = vector<ofVec3f>(MAX_PARTICLES, ofVec3f(0));
@@ -47,11 +86,14 @@ void Scene::initializeGPUData(){
     particlesHeadVbo.setVertexData(&positions[0], (int) positions.size(), GL_DYNAMIC_DRAW);
     particlesHeadVbo.setNormalData(&attributes[0], (int) attributes.size(), GL_STATIC_DRAW);
     
-    //Set un vbo for rendering the particles tail
-    //20 is the max number of points composing the particle tail
+    //TAILS.
+    //Set un vbo for rendering the particles tail.
+    //MAX_TAIL_LENGTH is the max number of points composing the particle tail.
     
     tailPoints = vector<ofVec3f>(MAX_PARTICLES * MAX_TAIL_LENGTH, ofVec3f(0));
     tailColors = vector<ofFloatColor>(MAX_PARTICLES * MAX_TAIL_LENGTH, ofFloatColor(1.0, 1.0, 1.0, 0.0));
+    
+    //Create the indices that will tell the graphic card witch segments to draw.
     
     for(int i = 0; i < MAX_PARTICLES; i++){
         
@@ -64,19 +106,160 @@ void Scene::initializeGPUData(){
         
     }
     
+    //Allocate all the date computed above in the particleTailVbo.
+    
     particlesTailVbo.setVertexData(&tailPoints[0], (int) tailPoints.size(), GL_STREAM_DRAW);
     particlesTailVbo.setColorData(&tailColors[0], (int) tailColors.size(), GL_STREAM_DRAW);
     particlesTailVbo.setIndexData(&tailIndices[0], (int) tailIndices.size(), GL_STATIC_DRAW);
     
     //Update GPU data
+    //Here we calculate and update the first time all the data that will be stored in the objects declared just before.
     
     updateParticlesRenderingData();
     
-    //Load particle texture
-    
-    particleImg.load("images/particleTex_1.png");
+    //Here we update the container of all particles present in the scene to simplify rendering pipeline.
     
     updateAllParticles();
+    
+    //Actuators
+    
+    for(int i = 0; i < actuators.size(); i++){
+        
+        //Up / Left
+        
+        ofVec3f upLeft = ofVec3f(actuators[i]->getPosition().x - actuators[i]->getRadius(), actuators[i]->getPosition().y - actuators[i]->getRadius());
+        
+        //Up / Right
+        
+        ofVec3f upRight = ofVec3f(actuators[i]->getPosition().x + actuators[i]->getRadius(), actuators[i]->getPosition().y - actuators[i]->getRadius());
+        
+        //Down / Right
+        
+        ofVec3f downRight = ofVec3f(actuators[i]->getPosition().x + actuators[i]->getRadius(), actuators[i]->getPosition().y + actuators[i]->getRadius());
+        
+        //Down / Left
+        
+        ofVec3f downLeft = ofVec3f(actuators[i]->getPosition().x - actuators[i]->getRadius(), actuators[i]->getPosition().y + actuators[i]->getRadius());
+        
+        //Set vertices
+        
+        actuatorsVertices.push_back(upLeft);
+        actuatorsVertices.push_back(upRight);
+        actuatorsVertices.push_back(downRight);
+        actuatorsVertices.push_back(downLeft);
+        
+        //Set indices -> 6 indices to define a quad.
+        
+        //This is the first triangle
+        
+        actuatorsIndices.push_back(i * 4);
+        actuatorsIndices.push_back(i * 4 + 1);
+        actuatorsIndices.push_back(i * 4 + 3);
+        
+        //This is the second triangls
+        
+        actuatorsIndices.push_back(i * 4 + 1);
+        actuatorsIndices.push_back(i * 4 + 2);
+        actuatorsIndices.push_back(i * 4 + 3);
+        
+        //Set textures coordinates
+        
+        actuatorsTexCoords.push_back(ofVec2f(-1));
+        actuatorsTexCoords.push_back(ofVec2f(1, -1));
+        actuatorsTexCoords.push_back(ofVec2f(1));
+        actuatorsTexCoords.push_back(ofVec2f(-1, 1));
+        
+        //Set attributes send throw normal attribute for each vertex
+        
+        actuatorsAttributes.push_back(ofVec3f(actuators[i]->getRadius(), 0.0, 0.0));
+        actuatorsAttributes.push_back(ofVec3f(actuators[i]->getRadius(), 0.0, 0.0));
+        actuatorsAttributes.push_back(ofVec3f(actuators[i]->getRadius(), 0.0, 0.0));
+        actuatorsAttributes.push_back(ofVec3f(actuators[i]->getRadius(), 0.0, 0.0));
+        
+        //Set colors
+        
+        actuatorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
+        actuatorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
+        actuatorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
+        actuatorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
+        
+    }
+    
+    actuatorsVbo.setVertexData(&actuatorsVertices[0], (int) actuatorsVertices.size(), GL_DYNAMIC_DRAW);
+    actuatorsVbo.setNormalData(&actuatorsAttributes[0], (int) actuatorsAttributes.size(), GL_DYNAMIC_DRAW);
+    actuatorsVbo.setIndexData(&actuatorsIndices[0], (int) actuatorsIndices.size(), GL_STATIC_DRAW);
+    actuatorsVbo.setTexCoordData(&actuatorsTexCoords[0], (int) actuatorsTexCoords.size(), GL_STATIC_DRAW);
+    actuatorsVbo.setColorData(&actuatorsColors[0], (int) actuatorsColors.size(), GL_DYNAMIC_DRAW);
+    
+    //Receptors
+    
+    for(int i = 0; i < receptors.size(); i++){
+        
+        //Up / Left
+        
+        ofVec3f upLeft = ofVec3f(receptors[i]->getPosition().x - receptors[i]->getRadius(), receptors[i]->getPosition().y - receptors[i]->getRadius());
+        
+        //Up / Right
+        
+        ofVec3f upRight = ofVec3f(receptors[i]->getPosition().x + receptors[i]->getRadius(), receptors[i]->getPosition().y - receptors[i]->getRadius());
+        
+        //Down / Right
+        
+        ofVec3f downRight = ofVec3f(receptors[i]->getPosition().x + receptors[i]->getRadius(), receptors[i]->getPosition().y + receptors[i]->getRadius());
+        
+        //Down / Left
+        
+        ofVec3f downLeft = ofVec3f(receptors[i]->getPosition().x - receptors[i]->getRadius(), receptors[i]->getPosition().y + receptors[i]->getRadius());
+        
+        //Set vertices
+        
+        receptorsVertices.push_back(upLeft);
+        receptorsVertices.push_back(upRight);
+        receptorsVertices.push_back(downRight);
+        receptorsVertices.push_back(downLeft);
+        
+        //Set indices -> 6 indices to define a quad.
+        
+        //This is the first triangle
+        
+        receptorsIndices.push_back(i * 4);
+        receptorsIndices.push_back(i * 4 + 1);
+        receptorsIndices.push_back(i * 4 + 3);
+        
+        //This is the second triangls
+        
+        receptorsIndices.push_back(i * 4 + 1);
+        receptorsIndices.push_back(i * 4 + 2);
+        receptorsIndices.push_back(i * 4 + 3);
+        
+        //Set textures coordinates
+        
+        receptorsTexCoords.push_back(ofVec2f(-1));
+        receptorsTexCoords.push_back(ofVec2f(1, -1));
+        receptorsTexCoords.push_back(ofVec2f(1));
+        receptorsTexCoords.push_back(ofVec2f(-1, 1));
+        
+        //Set attributes send throw normal attribute for each vertex
+        
+        receptorsAttributes.push_back(ofVec3f(receptors[i]->getRadius(), 0.0, 0.0));
+        receptorsAttributes.push_back(ofVec3f(receptors[i]->getRadius(), 0.0, 0.0));
+        receptorsAttributes.push_back(ofVec3f(receptors[i]->getRadius(), 0.0, 0.0));
+        receptorsAttributes.push_back(ofVec3f(receptors[i]->getRadius(), 0.0, 0.0));
+        
+        //Set colors
+        
+        receptorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
+        receptorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
+        receptorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
+        receptorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
+        
+    }
+    
+    receptorsVbo.setVertexData(&actuatorsVertices[0], (int) actuatorsVertices.size(), GL_DYNAMIC_DRAW);
+    receptorsVbo.setNormalData(&actuatorsAttributes[0], (int) actuatorsAttributes.size(), GL_DYNAMIC_DRAW);
+    receptorsVbo.setIndexData(&actuatorsIndices[0], (int) actuatorsIndices.size(), GL_STATIC_DRAW);
+    receptorsVbo.setTexCoordData(&actuatorsTexCoords[0], (int) actuatorsTexCoords.size(), GL_STATIC_DRAW);
+    receptorsVbo.setColorData(&actuatorsColors[0], (int) actuatorsColors.size(), GL_DYNAMIC_DRAW);
     
 }
 
@@ -84,30 +267,26 @@ void Scene::initializeGPUData(){
 
 void Scene::renderToScreen(){
     
-    //Draw background
+    //Draw background.
+    //This clears the last frame.
     
     ofSetColor(0, 0, 0, getAlpha());
     ofDrawRectangle(0, 0, ofGetWidth() + 1, ofGetHeight());
     
-    //Update GPU data
-    //This will update all the data related to the rendering of the particles.
-    //The vbos conataining all rendering data as : heads coords, tails coords, etc... will be updated.
-    
-    updateParticlesRenderingData();
-    
-    //First draw call
-    //Draw particles tail
+    //1 - Draw call
+    //Draw particles tail.
     
     ofEnableBlendMode(OF_BLENDMODE_ADD);
     
+    glLineWidth(2);
     particleTailProgram.begin();
     
     particlesTailVbo.drawElements(GL_LINES, (int) tailIndices.size());
     
     particleTailProgram.end();
     
-    //Second draw call
-    //Draw particles head
+    //2 - Draw call
+    //Draw all particles head.
 
     ofEnablePointSprites();
     
@@ -120,52 +299,87 @@ void Scene::renderToScreen(){
     particleHeadProgram.end();
     
     ofDisablePointSprites();
-    ofDisableBlendMode();
-    
-    ofEnableAlphaBlending();
-    
-    ofSetColor(255, 255, 255, getAlpha());
     
     //Draw actuators
+
+    actuatorsProgram.begin();
+    activeActuatorImg.bind();
     
-    for(int i = 0; i < actuators.size(); i++){
-        if(actuators[i]->getEnabled()) actuators[i]->debugDraw();
-    }
+    //3 - Draw call
+    //Draw all actuators
+    
+    actuatorsVbo.drawElements(GL_TRIANGLES, (int) actuatorsIndices.size());
+    
+    activeActuatorImg.unbind();
+    actuatorsProgram.end();
+    
+    //Debug draw wireframe.
+    
+//    ofSetColor(255, 255, 255);
+//    actuatorsVbo.drawElements(GL_LINES, (int) actuatorsIndices.size());
     
     //Draw receptors
     
-    for(int i = 0; i < receptors.size(); i++){
-        receptors[i]->debugDraw();
+    receptorProgram.begin();
+    receptorImg.bind();
+    
+    receptorsVbo.drawElements(GL_TRIANGLES, (int) receptorsIndices.size());
+    
+    receptorImg.unbind();
+    receptorProgram.end();
+    
+    ofDisableBlendMode();
+    ofEnableAlphaBlending();
+    
+    ofEnableAlphaBlending();
+    ofSetColor(255, 255, 255, getAlpha());
+    
+    //Draw emitters
+    
+    for(int i = 0; i < emitters.size(); i++){
+        emitterImg.draw(emitters[i]->getPosition() - emitterImg.getWidth() / 2);
     }
+
     
     //Draw polygones
+
+    polygoneProgram.begin();
+    polygonesVbo.drawElements(GL_TRIANGLES, (int) polygonesIndices.size());
+    polygoneProgram.end();
+    
+    polygoneWireframeProgram.begin();
     
     for(int i = 0; i < polygones.size(); i++){
-        polygones[i]->debugDraw();
+        
+        polygones[i]->drawWireframe();
+        
     }
     
-    //Draw actuator box
+    polygoneWireframeProgram.end();
     
-    ofSetColor(0, 0, 0, getAlpha() * 0.8);
-    ofFill();
-    ofDrawRectangle(actuatorBox.x, actuatorBox.y, actuatorBox.x + actuatorBox.width, actuatorBox.y + actuatorBox.height);
     ofSetColor(255, 255, 255, getAlpha());
-    ofNoFill();
-    ofDrawRectangle(actuatorBox.x, actuatorBox.y, actuatorBox.x + actuatorBox.width, actuatorBox.y + actuatorBox.height);
     
     //Draw disabled actuators
     
     for(int i = 0; i < actuators.size(); i++){
         if(!actuators[i]->getEnabled()){
-            ofDrawCircle(actuators[i]->getPosition(), 20);
+            actuatorImg.draw(actuators[i]->getPosition() - 20 , 40, 40);
         }
+    }
+    
+    //Draw actuators infos
+    
+    for(int i = 0; i < receptors.size(); i++){
+
+        string info = "[" + to_string((int) receptors[i]->getPercentFill()) + "/100]";
+        infosFont.drawString(info, receptors[i]->getPosition().x - infosFont.stringWidth(info) / 2, receptors[i]->getPosition().y + receptors[i]->getRadius() * 1.08);
+        
     }
     
     //Draw interface
     
     interface.draw();
-    
-    updateAllParticles();
+    ofDisableAlphaBlending();
     
 }
 
@@ -192,7 +406,7 @@ void Scene::updateParticlesRenderingData(){
         if(i < allParticles.size()){
             
             positions[i] = allParticles[i]->getPosition();
-            attributes[i].x = allParticles[i]->getMass() * 10; //Radius
+            attributes[i].x = allParticles[i]->getMass() * 6; //Radius
             attributes[i].z = allParticles[i]->getLifeLeft() / allParticles[i]->getLifeSpan() * getAlpha() / 255.0; //Alpha
             
             vector<ofVec2f> points = allParticles[i]->getPoints();
@@ -238,9 +452,165 @@ void Scene::updateParticlesRenderingData(){
     
 }
 
+void Scene::updateActuatorsRenderingData(){
+    
+    for(int i = 0; i < actuators.size(); i++){
+        
+        //Up / Left
+        
+        ofVec3f upLeft = ofVec3f(actuators[i]->getPosition().x - actuators[i]->getRadius(), actuators[i]->getPosition().y - actuators[i]->getRadius());
+        
+        //Up / Right
+        
+        ofVec3f upRight = ofVec3f(actuators[i]->getPosition().x + actuators[i]->getRadius(), actuators[i]->getPosition().y - actuators[i]->getRadius());
+        
+        //Down / Right
+        
+        ofVec3f downRight = ofVec3f(actuators[i]->getPosition().x + actuators[i]->getRadius(), actuators[i]->getPosition().y + actuators[i]->getRadius());
+        
+        //Down / Left
+        
+        ofVec3f downLeft = ofVec3f(actuators[i]->getPosition().x - actuators[i]->getRadius(), actuators[i]->getPosition().y + actuators[i]->getRadius());
+        
+        //Set vertices
+        
+        actuatorsVertices[i * 4] = upLeft;
+        actuatorsVertices[i * 4 + 1] = upRight;
+        actuatorsVertices[i * 4 + 2] = downRight;
+        actuatorsVertices[i * 4 + 3] = downLeft;
+        
+        //Set attributes send throw normal attribute
+        
+        actuatorsAttributes[i * 4] = (ofVec3f(actuators[i]->getRadius(), 0.0, 0.0));
+        actuatorsAttributes[i * 4 + 1] = (ofVec3f(actuators[i]->getRadius(), 0.0, 0.0));
+        actuatorsAttributes[i * 4 + 2] = (ofVec3f(actuators[i]->getRadius(), 0.0, 0.0));
+        actuatorsAttributes[i * 4 + 3] = (ofVec3f(actuators[i]->getRadius(), 0.0, 0.0));
+        
+        //Set colors
+        
+        float alpha = ((actuators[i]->getPosition().y - actuatorBox.height / 2) / (actuatorBox.height / 2));
+        
+        actuatorsColors[i * 4] = ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255));
+        actuatorsColors[i * 4 + 1] = ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255));
+        actuatorsColors[i * 4 + 2] = ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255));
+        actuatorsColors[i * 4 + 3] = ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255));
+        
+    }
+    
+    actuatorsVbo.updateVertexData(&actuatorsVertices[0], (int) actuatorsVertices.size());
+    actuatorsVbo.updateNormalData(&actuatorsAttributes[0], (int) actuatorsAttributes.size());
+    actuatorsVbo.updateColorData(&actuatorsColors[0], (int) actuatorsColors.size());
+    
+}
+
+void Scene::updateReceptorsRenderingData(){
+    
+    for(int i = 0; i < receptors.size(); i++){
+        
+        //Up / Left
+        
+        ofVec3f upLeft = ofVec3f(receptors[i]->getPosition().x - receptors[i]->getRadius(), receptors[i]->getPosition().y - receptors[i]->getRadius());
+        
+        //Up / Right
+        
+        ofVec3f upRight = ofVec3f(receptors[i]->getPosition().x + receptors[i]->getRadius(), receptors[i]->getPosition().y - receptors[i]->getRadius());
+        
+        //Down / Right
+        
+        ofVec3f downRight = ofVec3f(receptors[i]->getPosition().x + receptors[i]->getRadius(), receptors[i]->getPosition().y + receptors[i]->getRadius());
+        
+        //Down / Left
+        
+        ofVec3f downLeft = ofVec3f(receptors[i]->getPosition().x - receptors[i]->getRadius(), receptors[i]->getPosition().y + receptors[i]->getRadius());
+        
+        //Set vertices
+        
+        receptorsVertices[i * 4] = upLeft;
+        receptorsVertices[i * 4 + 1] = upRight;
+        receptorsVertices[i * 4 + 2] = downRight;
+        receptorsVertices[i * 4 + 3] = downLeft;
+        
+        //Set colors and visual feenback
+        
+        receptorsColors[i * 4] = ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255);
+        receptorsColors[i * 4 + 1] = ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255);
+        receptorsColors[i * 4 + 2] = ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255);
+        receptorsColors[i * 4 + 3] = ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255);
+        
+        //Set attributes
+        
+        receptorsAttributes[i * 4] = (ofVec3f(receptors[i]->getRadius(), receptors[i]->getPercentFill() * 0.01, 0.0));
+        receptorsAttributes[i * 4 + 1] = (ofVec3f(receptors[i]->getRadius(), receptors[i]->getPercentFill() * 0.01, 0.0));
+        receptorsAttributes[i * 4 + 2] = (ofVec3f(receptors[i]->getRadius(), receptors[i]->getPercentFill() * 0.01, 0.0));
+        receptorsAttributes[i * 4 + 3] = (ofVec3f(receptors[i]->getRadius(), receptors[i]->getPercentFill() * 0.01, 0.0));
+        
+    }
+    
+    receptorsVbo.updateVertexData(&receptorsVertices[0], (int) receptorsVertices.size());
+    receptorsVbo.updateNormalData(&receptorsAttributes[0], (int) receptorsAttributes.size());
+    receptorsVbo.updateColorData(&receptorsColors[0], (int) receptorsColors.size());
+    
+}
+
+void Scene::updatePolygonesRenderingData(){
+    
+    //Static data
+    
+    polygonesVertices.erase(polygonesVertices.begin(), polygonesVertices.end());
+    polygonesIndices.erase(polygonesIndices.begin(), polygonesIndices.end());
+    baricentricCoords.erase(baricentricCoords.begin(), baricentricCoords.end());
+    
+    int offsetIndices = 0;
+    
+    for(int i = 0; i < polygones.size(); i++){
+        
+        cout << polygones[i]->getVertices().size() << endl;
+        cout << polygones[i]->getIndices().size() << endl;
+       
+        //Set vertices
+        
+        for(int j = 0; j < polygones[i]->getVertices().size(); j++){
+            
+            polygonesVertices.push_back(polygones[i]->getVertices()[j]);
+            float cValue = ofRandom(1);
+            polygoneVerticesColor.push_back(ofFloatColor(cValue, cValue, cValue, 1));
+            
+        }
+
+        //Set indices
+      
+        for(int j = 0; j < polygones[i]->getIndices().size(); j++){
+        
+            polygonesIndices.push_back(ofIndexType(polygones[i]->getIndices()[j] + offsetIndices));
+            
+        }
+        
+        for(int j = 0; j < polygones[i]->getBaricentricCoords().size(); j++){
+            
+            baricentricCoords.push_back(polygones[i]->getBaricentricCoords()[j]);
+            
+        }
+
+        offsetIndices += polygones[i]->getVertices().size();
+        
+    }
+    
+    polygonesVbo.setVertexData(&polygonesVertices[0], (int) polygonesVertices.size(), GL_STATIC_DRAW);
+    polygonesVbo.setIndexData(&polygonesIndices[0], (int) polygonesIndices.size(), GL_STATIC_DRAW);
+    polygonesVbo.setColorData(&polygoneVerticesColor[0], (int) polygoneVerticesColor.size(), GL_STATIC_DRAW);
+    polygonesVbo.setNormalData(&baricentricCoords[0], (int) baricentricCoords.size(), GL_STATIC_DRAW);
+    
+}
+
 //Update the scene
 
 void Scene::update(){
+    
+    //Update GPU data
+    //This will update all the data related to the rendering of the particles.
+    //The vbos conataining all rendering data as : heads coords, tails coords, etc... will be updated.
+    
+    updateParticlesRenderingData();
     
     //Here we update the main container of particles
     
@@ -254,7 +624,13 @@ void Scene::update(){
         emitters[i]->applyGravity(ofVec2f(0.0, 0.1));
         
     }
-        
+    
+    //Update GPU data
+    //This will update all the data related to the rendering of the actuators.
+    //The vbos conataining all rendering data as : positions and radiuses will be updated.
+    
+    updateActuatorsRenderingData();
+    
     //Update actuators
     
     for(int i = 0; i < touches.size(); i++){
@@ -276,7 +652,7 @@ void Scene::update(){
 
             actuators[i]->enable(false);
             
-            ofVec2f position = ofVec2f((ofGetWidth() / 2) - (ofGetWidth() / 4) + i * ((ofGetWidth() / 2) / (actuators.size() - 1)), 0.0488281 * ofGetHeight() / 2);
+            ofVec2f position = ofVec2f((ofGetWidth() / 2) - (ofGetWidth() / 4) + i * ((ofGetWidth() / 2) / (actuators.size() - 1)), actuatorBox.height / 2);
             
             ofVec2f force = (position - actuators[i]->getPosition());
             actuators[i]->applyForce(force);
@@ -288,13 +664,28 @@ void Scene::update(){
         }
     }
     
-    //Update receptors
+    //Receptors
     
-    bool allAreFilled = true;
+    updateReceptorsRenderingData();
     
-    for(int i = 0; i < receptors.size(); i++){
-        receptors[i]->update();
-        if(!receptors[i]->isFilled()) allAreFilled = false;
+    //Check if receptors are filled
+    
+    if(!allAreFilled){
+        
+        allAreFilled = true;
+        
+        for(int i = 0; i < receptors.size(); i++){
+            receptors[i]->update();
+            if(!receptors[i]->isFilled()) allAreFilled = false;
+        }
+        
+        if(allAreFilled){
+            
+            IS_FINISHED = true;
+            levelEndCallback();
+            
+        }
+        
     }
     
     checkForCollisions();
@@ -354,6 +745,12 @@ void Scene::setPause(bool _pause){
     
 }
 
+bool Scene::isFinished(){
+    
+    return IS_FINISHED;
+    
+}
+
 //Player inputs
 //These inputs will only fire when this screen is active
 
@@ -369,6 +766,7 @@ void Scene::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, s
             
             if(actuators[i]->isOver(_touch)){
                 
+                actuatorsTimer[_touch.id] = ofGetElapsedTimeMillis();
                 activeActuators[_touch.id] = actuators[i];
                 break;
                 
@@ -410,8 +808,31 @@ void Scene::onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, str
 
 void Scene::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){
     
-    if(_touch.id < touches.size()){
-        touches[_touch.id] = _touch;
+    if(_touch.id < touches.size() && activeActuators[_touch.id] != nullptr){
+        
+        if((_touch - touches[_touch.id]).length() > 1 && actuatorsTimer[_touch.id] + timeToChange >= ofGetElapsedTimeMillis()) actuatorsTimer[_touch.id] = ofGetElapsedTimeMillis();
+        if(actuatorsTimer[_touch.id] + timeToChange >= ofGetElapsedTimeMillis()){
+            
+            if(activeActuators[_touch.id]->isDisabled()){
+                activeActuators[_touch.id]->disable(false);
+            }
+            
+            touches[_touch.id] = _touch;
+            
+        }else{
+        
+            float distance = (activeActuators[_touch.id]->getPosition() - touches[_touch.id]).length();
+            
+            if(!activeActuators[_touch.id]->isDisabled()){
+                activeActuators[_touch.id]->disable(true);
+            }
+            
+            activeActuators[_touch.id]->setRadius(distance + 100);
+            
+            touches[_touch.id] = _touch;
+            
+        }
+        
     }
     
 }
@@ -546,6 +967,17 @@ void Scene::saveSceneToXML(string _fileName){
             
         }
         
+        xml.addTag("indices");
+        xml.pushTag("indices");
+        
+        for(int j = 0; j < polygones[i]->getIndices().size(); j++){
+            
+            xml.addValue("index", polygones[i]->getIndices()[j]);
+            
+        }
+        
+        xml.popTag();
+        
         xml.popTag(); //vertice
         xml.popTag(); //vertices
     }
@@ -556,71 +988,6 @@ void Scene::saveSceneToXML(string _fileName){
     
 }
 
-void Scene::saveXML(string _name, ofxXmlSettings _XML){
-    
-    string message = "";
-    
-    if( _XML.saveFile(_name) ){
-        
-        message = _name + " saved in the data folder!";
-        
-    }else if( _XML.saveFile(ofxiOSGetDocumentsDirectory() + _name) ){
-        
-        message = _name + " saved in the documents folder!";
-        
-    }else{
-        
-        message = "Unable to save " + _name + " check data/ folder";
-        
-    }
-    
-    cout << message << endl;
-    
-}
-
-void Scene::loadXML(string _xmlFile, function<void(ofxXmlSettings _XML)> _callback){
-    
-    ofxXmlSettings XML;
-    
-    string message = "";
-    
-    if( XML.loadFile(_xmlFile) ){
-        
-        message = _xmlFile + " loaded from data folder!";
-        cout << message << endl;
-        
-        _callback(XML);
-        
-    }else if( XML.loadFile(ofxiOSGetDocumentsDirectory() + _xmlFile) ){
-        
-        message = _xmlFile + " loaded from documents folder!";
-        cout << message << endl;
-        
-        _callback(XML);
-        
-    }else{
-        
-        message = "unable to load " + _xmlFile + " check data/ folder";
-        cout << message << endl;
-        
-    }
-    
-}
-
-void Scene::logXML(string _fileName){
-    
-    loadXML(_fileName, [&](ofxXmlSettings _xml){
-        
-        string content;
-        
-        _xml.copyXmlToString(content);
-        
-        cout << content << endl;
-        
-    });
-    
-}
-
 //This function sets up the scene with a xml file.
 
 void Scene::XMLSetup(string _xmlFile){
@@ -628,6 +995,7 @@ void Scene::XMLSetup(string _xmlFile){
     loadXML(_xmlFile, [&](ofxXmlSettings _XML){
     
         logXML(_xmlFile);
+        XML = _XML;
         
         //Multitouch
         
@@ -693,6 +1061,7 @@ void Scene::XMLSetup(string _xmlFile){
         
         activeActuators.erase(activeActuators.begin(), activeActuators.end());
         activeActuators = vector<shared_ptr<Actuator>>(numActuators, nullptr);
+        actuatorsTimer = vector<float>(numActuators, ofGetElapsedTimeMillis());
         
         for(int i = 0; i < numActuators; i++){
             
@@ -732,7 +1101,7 @@ void Scene::XMLSetup(string _xmlFile){
             
             shared_ptr<Receptor> newReceptor = shared_ptr<Receptor>(new Receptor());
             
-            ofVec2f position = ofVec2f(_XML.getValue("X", 0.0) * ofGetWidth(), _XML.getValue("Y", 0) * ofGetHeight());
+            ofVec2f position = ofVec2f(_XML.getValue("X", 0.0) * ofGetWidth(), _XML.getValue("Y", 0.0) * ofGetHeight());
             float radius = _XML.getValue("radius", 0.0) * ofGetWidth();
             float strength = _XML.getValue("strength", 0.0);
             int maxParticles = _XML.getValue("maxParticles", 0);
@@ -778,6 +1147,8 @@ void Scene::XMLSetup(string _xmlFile){
                 
                 newPolygone->addVertex(_XML.getValue("X", 0.0) * ofGetWidth(), _XML.getValue("Y", 0.0) * ofGetHeight());
                 
+                polygonesVertices.push_back(ofVec3f(_XML.getValue("X", 0.0) * ofGetWidth(), _XML.getValue("Y", 0.0) * ofGetHeight(), 0));
+                
                 _XML.popTag();
                 
             }
@@ -790,9 +1161,15 @@ void Scene::XMLSetup(string _xmlFile){
             
         }
         
+        updatePolygonesRenderingData();
+        
         _XML.popTag();
         
     });
+    
+    //Set up all the GPU data needed for rendering the scene once we loaded all our game components.
+    
+    initializeGPUData();
     
 }
 

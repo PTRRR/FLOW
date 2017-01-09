@@ -23,16 +23,23 @@ private:
     
     shared_ptr<ofTrueTypeFont> font;
     
+    //Main
+    
+    vector<string> levels;
+    
     //Interface
     
+    ofImage backButtonImg;
     vector<shared_ptr<Button>> buttons;
+    vector<bool> levelsStatus;
+    
+    
     float lineHeightMultiplier = 0.06;
     ofVec2f lastPos = ofVec2f(0);
     ofVec2f deltaMove = ofVec2f(0);
     bool hasMoved = false;
     float movement = 0;
     Interface interface;
-    bool XMLExists(string _xmlName);
     
     //Rendering
     
@@ -44,12 +51,25 @@ private:
     void onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback) override;
     void onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback) override;
     
+    //Utils
+    
+    void downloadLevelsToIOSDirectory();
+    
 public:
     
     Levels();
     Levels(shared_ptr<ofTrueTypeFont> _font);
     
     void update() override;
+    void setup();
+    
+    //Set
+    
+    void setUnlocked(string _xmlFile);
+    
+    //Get
+    
+    vector<string> getLevels();
     
     //Utils
     

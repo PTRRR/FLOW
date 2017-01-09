@@ -190,6 +190,11 @@ bool BaseElement::isOut(){
     
 }
 
+bool BaseElement::isDisabled(){
+    
+    return disabled;
+    
+}
 
 //Physics
 

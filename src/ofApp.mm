@@ -4,7 +4,8 @@
 void ofApp::setup(){	
 
     mainFont = shared_ptr<ofTrueTypeFont>(new ofTrueTypeFont());
-    mainFont->load("GT-Cinetype-Trial-Regular.otf", 30);
+    mainFont->load("GT-Cinetype-Mono.ttf", 0.01953125 * ofGetWidth());
+    mainFont->setLetterSpacing(1.5);
     
     gameManager = GameManager(mainFont);
     
@@ -40,7 +41,7 @@ void ofApp::draw(){
     };
     
     ofSetColor(255, 0, 0);
-    ofDrawBitmapString("FPS: " + to_string((int) floor(ofGetFrameRate() * 10) / 10), 20, 20);
+    ofDrawBitmapString(ofGetFrameRate(), 20, 20);
     
 }
 

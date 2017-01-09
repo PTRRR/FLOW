@@ -76,6 +76,7 @@ public:
     float getMass();
     float getDamping();
     
+    bool isDisabled();
     bool isOut();
     
     //Physics

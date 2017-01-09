@@ -12,6 +12,7 @@ Actuator::Actuator(){
 
     strength = 0.0;
     radius = 100.0;
+    radiusTarget = radius;
     
     overRadius = 50.0;
 
@@ -23,11 +24,23 @@ void Actuator::debugDraw(){
     
     ofPushStyle();
     
-    ofDrawCircle(getPosition(), 20);
     ofNoFill();
     ofDrawCircle(getPosition() , radius);
     
     ofPopStyle();
+    
+}
+
+void Actuator::update(){
+    
+    Actuator::BaseElement::update();
+    
+    //Interpolation
+    
+    radius += (radiusTarget - radius) * 0.2;
+    
+    radius = ofClamp(radius, 50, 400);
+
     
 }
 
@@ -41,7 +54,7 @@ void Actuator::setStrength(float _strength){
 
 void Actuator::setRadius(float _radius){
     
-    radius = _radius;
+    radiusTarget = _radius / (radius * 0.01);
     
 }
 

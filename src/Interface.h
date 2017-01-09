@@ -46,6 +46,7 @@ public:
     //Set
     
     void setFont(shared_ptr<ofTrueTypeFont> _font);
+    void removeButton(shared_ptr<Button> _button);
     
 };
 

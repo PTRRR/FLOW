@@ -17,16 +17,76 @@ Levels::Levels(shared_ptr<ofTrueTypeFont> _font){
     interface.setMaxVelocity(100);
     interface.setDamping(0.9);
     interface.setFont(_font);
+    interface.addText("LEVELS", ofVec2f(ofGetWidth() / 2, ofGetHeight() * 0.06 / 2));
+    
+    backButtonImg.load("images/backButton.png");
+    shared_ptr<Button> backButton = interface.addButton("BACK", "BACK", ofVec2f(0.0390625 * ofGetWidth()));
+    backButton->setDimensions(ofVec2f(0.0390625 * ofGetWidth()));
+    backButton->setImage(backButtonImg);
+    
+    downloadLevelsToIOSDirectory();
+
+}
+
+//Private
+
+void Levels::downloadLevelsToIOSDirectory(){
+    
+    int levelIndex = 1;
+    ofxXmlSettings XMLTemp;
+    
+    while (XMLTemp.load("scene_" + to_string(levelIndex) + ".xml")) {
+        
+        XMLTemp.saveFile(ofxiOSGetDocumentsDirectory() + "scene_" + to_string(levelIndex) + ".xml");
+        levelIndex ++;
+        
+    }
+    
+    cout << levelIndex - 1 << " levels downloaded to ios directory" << endl;
+    
+}
+
+//Public
+
+void Levels::setup(){
+    
+    //Reset all.
+    
+    for(int i = buttons.size() - 1; i >= 0; i--){
+    
+        interface.removeButton(buttons[i]);
+        buttons.erase(buttons.begin() + i);
+        levels.erase(levels.begin() + i);
+        
+    }
+
+    //Set up new buttons.
     
     int levelIndex = 1;
     
-    while (XMLExists("scene_" + to_string(levelIndex) + ".xml")) {
-     
-        shared_ptr<Button> newButton =  interface.addButton("LEVEL " + to_string(levelIndex), "scene_" + to_string(levelIndex) + ".xml", ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2 + ofGetHeight() * lineHeightMultiplier * (levelIndex - 1)));
-
+    ofxXmlSettings XMLTemp;
+    
+    while (XMLTemp.load(ofxiOSGetDocumentsDirectory() + "scene_" + to_string(levelIndex) + ".xml")) {
+        
+        string file = "scene_" + to_string(levelIndex) + ".xml";
+        
+        levels.push_back(file);
+        
+        shared_ptr<Button> newButton = interface.addButton(to_string(levelIndex), "scene_" + to_string(levelIndex) + ".xml", ofVec2f(0));
+        
         newButton->setMass(10);
         newButton->setDamping(0.4);
         newButton->setMaxVelocity(10000);
+        
+        if(XMLTemp.getValue("general:UNLOCKED", 0) == 0){
+            
+            newButton->setActive(true);
+            
+        }else{
+            
+            newButton->setActive(true);
+            
+        }
         
         buttons.push_back(newButton);
         
@@ -34,31 +94,18 @@ Levels::Levels(shared_ptr<ofTrueTypeFont> _font){
         
     }
     
-}
-
-//Private
-
-bool Levels::XMLExists(string _xmlName){
+    int numLevels = levelIndex -1;
     
-    ofxXmlSettings XML;
+    //Set the buttons to the right position once whe know how much they are.
     
-    if( XML.loadFile(_xmlName) ){
+    for(int i = 0; i < numLevels; i++){
         
-        return true;
-        
-    }else if( XML.loadFile(ofxiOSGetDocumentsDirectory() + _xmlName) ){
-        
-        return true;
-        
-    }else{
-        
-        return false;
+        ofVec2f buttonPosition = ofVec2f(ofGetWidth() / 2, (ofGetHeight() / 2) + (ofGetHeight() * lineHeightMultiplier * i ) - ((ofGetHeight() * lineHeightMultiplier * (numLevels - 1) ) / 2) );
+        buttons[i]->setPosition(buttonPosition);
         
     }
     
 }
-
-//Public
 
 void Levels::update(){
     
@@ -104,21 +151,21 @@ void Levels::update(){
         
         deltaMove *= 0.95;
         
-    }
-    
-    //Limit movement
-    
-    if(buttons[buttons.size() - 1]->getPosition().y > ofGetHeight() / 2 + ofGetHeight() * lineHeightMultiplier * (buttons.size() - 1)){
+        //Limit movement
         
-        ofVec2f targetPosition = ofVec2f(buttons[buttons.size() - 1]->getPosition().x, ofGetHeight() / 2 + ofGetHeight() * lineHeightMultiplier * (buttons.size() - 1));
-        ofVec2f newPosition = buttons[buttons.size() - 1]->getPosition() + (targetPosition - buttons[buttons.size() - 1]->getPosition()) * 0.3;
-        buttons[buttons.size() - 1]->setPosition(newPosition);
-        
-    }else if(buttons[0]->getPosition().y < ofGetHeight() / 2 - ofGetHeight() * lineHeightMultiplier * (buttons.size() - 1)){
-        
-        ofVec2f targetPosition = ofVec2f(buttons[0]->getPosition().x, ofGetHeight() / 2 - ofGetHeight() * lineHeightMultiplier * (buttons.size() - 1));
-        ofVec2f newPosition = buttons[0]->getPosition() + (targetPosition - buttons[0]->getPosition()) * 0.3;
-        buttons[0]->setPosition(newPosition);
+        if(buttons[buttons.size() - 1]->getPosition().y > ofGetHeight() / 2 + ofGetHeight() * lineHeightMultiplier * (buttons.size() - 1)){
+            
+            ofVec2f targetPosition = ofVec2f(buttons[buttons.size() - 1]->getPosition().x, ofGetHeight() / 2 + ofGetHeight() * lineHeightMultiplier * (buttons.size() - 1));
+            ofVec2f newPosition = buttons[buttons.size() - 1]->getPosition() + (targetPosition - buttons[buttons.size() - 1]->getPosition()) * 0.3;
+            buttons[buttons.size() - 1]->setPosition(newPosition);
+            
+        }else if(buttons[0]->getPosition().y < ofGetHeight() / 2 - ofGetHeight() * lineHeightMultiplier * (buttons.size() - 1)){
+            
+            ofVec2f targetPosition = ofVec2f(buttons[0]->getPosition().x, ofGetHeight() / 2 - ofGetHeight() * lineHeightMultiplier * (buttons.size() - 1));
+            ofVec2f newPosition = buttons[0]->getPosition() + (targetPosition - buttons[0]->getPosition()) * 0.3;
+            buttons[0]->setPosition(newPosition);
+            
+        }
         
     }
     
@@ -132,12 +179,44 @@ void Levels::renderToScreen(){
     ofSetColor(255, 255, 255, getAlpha());
     interface.draw();
     
+    for(int i = 0; i < buttons.size(); i++){
+        
+        if(!buttons[i]->isActive()){
+            
+            float lineLength = 50;
+            ofDrawLine(buttons[i]->getPosition().x - lineLength / 2, buttons[i]->getPosition().y, buttons[i]->getPosition().x + lineLength / 2, buttons[i]->getPosition().y);
+            
+        }
+        
+    }
+    
 }
+
+//Set
 
 void Levels::setFont(shared_ptr<ofTrueTypeFont> _font){
     
     font = _font;
     interface.setFont(_font);
+    
+}
+
+void Levels::setUnlocked(string _xmlFile){
+    
+    ofxXmlSettings xml;
+    
+    xml.load(ofxiOSGetDocumentsDirectory() + _xmlFile);
+    
+    xml.setValue("general:UNLOCKED", 1);
+    xml.saveFile(ofxiOSGetDocumentsDirectory() + _xmlFile);
+    
+}
+
+//Get
+
+vector<string> Levels::getLevels(){
+    
+    return levels;
     
 }
 
@@ -166,9 +245,9 @@ void Levels::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, 
     
     if(_touch.id == 0){
      
-        deltaMove = ofVec2f(0, _touch.y - lastPos.y);
+//        deltaMove = ofVec2f(0, _touch.y - lastPos.y);
         
-        movement += deltaMove.y;
+//        movement += deltaMove.y;
         
         lastPos = _touch;
         
