@@ -73,6 +73,8 @@ void Scene::initializeGPUData(){
     particleTailProgram.load("shaders/particleTail");
     polygoneProgram.load("shaders/polygoneShader");
     polygoneWireframeProgram.load("shaders/polygoneShaderWireframe");
+    actuatorsProgram.load("shaders/actuatorShader");
+    
     
     //HEADS.
     //Set un vbo for rendering the particles head.
@@ -119,6 +121,65 @@ void Scene::initializeGPUData(){
     
     updateAllParticles();
     
+    //Actuators
+    
+    for(int i = 0; i < actuators.size(); i++){
+        
+        //Up / Left
+        
+        ofVec3f upLeft = ofVec3f(actuators[i]->getPosition().x - actuators[i]->getRadius(), actuators[i]->getPosition().y - actuators[i]->getRadius());
+        
+        //Up / Right
+        
+        ofVec3f upRight = ofVec3f(actuators[i]->getPosition().x + actuators[i]->getRadius(), actuators[i]->getPosition().y - actuators[i]->getRadius());
+        
+        //Down / Right
+        
+        ofVec3f downRight = ofVec3f(actuators[i]->getPosition().x + actuators[i]->getRadius(), actuators[i]->getPosition().y + actuators[i]->getRadius());
+        
+        //Down / Left
+        
+        ofVec3f downLeft = ofVec3f(actuators[i]->getPosition().x - actuators[i]->getRadius(), actuators[i]->getPosition().y + actuators[i]->getRadius());
+        
+        //Set vertices
+        
+        actuatorsVertices.push_back(upLeft);
+        actuatorsVertices.push_back(upRight);
+        actuatorsVertices.push_back(downRight);
+        actuatorsVertices.push_back(downLeft);
+        
+        //Set indices -> 6 indices to define a quad.
+        
+        //This is the first triangle
+        
+        actuatorsIndices.push_back(i * 4);
+        actuatorsIndices.push_back(i * 4 + 1);
+        actuatorsIndices.push_back(i * 4 + 3);
+        
+        //This is the second triangls
+        
+        actuatorsIndices.push_back(i * 4 + 1);
+        actuatorsIndices.push_back(i * 4 + 2);
+        actuatorsIndices.push_back(i * 4 + 3);
+        
+        //Set textures coordinates
+        
+        actuatorsTexCoords.push_back(ofVec2f(-1));
+        actuatorsTexCoords.push_back(ofVec2f(1, -1));
+        actuatorsTexCoords.push_back(ofVec2f(1));
+        actuatorsTexCoords.push_back(ofVec2f(-1, 1));
+        
+        //Set attributes send throw normal attribute
+        
+        actuatorsAttributes.push_back(ofVec3f(actuators[i]->getRadius()));
+        
+    }
+    
+    actuatorsVbo.setVertexData(&actuatorsVertices[0], (int) actuatorsVertices.size(), GL_DYNAMIC_DRAW);
+    actuatorsVbo.setNormalData(&actuatorsAttributes[0], (int) actuatorsAttributes.size(), GL_DYNAMIC_DRAW);
+    actuatorsVbo.setIndexData(&actuatorsIndices[0], (int) actuatorsIndices.size(), GL_STATIC_DRAW);
+    actuatorsVbo.setTexCoordData(&actuatorsTexCoords[0], (int) actuatorsTexCoords.size(), GL_STATIC_DRAW);
+    
 }
 
 //Where all the scene is rendered
@@ -130,12 +191,6 @@ void Scene::renderToScreen(){
     
     ofSetColor(0, 0, 0, getAlpha());
     ofDrawRectangle(0, 0, ofGetWidth() + 1, ofGetHeight());
-    
-    //Update GPU data
-    //This will update all the data related to the rendering of the particles.
-    //The vbos conataining all rendering data as : heads coords, tails coords, etc... will be updated.
-    
-    updateParticlesRenderingData();
     
     //1 - Draw call
     //Draw particles tail.
@@ -178,25 +233,36 @@ void Scene::renderToScreen(){
     }
     
     //Draw actuators
+
+    actuatorsProgram.begin();
     
-    ofPushStyle();
+    actuatorsVbo.drawElements(GL_TRIANGLES, (int) actuatorsIndices.size());
     
-    for(int i = 0; i < activeActuators.size(); i++){
-        
-        float alpha = ((actuators[i]->getPosition().y - actuatorBox.height / 2) / (actuatorBox.height / 2)) * 255;
-        ofSetColor(255, 255, 255, ofClamp(alpha, 0, getAlpha()));
-        activeActuatorImg.draw(actuators[i]->getPosition() - activeActuatorImg.getWidth() / 2);
-        
-        if(activeActuators[i] != nullptr && actuatorsTimer[i] + timeToChange < ofGetElapsedTimeMillis()){
-            
-            ofSetColor(255, 0, 0);
-            activeActuators[i]->debugDraw();
-            
-        }
-        
-    }
+    actuatorsProgram.end();
     
-    ofPopStyle();
+//    ofPushStyle();
+//    
+//    for(int i = 0; i < activeActuators.size(); i++){
+//        
+//        float alpha = ((actuators[i]->getPosition().y - actuatorBox.height / 2) / (actuatorBox.height / 2)) * 255;
+//        ofSetColor(255, 255, 255, ofClamp(alpha, 0, getAlpha()));
+//        activeActuatorImg.draw(actuators[i]->getPosition() - activeActuatorImg.getWidth() / 2);
+//        
+//        if(activeActuators[i] != nullptr && actuatorsTimer[i] + timeToChange < ofGetElapsedTimeMillis()){
+//            
+//            ofSetColor(255, 0, 0, ofClamp(alpha, 0, getAlpha()));
+//            activeActuators[i]->debugDraw();
+//            
+//        }else{
+//            
+//            ofSetColor(255, 255, 255, ofClamp(alpha, 0, getAlpha()));
+//            actuators[i]->debugDraw();
+//            
+//        }
+//        
+//    }
+//    
+//    ofPopStyle();
     
     //Draw receptors
     
@@ -272,10 +338,7 @@ void Scene::renderToScreen(){
     //Draw interface
     
     interface.draw();
-    
     ofDisableAlphaBlending();
-    
-    updateAllParticles();
     
 }
 
@@ -348,6 +411,44 @@ void Scene::updateParticlesRenderingData(){
     
 }
 
+void Scene::updateActuatorsRenderingData(){
+    
+    for(int i = 0; i < actuators.size(); i++){
+        
+        //Up / Left
+        
+        ofVec3f upLeft = ofVec3f(actuators[i]->getPosition().x - actuators[i]->getRadius(), actuators[i]->getPosition().y - actuators[i]->getRadius());
+        
+        //Up / Right
+        
+        ofVec3f upRight = ofVec3f(actuators[i]->getPosition().x + actuators[i]->getRadius(), actuators[i]->getPosition().y - actuators[i]->getRadius());
+        
+        //Down / Right
+        
+        ofVec3f downRight = ofVec3f(actuators[i]->getPosition().x + actuators[i]->getRadius(), actuators[i]->getPosition().y + actuators[i]->getRadius());
+        
+        //Down / Left
+        
+        ofVec3f downLeft = ofVec3f(actuators[i]->getPosition().x - actuators[i]->getRadius(), actuators[i]->getPosition().y + actuators[i]->getRadius());
+        
+        //Set vertices
+        
+        actuatorsVertices[i * 4] = upLeft;
+        actuatorsVertices[i * 4 + 1] = upRight;
+        actuatorsVertices[i * 4 + 2] = downRight;
+        actuatorsVertices[i * 4 + 3] = downLeft;
+        
+        //Set attributes send throw normal attribute
+        
+        actuatorsAttributes[i] = ofVec3f(actuators[i]->getRadius());
+        
+    }
+    
+    actuatorsVbo.updateVertexData(&actuatorsVertices[0], (int) actuatorsVertices.size());
+    actuatorsVbo.updateNormalData(&actuatorsAttributes[0], (int) actuatorsAttributes.size());
+    
+}
+
 void Scene::updatePolygonesRenderingData(){
     
     //Static data
@@ -402,6 +503,12 @@ void Scene::updatePolygonesRenderingData(){
 
 void Scene::update(){
     
+    //Update GPU data
+    //This will update all the data related to the rendering of the particles.
+    //The vbos conataining all rendering data as : heads coords, tails coords, etc... will be updated.
+    
+    updateParticlesRenderingData();
+    
     //Here we update the main container of particles
     
     updateAllParticles();
@@ -414,7 +521,13 @@ void Scene::update(){
         emitters[i]->applyGravity(ofVec2f(0.0, 0.1));
         
     }
-        
+    
+    //Update GPU data
+    //This will update all the data related to the rendering of the actuators.
+    //The vbos conataining all rendering data as : positions and radiuses will be updated.
+    
+    updateActuatorsRenderingData();
+    
     //Update actuators
     
     for(int i = 0; i < touches.size(); i++){
@@ -581,7 +694,7 @@ void Scene::onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, str
 
 void Scene::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){
     
-    if(_touch.id < touches.size()){
+    if(_touch.id < touches.size() && activeActuators[_touch.id] != nullptr){
         
         if((_touch - touches[_touch.id]).length() > 1 && actuatorsTimer[_touch.id] + timeToChange >= ofGetElapsedTimeMillis()) actuatorsTimer[_touch.id] = ofGetElapsedTimeMillis();
         if(actuatorsTimer[_touch.id] + timeToChange >= ofGetElapsedTimeMillis()){
@@ -601,7 +714,6 @@ void Scene::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, s
             }
             
             activeActuators[_touch.id]->setRadius(distance + 100);
-            
             
             touches[_touch.id] = _touch;
             

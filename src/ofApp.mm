@@ -40,6 +40,9 @@ void ofApp::draw(){
         
     };
     
+    ofSetColor(255, 0, 0);
+    ofDrawBitmapString(ofGetFrameRate(), 20, 20);
+    
 }
 
 //--------------------------------------------------------------

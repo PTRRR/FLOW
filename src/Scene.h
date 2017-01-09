@@ -101,19 +101,29 @@ private:
 
     //How much time the user have to stay still until he update the radius of the actuator.
     
-    float timeToChange = 2000;
+    float timeToChange = 1200;
     vector<float> actuatorsTimer;
     
     vector<shared_ptr<Actuator>> actuators;
     vector<shared_ptr<Actuator>> activeActuators;
     
-    void updatePolygonesRenderingData();
+    ofShader actuatorsProgram;
+    
+    ofVbo actuatorsVbo;
+    vector<ofVec3f> actuatorsVertices;
+    vector<ofVec2f> actuatorsTexCoords;
+    vector<ofIndexType> actuatorsIndices;
+    vector<ofVec3f> actuatorsAttributes;
+    
+    void updateActuatorsRenderingData();
     
     //Fixed actuators
     
     vector<shared_ptr<Actuator>> fixedActuators;
     
     //Polygones
+    
+    void updatePolygonesRenderingData();
     
     vector<shared_ptr<Polygone>> polygones;
     void checkForCollisions();
@@ -124,7 +134,6 @@ private:
     ofShader polygoneWireframeProgram;
     
     ofVbo polygonesVbo;
-    ofMesh polygonesMesh;
     vector<ofVec3f> polygonesVertices;
     vector<ofIndexType> polygonesIndices;
     vector<ofFloatColor> polygoneVerticesColor;
