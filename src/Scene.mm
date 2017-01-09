@@ -74,7 +74,7 @@ void Scene::initializeGPUData(){
     polygoneProgram.load("shaders/polygoneShader");
     polygoneWireframeProgram.load("shaders/polygoneShaderWireframe");
     actuatorsProgram.load("shaders/actuatorShader");
-    
+    receptorProgram.load("shaders/receptorShader");
     
     //HEADS.
     //Set un vbo for rendering the particles head.
@@ -169,9 +169,19 @@ void Scene::initializeGPUData(){
         actuatorsTexCoords.push_back(ofVec2f(1));
         actuatorsTexCoords.push_back(ofVec2f(-1, 1));
         
-        //Set attributes send throw normal attribute
+        //Set attributes send throw normal attribute for each vertex
         
-        actuatorsAttributes.push_back(ofVec3f(actuators[i]->getRadius()));
+        actuatorsAttributes.push_back(ofVec3f(actuators[i]->getRadius(), 0.0, 0.0));
+        actuatorsAttributes.push_back(ofVec3f(actuators[i]->getRadius(), 0.0, 0.0));
+        actuatorsAttributes.push_back(ofVec3f(actuators[i]->getRadius(), 0.0, 0.0));
+        actuatorsAttributes.push_back(ofVec3f(actuators[i]->getRadius(), 0.0, 0.0));
+        
+        //Set colors
+        
+        actuatorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
+        actuatorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
+        actuatorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
+        actuatorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
         
     }
     
@@ -179,6 +189,77 @@ void Scene::initializeGPUData(){
     actuatorsVbo.setNormalData(&actuatorsAttributes[0], (int) actuatorsAttributes.size(), GL_DYNAMIC_DRAW);
     actuatorsVbo.setIndexData(&actuatorsIndices[0], (int) actuatorsIndices.size(), GL_STATIC_DRAW);
     actuatorsVbo.setTexCoordData(&actuatorsTexCoords[0], (int) actuatorsTexCoords.size(), GL_STATIC_DRAW);
+    actuatorsVbo.setColorData(&actuatorsColors[0], (int) actuatorsColors.size(), GL_DYNAMIC_DRAW);
+    
+    //Receptors
+    
+    for(int i = 0; i < receptors.size(); i++){
+        
+        //Up / Left
+        
+        ofVec3f upLeft = ofVec3f(receptors[i]->getPosition().x - receptors[i]->getRadius(), receptors[i]->getPosition().y - receptors[i]->getRadius());
+        
+        //Up / Right
+        
+        ofVec3f upRight = ofVec3f(receptors[i]->getPosition().x + receptors[i]->getRadius(), receptors[i]->getPosition().y - receptors[i]->getRadius());
+        
+        //Down / Right
+        
+        ofVec3f downRight = ofVec3f(receptors[i]->getPosition().x + receptors[i]->getRadius(), receptors[i]->getPosition().y + receptors[i]->getRadius());
+        
+        //Down / Left
+        
+        ofVec3f downLeft = ofVec3f(receptors[i]->getPosition().x - receptors[i]->getRadius(), receptors[i]->getPosition().y + receptors[i]->getRadius());
+        
+        //Set vertices
+        
+        receptorsVertices.push_back(upLeft);
+        receptorsVertices.push_back(upRight);
+        receptorsVertices.push_back(downRight);
+        receptorsVertices.push_back(downLeft);
+        
+        //Set indices -> 6 indices to define a quad.
+        
+        //This is the first triangle
+        
+        receptorsIndices.push_back(i * 4);
+        receptorsIndices.push_back(i * 4 + 1);
+        receptorsIndices.push_back(i * 4 + 3);
+        
+        //This is the second triangls
+        
+        receptorsIndices.push_back(i * 4 + 1);
+        receptorsIndices.push_back(i * 4 + 2);
+        receptorsIndices.push_back(i * 4 + 3);
+        
+        //Set textures coordinates
+        
+        receptorsTexCoords.push_back(ofVec2f(-1));
+        receptorsTexCoords.push_back(ofVec2f(1, -1));
+        receptorsTexCoords.push_back(ofVec2f(1));
+        receptorsTexCoords.push_back(ofVec2f(-1, 1));
+        
+        //Set attributes send throw normal attribute for each vertex
+        
+        receptorsAttributes.push_back(ofVec3f(receptors[i]->getRadius(), 0.0, 0.0));
+        receptorsAttributes.push_back(ofVec3f(receptors[i]->getRadius(), 0.0, 0.0));
+        receptorsAttributes.push_back(ofVec3f(receptors[i]->getRadius(), 0.0, 0.0));
+        receptorsAttributes.push_back(ofVec3f(receptors[i]->getRadius(), 0.0, 0.0));
+        
+        //Set colors
+        
+        receptorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
+        receptorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
+        receptorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
+        receptorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
+        
+    }
+    
+    receptorsVbo.setVertexData(&actuatorsVertices[0], (int) actuatorsVertices.size(), GL_DYNAMIC_DRAW);
+    receptorsVbo.setNormalData(&actuatorsAttributes[0], (int) actuatorsAttributes.size(), GL_DYNAMIC_DRAW);
+    receptorsVbo.setIndexData(&actuatorsIndices[0], (int) actuatorsIndices.size(), GL_STATIC_DRAW);
+    receptorsVbo.setTexCoordData(&actuatorsTexCoords[0], (int) actuatorsTexCoords.size(), GL_STATIC_DRAW);
+    receptorsVbo.setColorData(&actuatorsColors[0], (int) actuatorsColors.size(), GL_DYNAMIC_DRAW);
     
 }
 
@@ -212,18 +293,45 @@ void Scene::renderToScreen(){
     particleHeadProgram.begin();
     particleImg.bind();
     
-//    particlesHeadVbo.draw(GL_POINTS, 0, (int) positions.size());
+    particlesHeadVbo.draw(GL_POINTS, 0, (int) positions.size());
     
     particleImg.unbind();
     particleHeadProgram.end();
     
     ofDisablePointSprites();
     
+    //Draw actuators
+
+    actuatorsProgram.begin();
+    activeActuatorImg.bind();
+    
+    //3 - Draw call
+    //Draw all actuators
+    
+    actuatorsVbo.drawElements(GL_TRIANGLES, (int) actuatorsIndices.size());
+    
+    activeActuatorImg.unbind();
+    actuatorsProgram.end();
+    
+    //Debug draw wireframe.
+    
+//    ofSetColor(255, 255, 255);
+//    actuatorsVbo.drawElements(GL_LINES, (int) actuatorsIndices.size());
+    
+    //Draw receptors
+    
+    receptorProgram.begin();
+    receptorImg.bind();
+    
+    receptorsVbo.drawElements(GL_TRIANGLES, (int) receptorsIndices.size());
+    
+    receptorImg.unbind();
+    receptorProgram.end();
+    
     ofDisableBlendMode();
     ofEnableAlphaBlending();
     
     ofEnableAlphaBlending();
-    
     ofSetColor(255, 255, 255, getAlpha());
     
     //Draw emitters
@@ -231,83 +339,7 @@ void Scene::renderToScreen(){
     for(int i = 0; i < emitters.size(); i++){
         emitterImg.draw(emitters[i]->getPosition() - emitterImg.getWidth() / 2);
     }
-    
-    //Draw actuators
 
-    actuatorsProgram.begin();
-    
-    actuatorsVbo.drawElements(GL_TRIANGLES, (int) actuatorsIndices.size());
-    
-    actuatorsProgram.end();
-    
-//    ofPushStyle();
-//    
-//    for(int i = 0; i < activeActuators.size(); i++){
-//        
-//        float alpha = ((actuators[i]->getPosition().y - actuatorBox.height / 2) / (actuatorBox.height / 2)) * 255;
-//        ofSetColor(255, 255, 255, ofClamp(alpha, 0, getAlpha()));
-//        activeActuatorImg.draw(actuators[i]->getPosition() - activeActuatorImg.getWidth() / 2);
-//        
-//        if(activeActuators[i] != nullptr && actuatorsTimer[i] + timeToChange < ofGetElapsedTimeMillis()){
-//            
-//            ofSetColor(255, 0, 0, ofClamp(alpha, 0, getAlpha()));
-//            activeActuators[i]->debugDraw();
-//            
-//        }else{
-//            
-//            ofSetColor(255, 255, 255, ofClamp(alpha, 0, getAlpha()));
-//            actuators[i]->debugDraw();
-//            
-//        }
-//        
-//    }
-//    
-//    ofPopStyle();
-    
-    //Draw receptors
-    
-    for(int i = 0; i < receptors.size(); i++){
-        
-        receptorImg.draw(receptors[i]->getPosition() - receptorImg.getWidth() / 2);
-        string info = "[" + to_string((int) receptors[i]->getPercentFill()) + "/100]";
-        infosFont.drawString(info, receptors[i]->getPosition().x - infosFont.stringWidth(info) / 2, receptors[i]->getPosition().y + receptors[i]->getRadius() + 20);
-        
-        //Draw a circle around the receptor that tells the player how much left to complete.
-        
-        int circleDef = 150;
-        
-        ofPushStyle();
-        ofBeginShape();
-        ofNoFill();
-        
-        for(int j = 0; j < (int) floor((circleDef + 1) * (receptors[i]->getPercentFill() / 100)); j++){
-            
-            float angle = ((2 * M_PI) / circleDef) * j - (M_PI * 0.5);
-            float radius = receptors[i]->getRadius() - 40;
-            
-            ofVertex(cos(angle) * radius + receptors[i]->getPosition().x, sin(angle) * radius + receptors[i]->getPosition().y);
-            
-        }
-        
-        ofEndShape();
-        
-        ofBeginShape();
-        ofNoFill();
-        
-        for(int j = 0; j < (int) floor((circleDef + 1) * (receptors[i]->getPercentFill() / 100)); j++){
-            
-            float angle = ((2 * M_PI) / circleDef) * j - (M_PI * 0.5);
-            float radius = receptors[i]->getRadius() - 55;
-            
-            ofVertex(cos(angle) * radius + receptors[i]->getPosition().x, sin(angle) * radius + receptors[i]->getPosition().y);
-            
-        }
-        
-        ofEndShape();
-        
-        ofPopStyle();
-        
-    }
     
     //Draw polygones
 
@@ -333,6 +365,15 @@ void Scene::renderToScreen(){
         if(!actuators[i]->getEnabled()){
             actuatorImg.draw(actuators[i]->getPosition() - 20 , 40, 40);
         }
+    }
+    
+    //Draw actuators infos
+    
+    for(int i = 0; i < receptors.size(); i++){
+
+        string info = "[" + to_string((int) receptors[i]->getPercentFill()) + "/100]";
+        infosFont.drawString(info, receptors[i]->getPosition().x - infosFont.stringWidth(info) / 2, receptors[i]->getPosition().y + receptors[i]->getRadius() * 1.08);
+        
     }
     
     //Draw interface
@@ -440,12 +481,74 @@ void Scene::updateActuatorsRenderingData(){
         
         //Set attributes send throw normal attribute
         
-        actuatorsAttributes[i] = ofVec3f(actuators[i]->getRadius());
+        actuatorsAttributes[i * 4] = (ofVec3f(actuators[i]->getRadius(), 0.0, 0.0));
+        actuatorsAttributes[i * 4 + 1] = (ofVec3f(actuators[i]->getRadius(), 0.0, 0.0));
+        actuatorsAttributes[i * 4 + 2] = (ofVec3f(actuators[i]->getRadius(), 0.0, 0.0));
+        actuatorsAttributes[i * 4 + 3] = (ofVec3f(actuators[i]->getRadius(), 0.0, 0.0));
+        
+        //Set colors
+        
+        float alpha = ((actuators[i]->getPosition().y - actuatorBox.height / 2) / (actuatorBox.height / 2));
+        
+        actuatorsColors[i * 4] = ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255));
+        actuatorsColors[i * 4 + 1] = ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255));
+        actuatorsColors[i * 4 + 2] = ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255));
+        actuatorsColors[i * 4 + 3] = ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255));
         
     }
     
     actuatorsVbo.updateVertexData(&actuatorsVertices[0], (int) actuatorsVertices.size());
     actuatorsVbo.updateNormalData(&actuatorsAttributes[0], (int) actuatorsAttributes.size());
+    actuatorsVbo.updateColorData(&actuatorsColors[0], (int) actuatorsColors.size());
+    
+}
+
+void Scene::updateReceptorsRenderingData(){
+    
+    for(int i = 0; i < receptors.size(); i++){
+        
+        //Up / Left
+        
+        ofVec3f upLeft = ofVec3f(receptors[i]->getPosition().x - receptors[i]->getRadius(), receptors[i]->getPosition().y - receptors[i]->getRadius());
+        
+        //Up / Right
+        
+        ofVec3f upRight = ofVec3f(receptors[i]->getPosition().x + receptors[i]->getRadius(), receptors[i]->getPosition().y - receptors[i]->getRadius());
+        
+        //Down / Right
+        
+        ofVec3f downRight = ofVec3f(receptors[i]->getPosition().x + receptors[i]->getRadius(), receptors[i]->getPosition().y + receptors[i]->getRadius());
+        
+        //Down / Left
+        
+        ofVec3f downLeft = ofVec3f(receptors[i]->getPosition().x - receptors[i]->getRadius(), receptors[i]->getPosition().y + receptors[i]->getRadius());
+        
+        //Set vertices
+        
+        receptorsVertices[i * 4] = upLeft;
+        receptorsVertices[i * 4 + 1] = upRight;
+        receptorsVertices[i * 4 + 2] = downRight;
+        receptorsVertices[i * 4 + 3] = downLeft;
+        
+        //Set colors and visual feenback
+        
+        receptorsColors[i * 4] = ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255);
+        receptorsColors[i * 4 + 1] = ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255);
+        receptorsColors[i * 4 + 2] = ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255);
+        receptorsColors[i * 4 + 3] = ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255);
+        
+        //Set attributes
+        
+        receptorsAttributes[i * 4] = (ofVec3f(receptors[i]->getRadius(), receptors[i]->getPercentFill() * 0.01, 0.0));
+        receptorsAttributes[i * 4 + 1] = (ofVec3f(receptors[i]->getRadius(), receptors[i]->getPercentFill() * 0.01, 0.0));
+        receptorsAttributes[i * 4 + 2] = (ofVec3f(receptors[i]->getRadius(), receptors[i]->getPercentFill() * 0.01, 0.0));
+        receptorsAttributes[i * 4 + 3] = (ofVec3f(receptors[i]->getRadius(), receptors[i]->getPercentFill() * 0.01, 0.0));
+        
+    }
+    
+    receptorsVbo.updateVertexData(&receptorsVertices[0], (int) receptorsVertices.size());
+    receptorsVbo.updateNormalData(&receptorsAttributes[0], (int) receptorsAttributes.size());
+    receptorsVbo.updateColorData(&receptorsColors[0], (int) receptorsColors.size());
     
 }
 
@@ -561,6 +664,10 @@ void Scene::update(){
         }
     }
     
+    //Receptors
+    
+    updateReceptorsRenderingData();
+    
     //Check if receptors are filled
     
     if(!allAreFilled){
@@ -574,6 +681,7 @@ void Scene::update(){
         
         if(allAreFilled){
             
+            IS_FINISHED = true;
             levelEndCallback();
             
         }
@@ -634,6 +742,12 @@ void Scene::setPause(bool _pause){
         emitters[i]->setPause(_pause);
         
     }
+    
+}
+
+bool Scene::isFinished(){
+    
+    return IS_FINISHED;
     
 }
 

@@ -36,6 +36,7 @@ private:
     
     ofTrueTypeFont infosFont;
     
+    bool IS_FINISHED = false;
     bool IS_PAUSED = false;
     int ORIGINAL_WIDTH = ofGetWidth();
     int ORIGINAL_HEIGHT = ofGetHeight();
@@ -92,6 +93,17 @@ private:
     
     vector<shared_ptr<Receptor>> receptors;
     
+    ofShader receptorProgram;
+    
+    ofVbo receptorsVbo;
+    vector<ofVec3f> receptorsVertices;
+    vector<ofVec2f> receptorsTexCoords;
+    vector<ofIndexType> receptorsIndices;
+    vector<ofFloatColor> receptorsColors;
+    vector<ofVec3f> receptorsAttributes;
+    
+    void updateReceptorsRenderingData();
+    
     //Actuators
 
     ofRectangle actuatorBox;
@@ -113,6 +125,7 @@ private:
     vector<ofVec3f> actuatorsVertices;
     vector<ofVec2f> actuatorsTexCoords;
     vector<ofIndexType> actuatorsIndices;
+    vector<ofFloatColor> actuatorsColors;
     vector<ofVec3f> actuatorsAttributes;
     
     void updateActuatorsRenderingData();
@@ -162,6 +175,8 @@ public:
     void initializeGPUData();
     void setPause(bool _pause);
     void onEnd(function<void()> _levelEndCallback);
+    
+    bool isFinished();
     
     void XMLSetup(string _xmlFile);
     

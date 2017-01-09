@@ -131,10 +131,14 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
             
             if(action == "BACK"){
                 
-                if(screenPipeline.getLastActiveScreen() == currentScene){
+                if(screenPipeline.getLastActiveScreen() == currentScene && !currentScene->isFinished()){
+                    
                     screenPipeline.setScreenActive(sceneMenu);
+                    
                 }else{
+                    
                     screenPipeline.setScreenActive(menu);
+                    
                 }
                 
             }else{
@@ -146,7 +150,7 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
                 
                 if (currentScene != nullptr) {
                     
-                    if(currentScene->getName() == text){
+                    if(currentScene->getName() == text && !currentScene->isFinished()){
                         
                         currentScene->setPause(false);
                         screenPipeline.setScreenActive(currentScene);
@@ -180,7 +184,6 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
                             
                             levels->setup();
                             screenPipeline.setScreenActive(levels);
-                            currentScene = nullptr;
                             
                         });
                         
@@ -211,7 +214,6 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
                         
                         levels->setup();
                         screenPipeline.setScreenActive(levels);
-                        currentScene = nullptr;
                         
                     });
                     

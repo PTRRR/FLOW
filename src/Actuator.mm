@@ -35,7 +35,12 @@ void Actuator::update(){
     
     Actuator::BaseElement::update();
     
+    //Interpolation
+    
     radius += (radiusTarget - radius) * 0.2;
+    
+    radius = ofClamp(radius, 50, 400);
+
     
 }
 
@@ -49,7 +54,7 @@ void Actuator::setStrength(float _strength){
 
 void Actuator::setRadius(float _radius){
     
-    radiusTarget = _radius;
+    radiusTarget = _radius / (radius * 0.01);
     
 }
 
