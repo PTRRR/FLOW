@@ -30,8 +30,7 @@ private:
     //Level
     
     ofxXmlSettings XML;
-    
-    
+
     //Main
     
     ofTrueTypeFont infosFont;
@@ -136,8 +135,6 @@ private:
     
     //Polygones
     
-    void updatePolygonesRenderingData();
-    
     vector<shared_ptr<Polygone>> polygones;
     void checkForCollisions();
     
@@ -149,6 +146,7 @@ private:
     ofVbo polygonesVbo;
     vector<ofVec3f> polygonesVertices;
     vector<ofIndexType> polygonesIndices;
+    vector<ofVec3f> polygonesAttributes;
     vector<ofFloatColor> polygoneVerticesColor;
     
     //User inputs callbacks
