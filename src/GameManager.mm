@@ -131,7 +131,11 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
             
             if(action == "BACK"){
                 
-                screenPipeline.setScreenActive(screenPipeline.getLastActiveScreen());
+                if(screenPipeline.getLastActiveScreen() == currentScene){
+                    screenPipeline.setScreenActive(sceneMenu);
+                }else{
+                    screenPipeline.setScreenActive(menu);
+                }
                 
             }else{
                 
