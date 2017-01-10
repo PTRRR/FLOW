@@ -51,7 +51,7 @@ private:
     vector<string> levelsList;
     
     shared_ptr<Scene> currentScene;
-    void onEnd();
+    void onEnd(); 
     shared_ptr<Scene> createNewScene(string _name, string _xmlFile);
     
     //Main sound
