@@ -36,9 +36,9 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     
     //This keeps a reference to the button created so that we can change its settings.
     
-    shared_ptr<Button> optionsButton = interface.addButton("OPTIONS", "OPTIONS", ofVec2f(ofGetWidth() - 0.0490625 * ofGetWidth(), 0.0390625 * ofGetWidth()));
-    optionsButton->setDimensions(ofVec2f(0.0390625 * ofGetWidth()));
-    optionsButton->setImage(optionsButtonImg);
+//    shared_ptr<Button> optionsButton = interface.addButton("OPTIONS", "OPTIONS", ofVec2f(ofGetWidth() - 0.0490625 * ofGetWidth(), 0.0390625 * ofGetWidth()));
+//    optionsButton->setDimensions(ofVec2f(0.0390625 * ofGetWidth()));
+//    optionsButton->setImage(optionsButtonImg);
     
     //Create the actuator box, where the player can take the actuators
     //This is useful to detect whether the actuators are active or not.
@@ -261,6 +261,51 @@ void Scene::initializeGPUData(){
     receptorsVbo.setTexCoordData(&actuatorsTexCoords[0], (int) actuatorsTexCoords.size(), GL_STATIC_DRAW);
     receptorsVbo.setColorData(&actuatorsColors[0], (int) actuatorsColors.size(), GL_DYNAMIC_DRAW);
     
+    //Polygones
+    
+    for(int i = 0; i < polygones.size(); i++){
+        
+        ofxTriangle triangles = polygones[i]->getTriangulatedPolygone();
+        
+        for(int j = 0; j < triangles.nTriangles; j++){
+         
+            ofVec3f p1 = ofVec3f(triangles.triangles[j].a.x, triangles.triangles[j].a.y, 0.0);
+            ofVec3f p2 = ofVec3f(triangles.triangles[j].b.x, triangles.triangles[j].b.y, 0.0);
+            ofVec3f p3 = ofVec3f(triangles.triangles[j].c.x, triangles.triangles[j].c.y, 0.0);
+            
+            polygonesVertices.push_back(p1);
+            polygonesVertices.push_back(p2);
+            polygonesVertices.push_back(p3);
+            
+            polygonesIndices.push_back(polygonesIndices.size());
+            polygonesIndices.push_back(polygonesIndices.size());
+            polygonesIndices.push_back(polygonesIndices.size());
+            
+            polygoneVerticesColor.push_back(ofFloatColor(1.0, 0.0, 0.0));
+            polygoneVerticesColor.push_back(ofFloatColor(0.0, 1.0, 0.0));
+            polygoneVerticesColor.push_back(ofFloatColor(0.0, 0.0, 1.0));
+            
+            float angle1 = (p1 - p2).angleRad(p1 - p3);
+            float angle2 = (p2 - p3).angleRad(p2 - p1);
+            float angle3 = (p3 - p2).angleRad(p3 - p1);
+            
+            float h1 = sin(angle2) * (p2 - p1).length();
+            float h2 = sin(angle3) * (p3 - p2).length();
+            float h3 = sin(angle1) * (p1 - p3).length();
+            
+            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
+            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
+            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
+            
+        }
+        
+    }
+    
+    polygonesVbo.setVertexData(&polygonesVertices[0], (int) polygonesVertices.size(), GL_STATIC_DRAW);
+    polygonesVbo.setIndexData(&polygonesIndices[0], (int) polygonesIndices.size(), GL_STATIC_DRAW);
+    polygonesVbo.setColorData(&polygoneVerticesColor[0], (int) polygoneVerticesColor.size(), GL_STATIC_DRAW);
+    polygonesVbo.setNormalData(&polygonesAttributes[0], (int) polygonesAttributes.size(), GL_STATIC_DRAW);
+    
 }
 
 //Where all the scene is rendered
@@ -340,22 +385,11 @@ void Scene::renderToScreen(){
         emitterImg.draw(emitters[i]->getPosition() - emitterImg.getWidth() / 2);
     }
 
-    
     //Draw polygones
 
     polygoneProgram.begin();
     polygonesVbo.drawElements(GL_TRIANGLES, (int) polygonesIndices.size());
     polygoneProgram.end();
-    
-    polygoneWireframeProgram.begin();
-    
-    for(int i = 0; i < polygones.size(); i++){
-        
-        polygones[i]->drawWireframe();
-        
-    }
-    
-    polygoneWireframeProgram.end();
     
     ofSetColor(255, 255, 255, getAlpha());
     
@@ -549,56 +583,6 @@ void Scene::updateReceptorsRenderingData(){
     receptorsVbo.updateVertexData(&receptorsVertices[0], (int) receptorsVertices.size());
     receptorsVbo.updateNormalData(&receptorsAttributes[0], (int) receptorsAttributes.size());
     receptorsVbo.updateColorData(&receptorsColors[0], (int) receptorsColors.size());
-    
-}
-
-void Scene::updatePolygonesRenderingData(){
-    
-    //Static data
-    
-    polygonesVertices.erase(polygonesVertices.begin(), polygonesVertices.end());
-    polygonesIndices.erase(polygonesIndices.begin(), polygonesIndices.end());
-    baricentricCoords.erase(baricentricCoords.begin(), baricentricCoords.end());
-    
-    int offsetIndices = 0;
-    
-    for(int i = 0; i < polygones.size(); i++){
-        
-        cout << polygones[i]->getVertices().size() << endl;
-        cout << polygones[i]->getIndices().size() << endl;
-       
-        //Set vertices
-        
-        for(int j = 0; j < polygones[i]->getVertices().size(); j++){
-            
-            polygonesVertices.push_back(polygones[i]->getVertices()[j]);
-            float cValue = ofRandom(1);
-            polygoneVerticesColor.push_back(ofFloatColor(cValue, cValue, cValue, 1));
-            
-        }
-
-        //Set indices
-      
-        for(int j = 0; j < polygones[i]->getIndices().size(); j++){
-        
-            polygonesIndices.push_back(ofIndexType(polygones[i]->getIndices()[j] + offsetIndices));
-            
-        }
-        
-        for(int j = 0; j < polygones[i]->getBaricentricCoords().size(); j++){
-            
-            baricentricCoords.push_back(polygones[i]->getBaricentricCoords()[j]);
-            
-        }
-
-        offsetIndices += polygones[i]->getVertices().size();
-        
-    }
-    
-    polygonesVbo.setVertexData(&polygonesVertices[0], (int) polygonesVertices.size(), GL_STATIC_DRAW);
-    polygonesVbo.setIndexData(&polygonesIndices[0], (int) polygonesIndices.size(), GL_STATIC_DRAW);
-    polygonesVbo.setColorData(&polygoneVerticesColor[0], (int) polygoneVerticesColor.size(), GL_STATIC_DRAW);
-    polygonesVbo.setNormalData(&baricentricCoords[0], (int) baricentricCoords.size(), GL_STATIC_DRAW);
     
 }
 
@@ -1147,8 +1131,6 @@ void Scene::XMLSetup(string _xmlFile){
                 
                 newPolygone->addVertex(_XML.getValue("X", 0.0) * ofGetWidth(), _XML.getValue("Y", 0.0) * ofGetHeight());
                 
-                polygonesVertices.push_back(ofVec3f(_XML.getValue("X", 0.0) * ofGetWidth(), _XML.getValue("Y", 0.0) * ofGetHeight(), 0));
-                
                 _XML.popTag();
                 
             }
@@ -1160,8 +1142,6 @@ void Scene::XMLSetup(string _xmlFile){
             _XML.popTag();
             
         }
-        
-        updatePolygonesRenderingData();
         
         _XML.popTag();
         

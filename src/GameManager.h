@@ -18,6 +18,8 @@
 #include "Levels.h"
 #include "Options.h"
 #include "SceneMenu.h"
+#include "NextLevel.h"
+#include "End.h"
 
 class GameManager{
 
@@ -39,13 +41,17 @@ private:
     shared_ptr<Levels> levels;
     shared_ptr<Options> options;
     shared_ptr<SceneMenu> sceneMenu;
+    shared_ptr<NextLevel> nextLevel;
+    shared_ptr<End> end;
     
     //Scenes
     
     string currentLevelFile;
+    string nextLevelFile;
     vector<string> levelsList;
     
     shared_ptr<Scene> currentScene;
+    void onEnd();
     shared_ptr<Scene> createNewScene(string _name, string _xmlFile);
     
     //Main sound

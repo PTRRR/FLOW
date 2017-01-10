@@ -1,16 +1,42 @@
-#extension GL_OES_standard_derivatives : enable
 precision highp float;
 
-varying vec4 vColor;
 varying vec3 vBC;
-
-float edgeFactor(){
-    vec3 d = fwidth(vBC);
-    vec3 a3 = smoothstep(vec3(0.0), d*1.5, vBC);
-    return min(min(a3.x, a3.y), a3.z);
-}
+varying vec3 vDistances;
 
 void main()
 {
-    gl_FragColor = vec4(vBC, 1.0);
+    
+    float lineWidth = 10.0;
+    
+    float dist1 = vBC.x * vDistances.x;
+    float dist2 = vBC.y * vDistances.y;
+    float dist3 = vBC.z * vDistances.z;
+    
+    vec4 fragment = vec4(1.0, 1.0, 1.0, 1.0);
+    
+    
+    
+    if(dist1 < lineWidth){
+     
+        float v = smoothstep( lineWidth / 2.0, 0.0, abs( (lineWidth / 2.0) - dist1) );
+        fragment.a *= v;
+        
+    }
+    
+    if(dist2 < lineWidth){
+    
+        float v = smoothstep( lineWidth / 2.0, 0.0, abs( (lineWidth / 2.0) - dist2) );
+        fragment.a *= v;
+    
+    }
+
+    if(dist3 < lineWidth){
+
+        float v = smoothstep( lineWidth / 2.0, 0.0, abs( (lineWidth / 2.0) - dist3) );
+        fragment.a *= v;
+        
+    }
+
+    gl_FragColor = fragment;
+    
 }

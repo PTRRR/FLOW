@@ -30,6 +30,8 @@
 		0E9BFFA21E055051007F9857 /* ScreenPipeline.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFFA01E055051007F9857 /* ScreenPipeline.mm */; };
 		0E9BFFA71E0553D9007F9857 /* SplashScreen.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFFA51E0553D9007F9857 /* SplashScreen.mm */; };
 		0E9BFFAF1E055958007F9857 /* Scene.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFFAD1E055958007F9857 /* Scene.mm */; };
+		0EEE15FA1E24453D0055CD18 /* NextLevel.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0EEE15F81E24453D0055CD18 /* NextLevel.mm */; };
+		0EEE15FD1E2449A10055CD18 /* End.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0EEE15FB1E2449A10055CD18 /* End.mm */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
@@ -121,6 +123,10 @@
 		0E9BFFA61E0553D9007F9857 /* SplashScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashScreen.h; sourceTree = "<group>"; };
 		0E9BFFAD1E055958007F9857 /* Scene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Scene.mm; sourceTree = "<group>"; };
 		0E9BFFAE1E055958007F9857 /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
+		0EEE15F81E24453D0055CD18 /* NextLevel.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NextLevel.mm; sourceTree = "<group>"; };
+		0EEE15F91E24453D0055CD18 /* NextLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NextLevel.h; sourceTree = "<group>"; };
+		0EEE15FB1E2449A10055CD18 /* End.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = End.mm; sourceTree = "<group>"; };
+		0EEE15FC1E2449A10055CD18 /* End.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = End.h; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* FLOW.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FLOW.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -283,6 +289,10 @@
 				0E4C32091E229D6D006B5AE4 /* Options.h */,
 				0E4C320B1E229DDA006B5AE4 /* SceneMenu.mm */,
 				0E4C320C1E229DDA006B5AE4 /* SceneMenu.h */,
+				0EEE15F81E24453D0055CD18 /* NextLevel.mm */,
+				0EEE15F91E24453D0055CD18 /* NextLevel.h */,
+				0EEE15FB1E2449A10055CD18 /* End.mm */,
+				0EEE15FC1E2449A10055CD18 /* End.h */,
 			);
 			name = Screens;
 			sourceTree = "<group>";
@@ -591,8 +601,10 @@
 				0E4C31FD1E2196EA006B5AE4 /* del_impl.cpp in Sources */,
 				0E078B7F1E16772F004595EF /* Particle.mm in Sources */,
 				0E078B831E16772F004595EF /* Polygone.mm in Sources */,
+				0EEE15FA1E24453D0055CD18 /* NextLevel.mm in Sources */,
 				0E078B891E168984004595EF /* Receptor.mm in Sources */,
 				0E9BFF9A1E053B07007F9857 /* Screen.mm in Sources */,
+				0EEE15FD1E2449A10055CD18 /* End.mm in Sources */,
 				0E078B811E16772F004595EF /* Actuator.mm in Sources */,
 				C32E84B046A417CA7171613C /* tinyxml.cpp in Sources */,
 				F00B7884241FB2CD87F076E0 /* tinyxmlerror.cpp in Sources */,
