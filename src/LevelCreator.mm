@@ -125,7 +125,11 @@ void LevelCreator::renderToScreen(){
     }
     
     if(down){
-        ofDrawCircle(touch, 50);
+        
+        ofDrawLine(touch.x, touch.y - 100, touch.x, touch.y + 100);
+        ofDrawLine(touch.x - 100, touch.y, touch.x + 100, touch.y);
+        ofDrawCircle(touch, 70);
+        
     }
     
     ofPopStyle();
@@ -363,6 +367,8 @@ void LevelCreator::setup(string _xmlFile){
 //Inputs
 
 void LevelCreator::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
+    
+    touch = getClosestPoint(_touch);
     
     bool button = false;
     
