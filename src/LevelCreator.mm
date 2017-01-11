@@ -370,105 +370,107 @@ void LevelCreator::onMouseDown(ofTouchEventArgs & _touch, function<void(string _
     
     touch = getClosestPoint(_touch);
     
-    bool button = false;
-    
     interface.mouseDown(_touch, [&](string text, string action){
         callback(text, action);
         button = true;
     });
     
-    if(button) return;
-    
-    if(v && !db){
+    if(!button){
         
-        if(noPolyline){
+        if(v && !db){
             
-            polylines.push_back(ofPolyline());
-            
-            ofVec2f closestPoint = getClosestPoint(_touch);
-            polylines[polylines.size() - 1].addVertex(closestPoint.x, closestPoint.y);
-            polylines[polylines.size() - 1].close();
-            
-            noPolyline = false;
-            
-        }else{
-            
-            ofVec2f closestPoint = getClosestPoint(_touch);
-            ofVec2f lastPoint = polylines[polylines.size() - 1].getVertices()[polylines[polylines.size() - 1].getVertices().size() - 1];
-            
-            if (polylines[polylines.size() - 1].getVertices().size() > 1 && closestPoint.x == polylines[polylines.size() - 1].getVertices()[0].x && closestPoint.y == polylines[polylines.size() - 1].getVertices()[0].y) {
+            if(noPolyline){
                 
-                noPolyline = true;
+                polylines.push_back(ofPolyline());
                 
-            }else if(closestPoint.x == lastPoint.x && closestPoint.y == lastPoint.y){
-                
-                vector<ofPoint> vertices = polylines[polylines.size() - 1].getVertices();
-                vertices.erase(vertices.begin() + vertices.size() - 1);
-                
-                polylines[polylines.size() - 1].clear();
-                polylines[polylines.size() - 1].addVertices(vertices);
-                cout << "remove" << endl;
-                
-            }else if(polylines[polylines.size() - 1].getVertices().size() == 1 && closestPoint.x == lastPoint.x && closestPoint.y == lastPoint.y){
-                
-                polylines[polylines.size() - 1].clear();
-                polylines.erase(polylines.begin() + polylines.size() - 1);
-                
-            }else{
-                
+                ofVec2f closestPoint = getClosestPoint(_touch);
                 polylines[polylines.size() - 1].addVertex(closestPoint.x, closestPoint.y);
                 polylines[polylines.size() - 1].close();
                 
+                noPolyline = false;
+                
+            }else{
+                
+                ofVec2f closestPoint = getClosestPoint(_touch);
+                ofVec2f lastPoint = polylines[polylines.size() - 1].getVertices()[polylines[polylines.size() - 1].getVertices().size() - 1];
+                
+                if (polylines[polylines.size() - 1].getVertices().size() > 1 && closestPoint.x == polylines[polylines.size() - 1].getVertices()[0].x && closestPoint.y == polylines[polylines.size() - 1].getVertices()[0].y) {
+                    
+                    noPolyline = true;
+                    
+                }else if(closestPoint.x == lastPoint.x && closestPoint.y == lastPoint.y){
+                    
+                    vector<ofPoint> vertices = polylines[polylines.size() - 1].getVertices();
+                    vertices.erase(vertices.begin() + vertices.size() - 1);
+                    
+                    polylines[polylines.size() - 1].clear();
+                    polylines[polylines.size() - 1].addVertices(vertices);
+                    cout << "remove" << endl;
+                    
+                }else if(polylines[polylines.size() - 1].getVertices().size() == 1 && closestPoint.x == lastPoint.x && closestPoint.y == lastPoint.y){
+                    
+                    polylines[polylines.size() - 1].clear();
+                    polylines.erase(polylines.begin() + polylines.size() - 1);
+                    
+                }else{
+                    
+                    polylines[polylines.size() - 1].addVertex(closestPoint.x, closestPoint.y);
+                    polylines[polylines.size() - 1].close();
+                    
+                }
+                
             }
+            
+        }else if(e){
+            
+            ofVec2f closestPoint = getClosestPoint(_touch);
+            
+            bool removed = false;
+            
+            for(int i = 0; i < emitters.size(); i++){
+                
+                if(closestPoint.x == emitters[i].x && closestPoint.y == emitters[i].y){
+                    emitters.erase(emitters.begin() + emitters.size() - 1);
+                    removed = true;
+                    break;
+                }
+                
+            }
+            
+            if(!removed) emitters.push_back(closestPoint);
+            
+        }else if(r){
+            
+            ofVec2f closestPoint = getClosestPoint(_touch);
+            
+            bool removed = false;
+            
+            for(int i = 0; i < receptors.size(); i++){
+                
+                if(closestPoint.x == receptors[i].x && closestPoint.y == receptors[i].y){
+                    receptors.erase(receptors.begin() + receptors.size() - 1);
+                    removed = true;
+                    break;
+                }
+                
+            }
+            
+            if(!removed) receptors.push_back(closestPoint);
             
         }
         
-    }else if(e){
-        
-        ofVec2f closestPoint = getClosestPoint(_touch);
-        
-        bool removed = false;
-        
-        for(int i = 0; i < emitters.size(); i++){
+        if(db){
             
-            if(closestPoint.x == emitters[i].x && closestPoint.y == emitters[i].y){
-                emitters.erase(emitters.begin() + emitters.size() - 1);
-                removed = true;
-                break;
-            }
+            polylines.erase(polylines.begin() + polylines.size() - 1);
+            db = false;
             
         }
-        
-        if(!removed) emitters.push_back(closestPoint);
-        
-    }else if(r){
-        
-        ofVec2f closestPoint = getClosestPoint(_touch);
-        
-        bool removed = false;
-        
-        for(int i = 0; i < receptors.size(); i++){
-            
-            if(closestPoint.x == receptors[i].x && closestPoint.y == receptors[i].y){
-                receptors.erase(receptors.begin() + receptors.size() - 1);
-                removed = true;
-                break;
-            }
-            
-        }
-        
-        if(!removed) receptors.push_back(closestPoint);
-        
-    }
-    
-    if(db){
-     
-        polylines.erase(polylines.begin() + polylines.size() - 1);
-        db = false;
         
     }
     
     down = true;
+    
+    
 
 }
 
@@ -476,7 +478,7 @@ void LevelCreator::onMouseMove(ofTouchEventArgs & _touch, function<void(string _
     
     touch = getClosestPoint(_touch);
     
-    if(polylines.size() > 0){
+    if(polylines.size() > 0 && !button){
      
         vector<ofPoint> vertices = polylines[polylines.size() - 1].getVertices();
         vertices.erase(vertices.begin() + vertices.size() - 1);
@@ -528,6 +530,7 @@ void LevelCreator::onMouseUp(ofTouchEventArgs & _touch, function<void(string _te
     });
     
     down = false;
+    button = false;
     
 }
 

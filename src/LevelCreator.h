@@ -59,6 +59,7 @@ private:
     
     //Inputs
     
+    bool button = false;
     bool db = false;
     bool down = false;
     ofVec2f touch;
