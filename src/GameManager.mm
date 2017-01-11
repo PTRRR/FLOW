@@ -48,6 +48,16 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     
     end = shared_ptr<End>(new End(mainFont));
     end->setName("END");
+    
+    //Level creator
+    
+    levelCreator = shared_ptr<LevelCreator>(new LevelCreator(mainFont));
+    levelCreator->setName("LEVEL-CREATOR");
+    
+    //Load levels creator
+    
+    loadLevelsCreator = shared_ptr<LoadLevelsCreator>(new LoadLevelsCreator(mainFont));
+    loadLevelsCreator->setName("LOAD-LEVELS-CREATOR");
 
     //Screen pipeline setup
 
@@ -58,6 +68,8 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     screenPipeline.addScreen(options);
     screenPipeline.addScreen(nextLevel);
     screenPipeline.addScreen(end);
+    screenPipeline.addScreen(levelCreator);
+    screenPipeline.addScreen(loadLevelsCreator);
 
     screenPipeline.setScreenActive(splashScreen);
     
@@ -117,6 +129,7 @@ shared_ptr<Scene> GameManager::createNewScene(string _name, string _xmlFile){
     
     //Update the current scene variable.
     
+    currentLevelFile = _xmlFile;
     currentScene = newScene;
     screenPipeline.addScreen(newScene);
     
@@ -249,6 +262,17 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
                 
             }
             
+        }else if(screenPipeline.getActiveScreen()->getName() == "LOAD-LEVELS-CREATOR"){
+            
+            
+            
+            
+            shared_ptr<LevelCreator> newLevelCreator = shared_ptr<LevelCreator>(new LevelCreator(mainFont));
+            newLevelCreator->setup(action);
+            
+            screenPipeline.addScreen(newLevelCreator);
+            screenPipeline.setScreenActive(newLevelCreator);
+            
         }else{
             
             if(action == "PLAY"){
@@ -306,6 +330,15 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
                 
                 onEnd();
                 
+            }else if(action == "LEVEL-CREATOR"){
+                
+                screenPipeline.setScreenActive(levelCreator);
+                
+            }else if(action == "LOAD"){
+                
+                loadLevelsCreator->setup();
+                screenPipeline.setScreenActive(loadLevelsCreator);
+                
             }
             
         }
@@ -319,6 +352,12 @@ void GameManager::mouseMove(ofTouchEventArgs & _touch){
     cout << "mouse move on: " + currentScreen << endl;
     
     screenPipeline.getActiveScreen()->mouseMove(_touch, [&](string text, string action){});
+    
+}
+
+void GameManager::doubleClick(ofTouchEventArgs &_touch){
+    
+    screenPipeline.getActiveScreen()->doubleClick(_touch, [&](string text, string action){});
     
 }
 

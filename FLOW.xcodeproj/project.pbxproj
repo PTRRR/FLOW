@@ -22,6 +22,8 @@
 		0E4C31FE1E2196EA006B5AE4 /* ofxTriangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C31FA1E2196EA006B5AE4 /* ofxTriangle.cpp */; };
 		0E4C320A1E229D6D006B5AE4 /* Options.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C32081E229D6D006B5AE4 /* Options.mm */; };
 		0E4C320D1E229DDA006B5AE4 /* SceneMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C320B1E229DDA006B5AE4 /* SceneMenu.mm */; };
+		0E7866E21E257CBD0064C88D /* LevelCreator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E7866E01E257CBD0064C88D /* LevelCreator.mm */; };
+		0E7866E51E25A4760064C88D /* LoadLevelsCreator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E7866E41E25A4760064C88D /* LoadLevelsCreator.mm */; };
 		0E9BFF901E043B97007F9857 /* GameManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF8E1E043B97007F9857 /* GameManager.mm */; };
 		0E9BFF931E043DF1007F9857 /* Button.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF911E043DF1007F9857 /* Button.mm */; };
 		0E9BFF971E0442A3007F9857 /* Interface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF951E0442A3007F9857 /* Interface.mm */; };
@@ -107,6 +109,10 @@
 		0E4C32091E229D6D006B5AE4 /* Options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Options.h; sourceTree = "<group>"; };
 		0E4C320B1E229DDA006B5AE4 /* SceneMenu.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SceneMenu.mm; sourceTree = "<group>"; };
 		0E4C320C1E229DDA006B5AE4 /* SceneMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneMenu.h; sourceTree = "<group>"; };
+		0E7866E01E257CBD0064C88D /* LevelCreator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LevelCreator.mm; sourceTree = "<group>"; };
+		0E7866E11E257CBD0064C88D /* LevelCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelCreator.h; sourceTree = "<group>"; };
+		0E7866E31E25A4760064C88D /* LoadLevelsCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadLevelsCreator.h; sourceTree = "<group>"; };
+		0E7866E41E25A4760064C88D /* LoadLevelsCreator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LoadLevelsCreator.mm; sourceTree = "<group>"; };
 		0E9BFF8E1E043B97007F9857 /* GameManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameManager.mm; sourceTree = "<group>"; };
 		0E9BFF8F1E043B97007F9857 /* GameManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameManager.h; sourceTree = "<group>"; };
 		0E9BFF911E043DF1007F9857 /* Button.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Button.mm; sourceTree = "<group>"; };
@@ -288,11 +294,15 @@
 				0E4C32081E229D6D006B5AE4 /* Options.mm */,
 				0E4C32091E229D6D006B5AE4 /* Options.h */,
 				0E4C320B1E229DDA006B5AE4 /* SceneMenu.mm */,
+				0E7866E31E25A4760064C88D /* LoadLevelsCreator.h */,
+				0E7866E41E25A4760064C88D /* LoadLevelsCreator.mm */,
 				0E4C320C1E229DDA006B5AE4 /* SceneMenu.h */,
 				0EEE15F81E24453D0055CD18 /* NextLevel.mm */,
 				0EEE15F91E24453D0055CD18 /* NextLevel.h */,
 				0EEE15FB1E2449A10055CD18 /* End.mm */,
 				0EEE15FC1E2449A10055CD18 /* End.h */,
+				0E7866E01E257CBD0064C88D /* LevelCreator.mm */,
+				0E7866E11E257CBD0064C88D /* LevelCreator.h */,
 			);
 			name = Screens;
 			sourceTree = "<group>";
@@ -591,6 +601,7 @@
 				E4D8936F11527B74007E1F53 /* ofApp.mm in Sources */,
 				0E4C320A1E229D6D006B5AE4 /* Options.mm in Sources */,
 				0E9BFFAF1E055958007F9857 /* Scene.mm in Sources */,
+				0E7866E21E257CBD0064C88D /* LevelCreator.mm in Sources */,
 				0E4C31DF1E1EC7B0006B5AE4 /* Levels.mm in Sources */,
 				0E9BFF971E0442A3007F9857 /* Interface.mm in Sources */,
 				DDA2E262B07659E1DBBB4D5E /* ofxXmlSettings.cpp in Sources */,
@@ -605,6 +616,7 @@
 				0E078B891E168984004595EF /* Receptor.mm in Sources */,
 				0E9BFF9A1E053B07007F9857 /* Screen.mm in Sources */,
 				0EEE15FD1E2449A10055CD18 /* End.mm in Sources */,
+				0E7866E51E25A4760064C88D /* LoadLevelsCreator.mm in Sources */,
 				0E078B811E16772F004595EF /* Actuator.mm in Sources */,
 				C32E84B046A417CA7171613C /* tinyxml.cpp in Sources */,
 				F00B7884241FB2CD87F076E0 /* tinyxmlerror.cpp in Sources */,

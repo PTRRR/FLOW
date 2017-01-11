@@ -20,6 +20,8 @@
 #include "SceneMenu.h"
 #include "NextLevel.h"
 #include "End.h"
+#include "LevelCreator.h"
+#include "LoadLevelsCreator.h"
 
 class GameManager{
 
@@ -43,6 +45,8 @@ private:
     shared_ptr<SceneMenu> sceneMenu;
     shared_ptr<NextLevel> nextLevel;
     shared_ptr<End> end;
+    shared_ptr<LevelCreator> levelCreator;
+    shared_ptr<LoadLevelsCreator> loadLevelsCreator;
     
     //Scenes
     
@@ -51,7 +55,7 @@ private:
     vector<string> levelsList;
     
     shared_ptr<Scene> currentScene;
-    void onEnd(); 
+    void onEnd();
     shared_ptr<Scene> createNewScene(string _name, string _xmlFile);
     
     //Main sound
@@ -71,6 +75,7 @@ public:
     void mouseDown(ofTouchEventArgs & _touch);
     void mouseUp(ofTouchEventArgs & _touch);
     void mouseMove(ofTouchEventArgs & _touch);
+    void doubleClick(ofTouchEventArgs & _touch);
     
 };
 
