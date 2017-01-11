@@ -17,8 +17,278 @@
     
     <emitter>
         
-        <X>0.664062500</X>
-        <Y>0.224121094</Y>
+        <X>0.531250000</X>
+        <Y>0.298828125</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.265625000</X>
+        <Y>0.273925781</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.265625000</X>
+        <Y>0.473144531</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.398437500</X>
+        <Y>0.647460938</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.630859375</X>
+        <Y>0.647460938</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.697265625</X>
+        <Y>0.522949219</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.730468750</X>
+        <Y>0.373535156</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.697265625</X>
+        <Y>0.273925781</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.630859375</X>
+        <Y>0.174316406</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.365234375</X>
+        <Y>0.199218750</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.365234375</X>
+        <Y>0.298828125</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.431640625</X>
+        <Y>0.448242188</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.464843750</X>
+        <Y>0.597656250</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.498046875</X>
+        <Y>0.722167969</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.498046875</X>
+        <Y>0.821777344</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.398437500</X>
+        <Y>0.896484375</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.265625000</X>
+        <Y>0.871582031</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.199218750</X>
+        <Y>0.796875000</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.199218750</X>
+        <Y>0.672363281</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.166015625</X>
+        <Y>0.572753906</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.132812500</X>
+        <Y>0.473144531</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.166015625</X>
+        <Y>0.398437500</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.166015625</X>
+        <Y>0.323730469</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.166015625</X>
+        <Y>0.249023438</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.166015625</X>
+        <Y>0.174316406</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.265625000</X>
+        <Y>0.124511719</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.365234375</X>
+        <Y>0.124511719</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.498046875</X>
+        <Y>0.124511719</Y>
         <boxX>0.006510417</boxX>
         <boxY>0.000488281</boxY>
         <rate>90.000000000</rate>
@@ -26,66 +296,5 @@
         <maxTailLength>25</maxTailLength>
     </emitter>
 </emitters>
-<receptors>
-    
-    <receptor>
-        
-        <X>0.199218750</X>
-        <Y>0.821777344</Y>
-        <radius>0.130208328</radius>
-        <strength>5.000000000</strength>
-        <maxParticles>300</maxParticles>
-        <decreasingFactor>0.022000000</decreasingFactor>
-    </receptor>
-</receptors>
-<polygones>
-    
-    <polygone>
-        
-        <vertices>
-            
-            <vertex>
-                
-                <X>0.464843750</X>
-                <Y>0.622558594</Y>
-                <Z>0.000000000</Z>
-            </vertex>
-            <vertex>
-                
-                <X>0.630859375</X>
-                <Y>0.498046875</Y>
-                <Z>0.000000000</Z>
-            </vertex>
-            <vertex>
-                
-                <X>0.630859375</X>
-                <Y>0.622558594</Y>
-                <Z>0.000000000</Z>
-            </vertex>
-        </vertices>
-    </polygone>
-    <polygone>
-        
-        <vertices>
-            
-            <vertex>
-                
-                <X>0.431640625</X>
-                <Y>0.597656250</Y>
-                <Z>0.000000000</Z>
-            </vertex>
-            <vertex>
-                
-                <X>0.597656250</X>
-                <Y>0.473144531</Y>
-                <Z>0.000000000</Z>
-            </vertex>
-            <vertex>
-                
-                <X>0.431640625</X>
-                <Y>0.473144531</Y>
-                <Z>0.000000000</Z>
-            </vertex>
-        </vertices>
-    </polygone>
-</polygones>
+<receptors></receptors>
+<polygones></polygones>

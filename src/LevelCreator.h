@@ -51,8 +51,10 @@ private:
     ofVec2f getClosestPoint(ofVec2f _position);
     
     string content;
+    string currentXML;
     void printLevel();
     void load();
+    void save();
     
     vector<ofVec2f> emitters;
     vector<ofVec2f> receptors;

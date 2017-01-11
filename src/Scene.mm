@@ -976,7 +976,11 @@ void Scene::saveSceneToXML(string _fileName){
 
 void Scene::XMLSetup(string _xmlFile){
     
-    loadXML(_xmlFile, [&](ofxXmlSettings _XML){
+    ofxXmlSettings _XML;
+    
+    _XML.load(ofxiOSGetDocumentsDirectory() + _xmlFile);
+    
+    loadXML(_xmlFile, [&](ofxXmlSettings _XMLA){
     
         logXML(_xmlFile);
         XML = _XML;

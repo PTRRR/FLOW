@@ -21,6 +21,7 @@ LevelCreator::LevelCreator(shared_ptr<ofTrueTypeFont> _font){
     interface.addButton("E", "E", ofVec2f(ofGetWidth() - 800, 40));
     interface.addButton("R", "R", ofVec2f(ofGetWidth() - 1000, 40));
     interface.addButton("LOAD", "LOAD", ofVec2f(ofGetWidth() - 1200, 40));
+    interface.addButton("SAVE", "SAVE", ofVec2f(ofGetWidth() - 1400, 40));
     
     rows = (ofGetHeight() / 512) * 10;
     columns = (ofGetWidth() / 512) * 10;
@@ -106,7 +107,7 @@ void LevelCreator::renderToScreen(){
     
     //Draw emitters
     
-    ofSetColor(255, 0, 0);
+    ofSetColor(255, 0, 0, getAlpha());
     
     for(int i = 0; i < emitters.size(); i++){
         
@@ -115,7 +116,7 @@ void LevelCreator::renderToScreen(){
         
     }
     
-    ofSetColor(0, 255, 0);
+    ofSetColor(0, 255, 0, getAlpha());
     
     for(int i = 0; i < receptors.size(); i++){
         
@@ -133,8 +134,6 @@ void LevelCreator::renderToScreen(){
     }
     
     ofPopStyle();
-    
-   
     
     ofDrawBitmapString(content, 20, 20);
     
@@ -189,6 +188,108 @@ long LevelCreator::PGCD(long a, long b){
     return b;
 }
 
+void LevelCreator::save(){
+    
+    ofxXmlSettings xml;
+    
+    xml.setValue("general:UNLOCKED", 1);
+    xml.setValue("general:ORIGINAL_WIDTH", 1536);
+    xml.setValue("general:ORIGINAL_HEIGHT", 2048);
+    xml.setValue("general:MAX_PARTICLES", 1000);
+    xml.setValue("general:MAX_TAIL_LENGTH", 25);
+    xml.setValue("general:MAX_ACTUATORS_NUM", 4);
+    
+    xml.setValue("actuators:MAX_ACTUATORS_NUM", 4);
+    xml.setValue("fixedActuators", "");
+    
+    //Emitters
+    
+    xml.addTag("emitters");
+    xml.pushTag("emitters");
+    
+    for(int i = 0; i < emitters.size(); i++){
+        
+        xml.addTag("emitter");
+        xml.pushTag("emitter", i);
+        
+        xml.addValue("X", emitters[i].x / ofGetWidth());
+        xml.addValue("Y", emitters[i].y / ofGetHeight());
+        xml.addValue("boxX", 0.006510417);
+        xml.addValue("boxY", 0.000488281);
+        xml.addValue("rate", 90.000000000);
+        xml.addValue("maxParticles", (float) (1000 / emitters.size()));
+        xml.addValue("maxTailLength", 25);
+        
+        xml.popTag();
+        
+    }
+    
+    xml.popTag();
+    
+    //Receptors
+    
+    xml.addTag("receptors");
+    xml.pushTag("receptors");
+    
+    for(int i = 0; i < receptors.size(); i++){
+        
+        xml.addTag("receptor");
+        xml.pushTag("receptor", i);
+        
+        xml.addValue("X", receptors[i].x / ofGetWidth());
+        xml.addValue("Y", receptors[i].y / ofGetHeight());
+        xml.addValue("radius", 0.130208328);
+        xml.addValue("strength", 5.000000000);
+        xml.addValue("maxParticles", 300);
+        xml.addValue("decreasingFactor", 0.022000000);
+        
+        xml.popTag();
+        
+    }
+    
+    xml.popTag();
+    
+    //Polygones
+    
+    xml.addTag("polygones");
+    xml.pushTag("polygones");
+    
+    for(int i = 0; i < polylines.size(); i++){
+        
+        //Polygone container
+        xml.addTag("polygone");
+        xml.pushTag("polygone", i);
+        
+        xml.addTag("vertices");
+        xml.pushTag("vertices");
+        
+        for(int j = 0; j < polylines[i].getVertices().size(); j++){
+            
+            xml.addTag("vertex");
+            xml.pushTag("vertex", j);
+            
+            xml.addValue("X", polylines[i].getVertices()[j].x / ofGetWidth());
+            xml.addValue("Y", polylines[i].getVertices()[j].y / ofGetHeight());
+            xml.addValue("Z", polylines[i].getVertices()[j].z);
+            
+            xml.popTag();
+            
+        }
+        
+        xml.popTag(); //vertice
+        xml.popTag(); //vertices
+    }
+    
+    xml.popTag();
+    
+    
+    xml.saveFile(currentXML);
+    xml.saveFile(ofxiOSGetDocumentsDirectory() + currentXML);
+    
+    interface.addText("SAVED " + currentXML, ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2));
+    
+}
+
 void LevelCreator::printLevel(){
     
     ofxXmlSettings xml;
@@ -208,7 +309,7 @@ void LevelCreator::printLevel(){
         xml.addValue("boxX", 0.006510417);
         xml.addValue("boxY", 0.000488281);
         xml.addValue("rate", 90.000000000);
-        xml.addValue("maxParticles", 1000);
+        xml.addValue("maxParticles", (float) (1000 / emitters.size()));
         xml.addValue("maxTailLength", 25);
         
         xml.popTag();
@@ -281,6 +382,8 @@ void LevelCreator::printLevel(){
 }
 
 void LevelCreator::setup(string _xmlFile){
+    
+    currentXML = _xmlFile;
     
     if(_xmlFile != ""){
     
@@ -523,6 +626,8 @@ void LevelCreator::onMouseUp(ofTouchEventArgs & _touch, function<void(string _te
             polylines.erase(polylines.begin(), polylines.end());
             emitters.erase(emitters.begin(), emitters.end());
             receptors.erase(receptors.begin(), receptors.end());
+        }else if(action == "SAVE"){
+            save();
         }
         
         callback(text, action);
