@@ -175,6 +175,13 @@ private:
     vector<ofVec3f> polygonesAttributes;
     vector<ofFloatColor> polygoneVerticesColor;
     
+    //Polygone rendering test
+    
+    ofShader dashedPolygoneProgram;
+    
+    ofVbo dashedPolygonesVbo;
+    vector<ofVec3f> dashedPolygonesVertices;
+    
     //Utils
     
     vector<ofVec3f> getQuadVertices(float _size);

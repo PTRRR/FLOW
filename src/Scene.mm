@@ -79,6 +79,7 @@ void Scene::initializeGPUData(){
     receptorProgram.load("shaders/receptorShader");
     quadTextureProgram.load("shaders/quadTextureShader");
     simpleQuadTextureProgram.load("shaders/simpleQuadTextureShader");
+    dashedPolygoneProgram.load("shaders/dashedPolygoneShader");
     
     
     //HEADS.
@@ -435,6 +436,25 @@ void Scene::initializeGPUData(){
     polygonesVbo.setColorData(&polygoneVerticesColor[0], (int) polygoneVerticesColor.size(), GL_STATIC_DRAW);
     polygonesVbo.setNormalData(&polygonesAttributes[0], (int) polygonesAttributes.size(), GL_STATIC_DRAW);
     
+    //Dashed polygones
+    
+    for(int i = 0; i < polygones.size(); i++){
+        
+        ofPolyline rawPolygone = polygones[i]->getRawPoligone();
+        ofPolyline processedPolygone = rawPolygone.getResampledBySpacing(ofRandom(20, 50));
+        
+        for(int j = 0; j < processedPolygone.getVertices().size(); j++){
+            
+            ofPoint currentVertice = processedPolygone.getVertices()[j];
+            
+            dashedPolygonesVertices.push_back(currentVertice);
+            
+        }
+        
+    }
+    
+    dashedPolygonesVbo.setVertexData(&dashedPolygonesVertices[0], (int) dashedPolygonesVertices.size(), GL_STATIC_DRAW);
+    
 }
 
 //Where all the scene is rendered
@@ -453,107 +473,64 @@ void Scene::renderToScreen(){
     glLineWidth(2.0);
     
     ofEnableBlendMode(OF_BLENDMODE_ADD);
-    
     particleTailProgram.begin();
-    
     particlesTailVbo.drawElements(GL_LINES, (int) tailIndices.size());
-    
     particleTailProgram.end();
-    
-    //2 - Draw call
-    //Draw all particles head.
-    
-    ofEnablePointSprites();
-    
-    particleHeadProgram.begin();
-    particleImg.bind();
-    
-    //particlesHeadVbo.draw(GL_POINTS, 0, (int) positions.size());
-    
-    particleImg.unbind();
-    particleHeadProgram.end();
-    
-    ofDisablePointSprites();
     ofDisableBlendMode();
-    
     ofEnableAlphaBlending();
     
-    //3 - Draw call
+    //2 - Draw call
     //Draw all receptors
     
     receptorProgram.begin();
     receptorProgram.setUniform1f("alpha", getAlpha() / 255.0);
     receptorImg.bind();
-    
     receptorsVbo.drawElements(GL_TRIANGLES, (int) receptorsIndices.size());
-    
     receptorImg.unbind();
     receptorProgram.end();
     
-    //4 - Draw call
+    //3 - Draw call
     //Draw all emitters
     
     quadTextureProgram.begin();
     quadTextureProgram.setUniform1f("alpha", getAlpha() / 255.0);
-    
     emitterImg.bind();
-    
     emittersVbo.drawElements(GL_TRIANGLES, (int) emittersIndices.size());
-    
     emitterImg.unbind();
-    
     quadTextureProgram.end();
     
-    //5 - Draw call
+    //4 - Draw call
     //Draw all actuators
     
     simpleQuadTextureProgram.begin();
     simpleQuadTextureProgram.setUniform1f("alpha", getAlpha() / 255.0);
-    
     actuatorImg.bind();
-
-    //Draw polygones
-
-    polygoneProgram.begin();
-    polygonesVbo.drawElements(GL_TRIANGLES, (int) polygonesIndices.size());
-    polygoneProgram.end();
-    
-    ofSetColor(255, 255, 255, getAlpha());
-    
     actuatorsVbo.drawElements(GL_TRIANGLES, (int) actuatorsIndices.size());
-    
     actuatorImg.unbind();
-    
     simpleQuadTextureProgram.end();
     
-    //    actuatorsVbo.drawElements(GL_LINES, (int) actuatorsIndices.size());
-    
-    //6 - Draw call
+    //5 - Draw call
     //Draw all actuators ring
     
     quadTextureProgram.begin();
     actuatorArrowImg.bind();
-    
     actuatorsRingVbo.drawElements(GL_TRIANGLES, (int) actuatorsRingIndices.size());
-    
     actuatorArrowImg.unbind();
     quadTextureProgram.end();
     
-    //7 - Draw call
-    //Draw polygones
+    //6 - Draw call
+    //Draw dashed polygones,
     
-    polygoneProgram.begin();
-    polygoneProgram.setUniform1f("alpha", getAlpha() / 255.0);
+    ofEnablePointSprites();
+    dashedPolygoneProgram.begin();
+    dashedPolygoneProgram.setUniform1f("alpha", getAlpha() / 255.0);
+    particleImg.bind();
+    dashedPolygonesVbo.draw(GL_POINTS, 0, (int) dashedPolygonesVertices.size());
+    particleImg.unbind();
+    dashedPolygoneProgram.end();
+    ofDisablePointSprites();
     
-    polygoneImg.bind();
-    
-    polygonesVbo.drawElements(GL_TRIANGLES, (int) polygonesIndices.size());
-    
-    polygoneImg.unbind();
-    
-    polygoneProgram.end();
-    
-    //Draw interface
+    //Draw interface -- NOT GPU BASED
     
     ofSetColor(255, 255, 255, getAlpha());
     
