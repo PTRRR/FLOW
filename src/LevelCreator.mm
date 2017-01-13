@@ -23,12 +23,8 @@ LevelCreator::LevelCreator(shared_ptr<ofTrueTypeFont> _font){
     interface.addButton("LOAD", "LOAD", ofVec2f(ofGetWidth() - 1200, 40));
     interface.addButton("SAVE", "SAVE", ofVec2f(ofGetWidth() - 1400, 40));
     
-    rows = (int) ofGetHeight() / (512 * 0.1);
-    columns = (int) ofGetWidth() / (512 * 0.1);
-    
-    cout << ofGetWidth() << endl << ofGetHeight() << endl;
-    cout <<  PGCD((long) ofGetWidth(), (long) ofGetWidth()) << endl;
-    
+    rows = (int) ofGetHeight() / (512 * 0.05);
+    columns = (int) ofGetWidth() / (512 * 0.05);
     
     //Set points
     
@@ -42,44 +38,35 @@ LevelCreator::LevelCreator(shared_ptr<ofTrueTypeFont> _font){
         
     }
     
+    for(int i = 0; i < rows; i++){
+        
+        gridVertices.push_back(ofVec3f(0, (float) ofGetHeight() / rows * i, 0));
+        gridVertices.push_back(ofVec3f(ofGetWidth(), (float) ofGetHeight() / rows * i, 0));
+        
+    }
+    
+    for(int i = 0; i < columns; i++){
+        
+        gridVertices.push_back(ofVec3f((float) ofGetWidth() / columns * i, 0, 0));
+        gridVertices.push_back(ofVec3f((float) ofGetWidth() / columns * i, ofGetHeight(), 0));
+        
+    }
+    
+    gridVbo.setVertexData(&gridVertices[0], (int) gridVertices.size(), GL_STATIC_DRAW);
+    
 }
 
 void LevelCreator::renderToScreen(){
-    
-    ofSetColor(255, 255, 255, getAlpha());
     
     ofPushStyle();
 
     //Draw grid
     
-    ofSetColor(100, 100, 100, getAlpha());
+    ofSetColor(50, 50, 50, getAlpha());
     
-    //Rows
-    
-    for(int i = 0; i < rows; i++){
-
-        ofDrawLine(0, (float) ofGetHeight() / rows * i, ofGetWidth(), (float) ofGetHeight() / rows * i);
-        
-    }
-    
-    //Columns
-    
-    for(int i = 0; i < columns; i++){
-        
-        ofDrawLine((float) ofGetWidth() / columns * i, 0, (float) ofGetWidth() / columns * i, ofGetHeight());
-        
-    }
-    
-    //Draw points
-    
-    for(int i = 0; i < points.size(); i++){
-        
-        ofDrawCircle(points[i], 3);
-        
-    }
+    gridVbo.draw(GL_LINES, 0, (int) gridVertices.size());
     
     //Draw polygones
-    
     
     ofNoFill();
     ofSetColor(255, 255, 255, getAlpha());
@@ -136,6 +123,8 @@ void LevelCreator::renderToScreen(){
     ofPopStyle();
     
     ofDrawBitmapString(content, 20, 20);
+    
+    ofSetColor(255, 255, 255, getAlpha());
     
     interface.draw();
     
@@ -308,7 +297,7 @@ void LevelCreator::printLevel(){
         xml.addValue("Y", emitters[i].y / ofGetHeight());
         xml.addValue("boxX", 0.006510417);
         xml.addValue("boxY", 0.000488281);
-        xml.addValue("rate", 90.000000000);
+        xml.addValue("rate", (float) 90.000000000 / emitters.size());
         xml.addValue("maxParticles", (float) (1000 / emitters.size()));
         xml.addValue("maxTailLength", 25);
         
@@ -376,8 +365,6 @@ void LevelCreator::printLevel(){
     
     
     xml.copyXmlToString(content);
-    
-    cout << content << endl;
     
 }
 

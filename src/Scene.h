@@ -177,10 +177,12 @@ private:
     
     //Polygone rendering test
     
+    ofImage dashedPolygoneImg;
     ofShader dashedPolygoneProgram;
     
     ofVbo dashedPolygonesVbo;
     vector<ofVec3f> dashedPolygonesVertices;
+    vector<ofVec3f> dashedPolygonesAttributes;
     
     //Utils
     
@@ -196,10 +198,14 @@ private:
     void onDoubleClick(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback) override;
     
     //Other callbacks
+    
     function<void()> levelEndCallback = nullptr;
     
     //Sounds
     
+    float lastPlay = 0;
+    float playOffset = 100.0;
+    vector<ofSoundPlayer> particlesSounds;
     
     //XML files
     

@@ -59,6 +59,10 @@ private:
     vector<ofVec2f> emitters;
     vector<ofVec2f> receptors;
     
+    ofVbo gridVbo;
+    vector<ofVec3f> gridVertices;
+    vector<ofIndexType> gridIndices;
+    
     //Inputs
     
     bool button = false;

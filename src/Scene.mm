@@ -30,16 +30,6 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     backButton->setDimensions(ofVec2f(0.0390625 * ofGetWidth()));
     backButton->setImage(backButtonImg);
     
-    //Loade the image that will represend the button
-    
-    //    optionsButtonImg.load("images/options.png");
-    
-    //This keeps a reference to the button created so that we can change its settings.
-    
-    //    shared_ptr<Button> optionsButton = interface.addButton("OPTIONS", "OPTIONS", ofVec2f(ofGetWidth() - 0.0490625 * ofGetWidth(), 0.0390625 * ofGetWidth()));
-    //    optionsButton->setDimensions(ofVec2f(0.0390625 * ofGetWidth()));
-    //    optionsButton->setImage(optionsButtonImg);
-    
     //Create the actuator box, where the player can take the actuators
     //This is useful to detect whether the actuators are active or not.
     //The player can drag them from the box to make them become active.
@@ -56,10 +46,22 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     particleImg.load("images/particleTex_1.png");
     actuatorArrowImg.load("images/actuator_arrow_2.png");
     polygoneImg.load("images/polygone_tex.png");
+    dashedPolygoneImg.load("images/dashed_polygone.png");
     
     //Load the font that will be used to display informations on the scene
     
     infosFont.load("GT-Cinetype-Mono.ttf", 0.009765625 * ofGetWidth());
+    
+    //Sounds
+    //Create an array of sounds that will be plaed when particles touch someting.
+    
+    for(int i = 0; i < 100; i++){
+        
+        ofSoundPlayer newSound;
+        newSound.load("sounds/bell"+ to_string((int) ofRandom(1, 5)) +".mp3");
+        particlesSounds.push_back(newSound);
+        
+    }
     
 };
 
@@ -391,69 +393,71 @@ void Scene::initializeGPUData(){
     polygonesVbo.setColorData(&polygoneVerticesColor[0], (int) polygoneVerticesColor.size(), GL_STATIC_DRAW);
     polygonesVbo.setNormalData(&polygonesAttributes[0], (int) polygonesAttributes.size(), GL_STATIC_DRAW);
     
-    //Polygones
+//    //First test but cool for other project
     
-    for(int i = 0; i < polygones.size(); i++){
-        
-        ofxTriangle triangles = polygones[i]->getTriangulatedPolygone();
-        
-        for(int j = 0; j < triangles.nTriangles; j++){
-         
-            ofVec3f p1 = ofVec3f(triangles.triangles[j].a.x, triangles.triangles[j].a.y, 0.0);
-            ofVec3f p2 = ofVec3f(triangles.triangles[j].b.x, triangles.triangles[j].b.y, 0.0);
-            ofVec3f p3 = ofVec3f(triangles.triangles[j].c.x, triangles.triangles[j].c.y, 0.0);
-            
-            polygonesVertices.push_back(p1);
-            polygonesVertices.push_back(p2);
-            polygonesVertices.push_back(p3);
-            
-            polygonesIndices.push_back(polygonesIndices.size());
-            polygonesIndices.push_back(polygonesIndices.size());
-            polygonesIndices.push_back(polygonesIndices.size());
-            
-            polygoneVerticesColor.push_back(ofFloatColor(1.0, 0.0, 0.0));
-            polygoneVerticesColor.push_back(ofFloatColor(0.0, 1.0, 0.0));
-            polygoneVerticesColor.push_back(ofFloatColor(0.0, 0.0, 1.0));
-            
-            float angle1 = (p1 - p2).angleRad(p1 - p3);
-            float angle2 = (p2 - p3).angleRad(p2 - p1);
-            float angle3 = (p3 - p2).angleRad(p3 - p1);
-            
-            float h1 = sin(angle2) * (p2 - p1).length();
-            float h2 = sin(angle3) * (p3 - p2).length();
-            float h3 = sin(angle1) * (p1 - p3).length();
-            
-            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
-            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
-            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
-            
-        }
-        
-    }
-    
-    polygonesVbo.setVertexData(&polygonesVertices[0], (int) polygonesVertices.size(), GL_STATIC_DRAW);
-    polygonesVbo.setIndexData(&polygonesIndices[0], (int) polygonesIndices.size(), GL_STATIC_DRAW);
-    polygonesVbo.setColorData(&polygoneVerticesColor[0], (int) polygoneVerticesColor.size(), GL_STATIC_DRAW);
-    polygonesVbo.setNormalData(&polygonesAttributes[0], (int) polygonesAttributes.size(), GL_STATIC_DRAW);
+//    for(int i = 0; i < polygones.size(); i++){
+//        
+//        ofxTriangle triangles = polygones[i]->getTriangulatedPolygone();
+//        
+//        for(int j = 0; j < triangles.nTriangles; j++){
+//         
+//            ofVec3f p1 = ofVec3f(triangles.triangles[j].a.x, triangles.triangles[j].a.y, 0.0);
+//            ofVec3f p2 = ofVec3f(triangles.triangles[j].b.x, triangles.triangles[j].b.y, 0.0);
+//            ofVec3f p3 = ofVec3f(triangles.triangles[j].c.x, triangles.triangles[j].c.y, 0.0);
+//            
+//            polygonesVertices.push_back(p1);
+//            polygonesVertices.push_back(p2);
+//            polygonesVertices.push_back(p3);
+//            
+//            polygonesIndices.push_back(polygonesIndices.size());
+//            polygonesIndices.push_back(polygonesIndices.size());
+//            polygonesIndices.push_back(polygonesIndices.size());
+//            
+//            polygoneVerticesColor.push_back(ofFloatColor(1.0, 0.0, 0.0));
+//            polygoneVerticesColor.push_back(ofFloatColor(0.0, 1.0, 0.0));
+//            polygoneVerticesColor.push_back(ofFloatColor(0.0, 0.0, 1.0));
+//            
+//            float angle1 = (p1 - p2).angleRad(p1 - p3);
+//            float angle2 = (p2 - p3).angleRad(p2 - p1);
+//            float angle3 = (p3 - p2).angleRad(p3 - p1);
+//            
+//            float h1 = sin(angle2) * (p2 - p1).length();
+//            float h2 = sin(angle3) * (p3 - p2).length();
+//            float h3 = sin(angle1) * (p1 - p3).length();
+//            
+//            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
+//            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
+//            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
+//            
+//        }
+//        
+//    }
+//    
+//    polygonesVbo.setVertexData(&polygonesVertices[0], (int) polygonesVertices.size(), GL_STATIC_DRAW);
+//    polygonesVbo.setIndexData(&polygonesIndices[0], (int) polygonesIndices.size(), GL_STATIC_DRAW);
+//    polygonesVbo.setColorData(&polygoneVerticesColor[0], (int) polygoneVerticesColor.size(), GL_STATIC_DRAW);
+//    polygonesVbo.setNormalData(&polygonesAttributes[0], (int) polygonesAttributes.size(), GL_STATIC_DRAW);
     
     //Dashed polygones
     
     for(int i = 0; i < polygones.size(); i++){
         
         ofPolyline rawPolygone = polygones[i]->getRawPoligone();
-        ofPolyline processedPolygone = rawPolygone.getResampledBySpacing(ofRandom(20, 50));
+        ofPolyline processedPolygone = rawPolygone.getResampledBySpacing(20);
         
         for(int j = 0; j < processedPolygone.getVertices().size(); j++){
             
             ofPoint currentVertice = processedPolygone.getVertices()[j];
             
             dashedPolygonesVertices.push_back(currentVertice);
+            dashedPolygonesAttributes.push_back(ofVec3f(ofRandom(4.0, 7.0)));
             
         }
         
     }
     
     dashedPolygonesVbo.setVertexData(&dashedPolygonesVertices[0], (int) dashedPolygonesVertices.size(), GL_STATIC_DRAW);
+    dashedPolygonesVbo.setNormalData(&dashedPolygonesAttributes[0], (int) dashedPolygonesAttributes.size(), GL_STATIC_DRAW);
     
 }
 
@@ -464,6 +468,7 @@ void Scene::renderToScreen(){
     //Draw background.
     //This clears the last frame.
     
+    ofEnableAlphaBlending();
     ofSetColor(0, 0, 0, getAlpha());
     ofDrawRectangle(0, 0, ofGetWidth() + 1, ofGetHeight());
     
@@ -477,6 +482,7 @@ void Scene::renderToScreen(){
     particlesTailVbo.drawElements(GL_LINES, (int) tailIndices.size());
     particleTailProgram.end();
     ofDisableBlendMode();
+    
     ofEnableAlphaBlending();
     
     //2 - Draw call
@@ -521,16 +527,20 @@ void Scene::renderToScreen(){
     //6 - Draw call
     //Draw dashed polygones,
     
+    ofEnableAlphaBlending();
+    ofEnableBlendMode(OF_BLENDMODE_ADD);
     ofEnablePointSprites();
     dashedPolygoneProgram.begin();
     dashedPolygoneProgram.setUniform1f("alpha", getAlpha() / 255.0);
-    particleImg.bind();
+    dashedPolygoneImg.bind();
     dashedPolygonesVbo.draw(GL_POINTS, 0, (int) dashedPolygonesVertices.size());
-    particleImg.unbind();
+    dashedPolygoneImg.unbind();
     dashedPolygoneProgram.end();
     ofDisablePointSprites();
+    ofDisableBlendMode();
     
     //Draw interface -- NOT GPU BASED
+    ofEnableAlphaBlending();
     
     ofSetColor(255, 255, 255, getAlpha());
     
@@ -849,9 +859,25 @@ void Scene::checkForCollisions(){
                         intersectionDetected = true;
                         
                     });
+
+                    //Trigger sounds
+                    
+//                    if(ofGetElapsedTimeMillis() > lastPlay + playOffset){
+//                        for(int k = 0; k < particlesSounds.size(); k++){
+//                            
+//                            if(!particlesSounds[k].isPlaying()){
+//                                particlesSounds[k].play();
+//                                cout << k << endl;
+//                                lastPlay = ofGetElapsedTimeMillis();
+//                                playOffset = ofRandom(50.0, 100.0);
+//                                break;
+//                            }
+//                            
+//                        }
+//                    }
                     
                 }
-                
+            
             }
             
         }
