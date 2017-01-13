@@ -342,10 +342,10 @@ void Scene::initializeGPUData(){
         
     }
     
-    receptorsVbo.setVertexData(&actuatorsVertices[0], (int) actuatorsVertices.size(), GL_DYNAMIC_DRAW);
-    receptorsVbo.setNormalData(&actuatorsAttributes[0], (int) actuatorsAttributes.size(), GL_DYNAMIC_DRAW);
-    receptorsVbo.setIndexData(&actuatorsIndices[0], (int) actuatorsIndices.size(), GL_STATIC_DRAW);
-    receptorsVbo.setTexCoordData(&actuatorsTexCoords[0], (int) actuatorsTexCoords.size(), GL_STATIC_DRAW);
+    receptorsVbo.setVertexData(&receptorsVertices[0], (int) receptorsVertices.size(), GL_DYNAMIC_DRAW);
+    receptorsVbo.setNormalData(&receptorsAttributes[0], (int) receptorsAttributes.size(), GL_DYNAMIC_DRAW);
+    receptorsVbo.setIndexData(&receptorsIndices[0], (int) receptorsIndices.size(), GL_STATIC_DRAW);
+    receptorsVbo.setTexCoordData(&receptorsTexCoords[0], (int) receptorsTexCoords.size(), GL_STATIC_DRAW);
     
     //Polygones
     
