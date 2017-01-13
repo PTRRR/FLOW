@@ -162,6 +162,8 @@ private:
     
     //Polygones
     
+    ofImage polygoneImg;
+    
     ofShader polygoneProgram;
     ofShader polygoneWireframeProgram;
     

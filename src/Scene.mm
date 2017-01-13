@@ -55,6 +55,7 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     activeActuatorImg.load("images/actuator.png");
     particleImg.load("images/particleTex_1.png");
     actuatorArrowImg.load("images/actuator_arrow_2.png");
+    polygoneImg.load("images/polygone_tex.png");
     
     //Load the font that will be used to display informations on the scene
     
@@ -361,7 +362,7 @@ void Scene::initializeGPUData(){
             
             polygonesTexCoords.push_back(ofVec2f(0.5, 0));
             polygonesTexCoords.push_back(ofVec2f(1, 1));
-            polygonesTexCoords.push_back(ofVec2f(-1, 1));
+            polygonesTexCoords.push_back(ofVec2f(0, 1));
             
             polygoneVerticesColor.push_back(ofFloatColor(1.0, 0.0, 0.0));
             polygoneVerticesColor.push_back(ofFloatColor(0.0, 1.0, 0.0));
@@ -404,6 +405,8 @@ void Scene::renderToScreen(){
     //1 - Draw call
     //Draw particles tail.
     
+    glLineWidth(2.0);
+    
     ofEnableBlendMode(OF_BLENDMODE_ADD);
     
     particleTailProgram.begin();
@@ -420,7 +423,7 @@ void Scene::renderToScreen(){
     particleHeadProgram.begin();
     particleImg.bind();
     
-    //    particlesHeadVbo.draw(GL_POINTS, 0, (int) positions.size());
+    //particlesHeadVbo.draw(GL_POINTS, 0, (int) positions.size());
     
     particleImg.unbind();
     particleHeadProgram.end();
@@ -489,7 +492,11 @@ void Scene::renderToScreen(){
     polygoneProgram.begin();
     polygoneProgram.setUniform1f("alpha", getAlpha() / 255.0);
     
+    polygoneImg.bind();
+    
     polygonesVbo.drawElements(GL_TRIANGLES, (int) polygonesIndices.size());
+    
+    polygoneImg.unbind();
     
     polygoneProgram.end();
     

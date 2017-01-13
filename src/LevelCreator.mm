@@ -23,8 +23,8 @@ LevelCreator::LevelCreator(shared_ptr<ofTrueTypeFont> _font){
     interface.addButton("LOAD", "LOAD", ofVec2f(ofGetWidth() - 1200, 40));
     interface.addButton("SAVE", "SAVE", ofVec2f(ofGetWidth() - 1400, 40));
     
-    rows = (ofGetHeight() / 512) * 10;
-    columns = (ofGetWidth() / 512) * 10;
+    rows = (int) ofGetHeight() / (512 * 0.1);
+    columns = (int) ofGetWidth() / (512 * 0.1);
     
     cout << ofGetWidth() << endl << ofGetHeight() << endl;
     cout <<  PGCD((long) ofGetWidth(), (long) ofGetWidth()) << endl;
@@ -36,7 +36,7 @@ LevelCreator::LevelCreator(shared_ptr<ofTrueTypeFont> _font){
         
         for(int j = 1; j < columns; j++){
             
-            points.push_back(ofVec2f( ofGetWidth() / columns * j, ofGetHeight() / rows * i ));
+            points.push_back(ofVec2f( (float) ofGetWidth() / columns * j, (float) ofGetHeight() / rows * i ));
             
         }
         
@@ -58,7 +58,7 @@ void LevelCreator::renderToScreen(){
     
     for(int i = 0; i < rows; i++){
 
-        ofDrawLine(0, ofGetHeight() / rows * i, ofGetWidth(), ofGetHeight() / rows * i);
+        ofDrawLine(0, (float) ofGetHeight() / rows * i, ofGetWidth(), (float) ofGetHeight() / rows * i);
         
     }
     
@@ -66,7 +66,7 @@ void LevelCreator::renderToScreen(){
     
     for(int i = 0; i < columns; i++){
         
-        ofDrawLine(ofGetWidth() / columns * i, 0, ofGetWidth() / columns * i, ofGetHeight());
+        ofDrawLine((float) ofGetWidth() / columns * i, 0, (float) ofGetWidth() / columns * i, ofGetHeight());
         
     }
     
