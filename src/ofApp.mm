@@ -74,6 +74,8 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
 //--------------------------------------------------------------
 void ofApp::touchDoubleTap(ofTouchEventArgs & touch){
 
+    gameManager.doubleClick(touch);
+    
 }
 
 //--------------------------------------------------------------

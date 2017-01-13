@@ -36,6 +36,7 @@ private:
     virtual void onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){};
     virtual void onMouseDrag(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){};
     virtual void onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){};
+    virtual void onDoubleClick(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){};
     
     ofFbo fbo;
     
@@ -52,6 +53,7 @@ public:
     void mouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback);
     void mouseDrag(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback);
     void mouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback);
+    void doubleClick(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback);
     
     //Set
     void setAlpha(float _alpha);
