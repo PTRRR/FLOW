@@ -922,6 +922,18 @@ void Scene::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, s
     
 }
 
+void Scene::onDoubleClick(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
+    
+    for(int i = 0; i < actuators.size(); i++){
+        
+        if (actuators[i]->isOver(_touch)) {
+            
+        }
+        
+    }
+    
+}
+
 void Scene::onEnd(function<void ()> _levelEndCallback){
     
     levelEndCallback = _levelEndCallback;
