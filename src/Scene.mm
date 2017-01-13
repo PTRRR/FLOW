@@ -434,7 +434,7 @@ void Scene::renderToScreen(){
     //Draw all receptors
     
     receptorProgram.begin();
-    receptorProgram.setUniform1f("alpha", 1.0);
+    receptorProgram.setUniform1f("alpha", getAlpha() / 255.0);
     receptorImg.bind();
     
     receptorsVbo.drawElements(GL_TRIANGLES, (int) receptorsIndices.size());
