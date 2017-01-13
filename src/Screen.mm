@@ -102,6 +102,18 @@ void Screen::mouseUp(ofTouchEventArgs & _touch, function<void (string _text, str
     
 }
 
+void Screen::doubleClick(ofTouchEventArgs & _touch, function<void (string _text, string _action)> _callback){
+    
+    if(isActive()){
+        onDoubleClick(_touch, [&](string text, string action){
+            
+            _callback(text, action);
+            
+        });
+    }
+    
+}
+
 //Set
 
 void Screen::setAlpha(float _alpha){

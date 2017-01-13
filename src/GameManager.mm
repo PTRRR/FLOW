@@ -38,6 +38,26 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     
     sceneMenu = shared_ptr<SceneMenu>(new SceneMenu(mainFont));
     sceneMenu->setName("SCENE-MENU");
+    
+    //Next level screen
+    
+    nextLevel = shared_ptr<NextLevel>(new NextLevel(mainFont));
+    nextLevel->setName("NEXT-LEVEL");
+    
+    //End screen
+    
+    end = shared_ptr<End>(new End(mainFont));
+    end->setName("END");
+    
+    //Level creator
+    
+    levelCreator = shared_ptr<LevelCreator>(new LevelCreator(mainFont));
+    levelCreator->setName("LEVEL-CREATOR");
+    
+    //Load levels creator
+    
+    loadLevelsCreator = shared_ptr<LoadLevelsCreator>(new LoadLevelsCreator(mainFont));
+    loadLevelsCreator->setName("LOAD-LEVELS-CREATOR");
 
     //Screen pipeline setup
 
@@ -46,6 +66,10 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     screenPipeline.addScreen(levels);
     screenPipeline.addScreen(sceneMenu);
     screenPipeline.addScreen(options);
+    screenPipeline.addScreen(nextLevel);
+    screenPipeline.addScreen(end);
+    screenPipeline.addScreen(levelCreator);
+    screenPipeline.addScreen(loadLevelsCreator);
 
     screenPipeline.setScreenActive(splashScreen);
     
@@ -93,15 +117,63 @@ void GameManager::draw(){
     
 }
 
+//Scene
+
 shared_ptr<Scene> GameManager::createNewScene(string _name, string _xmlFile){
     
+    //Create a pointer to a new instance of a scene.
+    
     shared_ptr<Scene> newScene = shared_ptr<Scene>(new Scene(mainFont));
-    newScene->setName(_name);
+    newScene->setName(_xmlFile);
     newScene->XMLSetup(_xmlFile);
+    
+    //Update the current scene variable.
+    
+    currentLevelFile = _xmlFile;
     currentScene = newScene;
     screenPipeline.addScreen(newScene);
     
     return newScene;
+    
+}
+
+//This function will be triggered every times the players finish a level.
+
+void GameManager::onEnd(){
+    
+    //This is the callback function that is triggered by the current scene when it's finished.
+    
+    currentScene->onEnd([&](){
+        
+        //Get the level list to check wich one is next.
+        
+        levelsList = levels->getLevels();
+        
+        //Loop throw all levels to find out wich one is the next.
+        
+        if(currentScene->getName() == levelsList[levelsList.size() - 1]){
+            
+            screenPipeline.setScreenActive(end);
+            
+        }else{
+            
+            for(int i = 0; i < levelsList.size(); i++){
+                
+                if (levelsList[i] == currentLevelFile && i < levelsList.size() - 1) {
+                    
+                    nextLevelFile = levelsList[i + 1];
+                    levels->setUnlocked(nextLevelFile);
+                    levels->setup();
+                    screenPipeline.setScreenActive(nextLevel);
+                    break;
+                    
+                }
+                
+            }
+            
+        }
+        
+    });
     
 }
 
@@ -150,76 +222,56 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
                 
                 if (currentScene != nullptr) {
                     
+                    //If the scene selectet is the same of the current one and if the current one is not finished.
+                    
                     if(currentScene->getName() == text && !currentScene->isFinished()){
+                        
+                        //Restore the previous scene not ended
                         
                         currentScene->setPause(false);
                         screenPipeline.setScreenActive(currentScene);
                         
                     }else{
                         
+                        //Create a new scene if the scene selected is not the current one.
+                        
                         screenPipeline.removeScreen(currentScene);
                         currentScene = nullptr;
                         
                         currentLevelFile = action;
                         screenPipeline.setScreenActive(createNewScene(text, action));
+                    
+                        //Sets the callback function triggered once this scene will be finished.
                         
-                        //If the scene is completed return to levels.
-                        
-                        currentScene->onEnd([&](){
-                            
-                            
-                            levelsList = levels->getLevels();
-                            
-                            for(int i = 0; i < levelsList.size(); i++){
-                                
-                                if (levelsList[i] == currentLevelFile && i < levelsList.size() - 1) {
-                                    
-                                    string nextLevelFile = levelsList[i + 1];
-                                    levels->setUnlocked(nextLevelFile);
-                                    break;
-                                    
-                                }
-                                
-                            }
-                            
-                            levels->setup();
-                            screenPipeline.setScreenActive(levels);
-                            
-                        });
+                        onEnd();
                         
                     }
                     
                 }else{
                     
+                    //Create a new scene if none has been previously set.
+                    
                     currentLevelFile = action;
                     screenPipeline.setScreenActive(createNewScene(text, action));
                     
-                    //If the scene is completed return to levels.
+                    //Sets the callback function triggered once this scene will be finished.
                     
-                    currentScene->onEnd([&](){
-                        
-                        levelsList = levels->getLevels();
-                        
-                        for(int i = 0; i < levelsList.size(); i++){
-                            
-                            if (levelsList[i] == currentLevelFile && i < levelsList.size() - 1) {
-                                
-                                string nextLevelFile = levelsList[i + 1];
-                                levels->setUnlocked(nextLevelFile);
-                                break;
-                                
-                            }
-                            
-                        }
-                        
-                        levels->setup();
-                        screenPipeline.setScreenActive(levels);
-                        
-                    });
+                    onEnd();
                     
                 }
                 
             }
+            
+        }else if(screenPipeline.getActiveScreen()->getName() == "LOAD-LEVELS-CREATOR"){
+            
+            
+            
+            
+            shared_ptr<LevelCreator> newLevelCreator = shared_ptr<LevelCreator>(new LevelCreator(mainFont));
+            newLevelCreator->setup(action);
+            
+            screenPipeline.addScreen(newLevelCreator);
+            screenPipeline.setScreenActive(newLevelCreator);
             
         }else{
             
@@ -266,6 +318,27 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
                     
                 }
                 
+            }else if(action == "NEXT-LEVEL"){
+                
+                screenPipeline.setScreenActive(createNewScene("nextLevel", nextLevelFile));
+                
+                onEnd();
+                
+            }else if(action == "RESTART"){
+                
+                screenPipeline.setScreenActive(createNewScene("currentLevel", currentLevelFile));
+                
+                onEnd();
+                
+            }else if(action == "LEVEL-CREATOR"){
+                
+                screenPipeline.setScreenActive(levelCreator);
+                
+            }else if(action == "LOAD"){
+                
+                loadLevelsCreator->setup();
+                screenPipeline.setScreenActive(loadLevelsCreator);
+                
             }
             
         }
@@ -279,6 +352,12 @@ void GameManager::mouseMove(ofTouchEventArgs & _touch){
     cout << "mouse move on: " + currentScreen << endl;
     
     screenPipeline.getActiveScreen()->mouseMove(_touch, [&](string text, string action){});
+    
+}
+
+void GameManager::doubleClick(ofTouchEventArgs &_touch){
+    
+    screenPipeline.getActiveScreen()->doubleClick(_touch, [&](string text, string action){});
     
 }
 

@@ -22,6 +22,10 @@
 		0E4C31FE1E2196EA006B5AE4 /* ofxTriangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C31FA1E2196EA006B5AE4 /* ofxTriangle.cpp */; };
 		0E4C320A1E229D6D006B5AE4 /* Options.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C32081E229D6D006B5AE4 /* Options.mm */; };
 		0E4C320D1E229DDA006B5AE4 /* SceneMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C320B1E229DDA006B5AE4 /* SceneMenu.mm */; };
+		0E934CB21E28628F00F136B5 /* LevelCreator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E934CAF1E28628F00F136B5 /* LevelCreator.mm */; };
+		0E934CB31E28628F00F136B5 /* LoadLevelsCreator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E934CB01E28628F00F136B5 /* LoadLevelsCreator.mm */; };
+		0E934CB41E28628F00F136B5 /* NextLevel.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E934CB11E28628F00F136B5 /* NextLevel.mm */; };
+		0E934CB71E2862AB00F136B5 /* End.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E934CB61E2862AB00F136B5 /* End.mm */; };
 		0E9BFF901E043B97007F9857 /* GameManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF8E1E043B97007F9857 /* GameManager.mm */; };
 		0E9BFF931E043DF1007F9857 /* Button.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF911E043DF1007F9857 /* Button.mm */; };
 		0E9BFF971E0442A3007F9857 /* Interface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E9BFF951E0442A3007F9857 /* Interface.mm */; };
@@ -105,6 +109,14 @@
 		0E4C32091E229D6D006B5AE4 /* Options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Options.h; sourceTree = "<group>"; };
 		0E4C320B1E229DDA006B5AE4 /* SceneMenu.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SceneMenu.mm; sourceTree = "<group>"; };
 		0E4C320C1E229DDA006B5AE4 /* SceneMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneMenu.h; sourceTree = "<group>"; };
+		0E934CAC1E28628F00F136B5 /* LevelCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelCreator.h; sourceTree = "<group>"; };
+		0E934CAD1E28628F00F136B5 /* LoadLevelsCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadLevelsCreator.h; sourceTree = "<group>"; };
+		0E934CAE1E28628F00F136B5 /* NextLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NextLevel.h; sourceTree = "<group>"; };
+		0E934CAF1E28628F00F136B5 /* LevelCreator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LevelCreator.mm; sourceTree = "<group>"; };
+		0E934CB01E28628F00F136B5 /* LoadLevelsCreator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LoadLevelsCreator.mm; sourceTree = "<group>"; };
+		0E934CB11E28628F00F136B5 /* NextLevel.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NextLevel.mm; sourceTree = "<group>"; };
+		0E934CB51E2862AB00F136B5 /* End.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = End.h; sourceTree = "<group>"; };
+		0E934CB61E2862AB00F136B5 /* End.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = End.mm; sourceTree = "<group>"; };
 		0E9BFF8E1E043B97007F9857 /* GameManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GameManager.mm; sourceTree = "<group>"; };
 		0E9BFF8F1E043B97007F9857 /* GameManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameManager.h; sourceTree = "<group>"; };
 		0E9BFF911E043DF1007F9857 /* Button.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Button.mm; sourceTree = "<group>"; };
@@ -273,6 +285,14 @@
 		0E9BFF9C1E053BFD007F9857 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				0E934CB61E2862AB00F136B5 /* End.mm */,
+				0E934CB51E2862AB00F136B5 /* End.h */,
+				0E934CAF1E28628F00F136B5 /* LevelCreator.mm */,
+				0E934CAC1E28628F00F136B5 /* LevelCreator.h */,
+				0E934CB01E28628F00F136B5 /* LoadLevelsCreator.mm */,
+				0E934CAD1E28628F00F136B5 /* LoadLevelsCreator.h */,
+				0E934CB11E28628F00F136B5 /* NextLevel.mm */,
+				0E934CAE1E28628F00F136B5 /* NextLevel.h */,
 				0E9BFF9D1E053C25007F9857 /* Menu.mm */,
 				0E9BFF9E1E053C25007F9857 /* Menu.h */,
 				0E9BFFA51E0553D9007F9857 /* SplashScreen.mm */,
@@ -306,13 +326,13 @@
 			name = "Game elements";
 			sourceTree = "<group>";
 		};
-		0E9BFFA91E055555007F9857 /* Scenes */ = {
+		0E9BFFA91E055555007F9857 /* Scene */ = {
 			isa = PBXGroup;
 			children = (
 				0E9BFFAD1E055958007F9857 /* Scene.mm */,
 				0E9BFFAE1E055958007F9857 /* Scene.h */,
 			);
-			name = Scenes;
+			name = Scene;
 			sourceTree = "<group>";
 		};
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
@@ -452,7 +472,7 @@
 				E4D8936C11527B74007E1F53 /* ofApp.h */,
 				0E9BFF8E1E043B97007F9857 /* GameManager.mm */,
 				0E9BFF8F1E043B97007F9857 /* GameManager.h */,
-				0E9BFFA91E055555007F9857 /* Scenes */,
+				0E9BFFA91E055555007F9857 /* Scene */,
 				0E9BFFA81E055548007F9857 /* Game elements */,
 				0E9BFF9C1E053BFD007F9857 /* Screens */,
 				0E9BFF941E043DFB007F9857 /* GUI */,
@@ -576,11 +596,13 @@
 			files = (
 				0E4C320D1E229DDA006B5AE4 /* SceneMenu.mm in Sources */,
 				0E4C31FE1E2196EA006B5AE4 /* ofxTriangle.cpp in Sources */,
+				0E934CB31E28628F00F136B5 /* LoadLevelsCreator.mm in Sources */,
 				0E9BFF901E043B97007F9857 /* GameManager.mm in Sources */,
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
 				E4D8936F11527B74007E1F53 /* ofApp.mm in Sources */,
 				0E4C320A1E229D6D006B5AE4 /* Options.mm in Sources */,
 				0E9BFFAF1E055958007F9857 /* Scene.mm in Sources */,
+				0E934CB71E2862AB00F136B5 /* End.mm in Sources */,
 				0E4C31DF1E1EC7B0006B5AE4 /* Levels.mm in Sources */,
 				0E9BFF971E0442A3007F9857 /* Interface.mm in Sources */,
 				DDA2E262B07659E1DBBB4D5E /* ofxXmlSettings.cpp in Sources */,
@@ -594,9 +616,11 @@
 				0E078B891E168984004595EF /* Receptor.mm in Sources */,
 				0E9BFF9A1E053B07007F9857 /* Screen.mm in Sources */,
 				0E078B811E16772F004595EF /* Actuator.mm in Sources */,
+				0E934CB41E28628F00F136B5 /* NextLevel.mm in Sources */,
 				C32E84B046A417CA7171613C /* tinyxml.cpp in Sources */,
 				F00B7884241FB2CD87F076E0 /* tinyxmlerror.cpp in Sources */,
 				0E078B7E1E16772F004595EF /* BaseElement.mm in Sources */,
+				0E934CB21E28628F00F136B5 /* LevelCreator.mm in Sources */,
 				0E9BFFA71E0553D9007F9857 /* SplashScreen.mm in Sources */,
 				0277A21A660EFCF41027A1B3 /* tinyxmlparser.cpp in Sources */,
 				0E22F05E1E0A8A8500197899 /* Text.mm in Sources */,

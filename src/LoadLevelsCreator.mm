@@ -1,16 +1,16 @@
 //
-//  Levels.mm
+//  LoadLevelsCreator.mm
 //  FLOW
 //
 //  Created by Pietro Alberti on 05.01.17.
 //
 //
 
-#include "Levels.h"
+#include "LoadLevelsCreator.h"
 
-Levels::Levels(){}
+LoadLevelsCreator::LoadLevelsCreator(){}
 
-Levels::Levels(shared_ptr<ofTrueTypeFont> _font){
+LoadLevelsCreator::LoadLevelsCreator(shared_ptr<ofTrueTypeFont> _font){
     
     font = _font;
     interface.setMass(50);
@@ -19,7 +19,7 @@ Levels::Levels(shared_ptr<ofTrueTypeFont> _font){
     interface.setFont(_font);
     interface.addText("LEVELS", ofVec2f(ofGetWidth() / 2, ofGetHeight() * 0.06 / 2));
     
-    backButtonImg.load("images/back_button.png");
+    backButtonImg.load("images/backButton.png");
     shared_ptr<Button> backButton = interface.addButton("BACK", "BACK", ofVec2f(0.0390625 * ofGetWidth()));
     backButton->setDimensions(ofVec2f(0.0390625 * ofGetWidth()));
     backButton->setImage(backButtonImg);
@@ -30,7 +30,7 @@ Levels::Levels(shared_ptr<ofTrueTypeFont> _font){
 
 //Private
 
-void Levels::downloadLevelsToIOSDirectory(){
+void LoadLevelsCreator::downloadLevelsToIOSDirectory(){
     
     int levelIndex = 1;
     ofxXmlSettings XMLTemp;
@@ -48,7 +48,7 @@ void Levels::downloadLevelsToIOSDirectory(){
 
 //Public
 
-void Levels::setup(){
+void LoadLevelsCreator::setup(){
     
     //Reset all.
     
@@ -107,7 +107,7 @@ void Levels::setup(){
     
 }
 
-void Levels::update(){
+void LoadLevelsCreator::update(){
     
     if(buttons.size() > 0){
         
@@ -171,7 +171,7 @@ void Levels::update(){
     
 }
 
-void Levels::renderToScreen(){
+void LoadLevelsCreator::renderToScreen(){
     
     ofSetColor(0, 0, 0, getAlpha());
     ofDrawRectangle(0, 0, ofGetWidth() + 1, ofGetHeight());
@@ -194,14 +194,14 @@ void Levels::renderToScreen(){
 
 //Set
 
-void Levels::setFont(shared_ptr<ofTrueTypeFont> _font){
+void LoadLevelsCreator::setFont(shared_ptr<ofTrueTypeFont> _font){
     
     font = _font;
     interface.setFont(_font);
     
 }
 
-void Levels::setUnlocked(string _xmlFile){
+void LoadLevelsCreator::setUnlocked(string _xmlFile){
     
     ofxXmlSettings xml;
     
@@ -214,7 +214,7 @@ void Levels::setUnlocked(string _xmlFile){
 
 //Get
 
-vector<string> Levels::getLevels(){
+vector<string> LoadLevelsCreator::getLevels(){
     
     return levels;
     
@@ -222,7 +222,7 @@ vector<string> Levels::getLevels(){
 
 //Inputs
 
-void Levels::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
+void LoadLevelsCreator::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
     
     interface.mouseDown(_touch, [&](string text, string action){
         callback(text, action);
@@ -237,7 +237,7 @@ void Levels::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, 
     
 }
 
-void Levels::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
+void LoadLevelsCreator::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
     
     interface.mouseMove(_touch, [&](string text, string action){
         callback(text, action);
@@ -255,7 +255,7 @@ void Levels::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, 
     
 }
 
-void Levels::onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
+void LoadLevelsCreator::onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
     
     interface.mouseUp(_touch, [&](string text, string action){
         if(abs(movement) < 5 && _touch.id == 0) callback(text, action);

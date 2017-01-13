@@ -19,6 +19,8 @@ Menu::Menu(shared_ptr<ofTrueTypeFont> _font){
     interface.addButton("PLAY", "PLAY", ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2));
     interface.addButton("EXIT", "EXIT", ofVec2f(ofGetWidth() / 2, ofGetHeight() - ofGetHeight() * 0.06 / 2));
     
+    interface.addButton("LEVEL-CREATOR", "LEVEL-CREATOR", ofVec2f(ofGetWidth() / 2, ofGetHeight() - ofGetHeight() * 0.06 * 1.5));
+    
 }
 
 void Menu::renderToScreen(){
