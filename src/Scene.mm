@@ -851,7 +851,6 @@ void Scene::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, s
             
             if(actuators[i]->isOver(_touch)){
                 
-                actuatorsTimer[_touch.id] = ofGetElapsedTimeMillis();
                 activeActuators[_touch.id] = actuators[i];
                 break;
                 
@@ -865,6 +864,8 @@ void Scene::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, s
         _callback(_text, _action);
     });
     
+    cout << "down" << endl;
+    
 }
 
 void Scene::onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){
@@ -877,6 +878,7 @@ void Scene::onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, str
     
     if(_touch.id < activeActuators.size()){
         
+        if(activeActuators[_touch.id]->isDisabled()) activeActuators[_touch.id]->disable(false);
         activeActuators[_touch.id] = nullptr;
         
     }
@@ -893,28 +895,18 @@ void Scene::onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, str
 
 void Scene::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){
     
-    if(_touch.id < touches.size() && activeActuators[_touch.id] != nullptr){
+    if(_touch.id < touches.size()){
         
-        if((_touch - touches[_touch.id]).length() > 1 && actuatorsTimer[_touch.id] + timeToChange >= ofGetElapsedTimeMillis()) actuatorsTimer[_touch.id] = ofGetElapsedTimeMillis();
-        if(actuatorsTimer[_touch.id] + timeToChange >= ofGetElapsedTimeMillis()){
-            
-            if(activeActuators[_touch.id]->isDisabled()){
-                activeActuators[_touch.id]->disable(false);
-            }
-            
+        //If the actuator linked with the current touch is disabled just update its radius else its position.
+        
+        if(!activeActuators[_touch.id]->isDisabled()){
+         
             touches[_touch.id] = _touch;
             
         }else{
             
-            float distance = (activeActuators[_touch.id]->getPosition() - touches[_touch.id]).length();
-            
-            if(!activeActuators[_touch.id]->isDisabled()){
-                activeActuators[_touch.id]->disable(true);
-            }
-            
-            activeActuators[_touch.id]->setRadius(distance + 100);
-            
-            touches[_touch.id] = _touch;
+            float distance = (activeActuators[_touch.id]->getPosition() - _touch).length();
+            activeActuators[_touch.id]->setRadius(distance);
             
         }
         
@@ -924,9 +916,16 @@ void Scene::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, s
 
 void Scene::onDoubleClick(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
     
-    for(int i = 0; i < actuators.size(); i++){
+    if(_touch.id < touches.size()){
         
-        if (actuators[i]->isOver(_touch)) {
+        for(int i = 0; i < actuators.size(); i++){
+            
+            if (actuators[i]->isOver(_touch)) {
+                
+                activeActuators[_touch.id] = actuators[i];
+                activeActuators[_touch.id]->disable(true);
+                
+            }
             
         }
         
@@ -1162,7 +1161,6 @@ void Scene::XMLSetup(string _xmlFile){
         
         activeActuators.erase(activeActuators.begin(), activeActuators.end());
         activeActuators = vector<shared_ptr<Actuator>>(numActuators, nullptr);
-        actuatorsTimer = vector<float>(numActuators, ofGetElapsedTimeMillis());
         
         for(int i = 0; i < numActuators; i++){
             
