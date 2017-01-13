@@ -4,7 +4,7 @@
 void ofApp::setup(){	
 
     mainFont = shared_ptr<ofTrueTypeFont>(new ofTrueTypeFont());
-    mainFont->load("GT-Cinetype-Mono.ttf", 0.01953125 * ofGetWidth());
+    mainFont->load("GT-America-Mono-Ultra-Light.woff", 0.01953125 * ofGetWidth());
     mainFont->setLetterSpacing(1.5);
     
     gameManager = GameManager(mainFont);

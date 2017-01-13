@@ -24,13 +24,12 @@
 #include "ofxOpenALSoundPlayer.h"
 
 class Scene : public Screen{
-
+    
 private:
     
     //Level
     
     ofxXmlSettings XML;
-    
     
     //Main
     
@@ -54,18 +53,65 @@ private:
     ofImage optionsButtonImg;
     Interface interface;
     
+    //-----------------------------------------
+    
+    //Game elements
+    
     //Emitter
     
-    ofImage emitterImg;
-
     vector<shared_ptr<ParticleSystem>> emitters;
     vector<shared_ptr<Particle>> allParticles;
     
-    void updateAllParticles();
+    //Receptor
     
-    //Particles rendering
-    //Head
-    //This variables are related to the rendering of the head of the particle
+    bool allAreFilled = false;
+    ofImage receptorImg;
+    
+    vector<shared_ptr<Receptor>> receptors;
+    
+    void updateReceptorsRenderingData();
+    
+    //Actuators
+    
+    ofRectangle actuatorBox;
+    
+    ofImage actuatorImg;
+    ofImage activeActuatorImg;
+    
+    //How much time the user have to stay still until he update the radius of the actuator.
+    
+    float timeToChange = 1200;
+    vector<float> actuatorsTimer;
+    
+    vector<shared_ptr<Actuator>> actuators;
+    vector<shared_ptr<Actuator>> activeActuators;
+    
+    //Fixed actuators
+    
+    vector<shared_ptr<Actuator>> fixedActuators;
+    
+    //Polygones
+    
+    vector<shared_ptr<Polygone>> polygones;
+    void checkForCollisions();
+    
+    //GPU rendering variables.
+    
+    //Quad texture
+    
+    ofShader quadTextureProgram;
+    ofShader simpleQuadTextureProgram;
+    
+    //Emitters
+    
+    ofImage emitterImg;
+    
+    ofVbo emittersVbo;
+    vector<ofVec3f> emittersVertices;
+    vector<ofVec2f> emittersTexCoords;
+    vector<ofIndexType> emittersIndices;
+    
+    //Particles
     
     ofImage particleImg;
     
@@ -76,7 +122,7 @@ private:
     ofShader particleHeadProgram;
     ofShader particleTailProgram;
     
-    //Tail
+    //Tails
     
     ofVbo particlesTailVbo;
     vector<ofVec3f> tailPoints;
@@ -84,14 +130,10 @@ private:
     vector<ofIndexType> tailIndices;
     vector<ofVec3f> baricentricCoords;
     
+    void updateAllParticles();
     void updateParticlesRenderingData();
     
-    //Receptor
-    
-    bool allAreFilled = false;
-    ofImage receptorImg;
-    
-    vector<shared_ptr<Receptor>> receptors;
+    //Receptors
     
     ofShader receptorProgram;
     
@@ -99,25 +141,9 @@ private:
     vector<ofVec3f> receptorsVertices;
     vector<ofVec2f> receptorsTexCoords;
     vector<ofIndexType> receptorsIndices;
-    vector<ofFloatColor> receptorsColors;
     vector<ofVec3f> receptorsAttributes;
     
-    void updateReceptorsRenderingData();
-    
     //Actuators
-
-    ofRectangle actuatorBox;
-    
-    ofImage actuatorImg;
-    ofImage activeActuatorImg;
-
-    //How much time the user have to stay still until he update the radius of the actuator.
-    
-    float timeToChange = 1200;
-    vector<float> actuatorsTimer;
-    
-    vector<shared_ptr<Actuator>> actuators;
-    vector<shared_ptr<Actuator>> activeActuators;
     
     ofShader actuatorsProgram;
     
@@ -128,20 +154,19 @@ private:
     vector<ofFloatColor> actuatorsColors;
     vector<ofVec3f> actuatorsAttributes;
     
+    //Actuators ring
+    
+    ofImage actuatorArrowImg;
+    
+    ofVbo actuatorsRingVbo;
+    vector<ofVec3f> actuatorsRingVertices;
+    vector<ofVec2f> actuatorsRingTexCoords;
+    vector<ofIndexType> actuatorsRingIndices;
+    vector<ofFloatColor> actuatorsRingColors;
+    
     void updateActuatorsRenderingData();
     
-    //Fixed actuators
-    
-    vector<shared_ptr<Actuator>> fixedActuators;
-    
     //Polygones
-    
-    void updatePolygonesRenderingData();
-    
-    vector<shared_ptr<Polygone>> polygones;
-    void checkForCollisions();
-    
-    //Polygones rendering
     
     ofShader polygoneProgram;
     ofShader polygoneWireframeProgram;
@@ -149,7 +174,12 @@ private:
     ofVbo polygonesVbo;
     vector<ofVec3f> polygonesVertices;
     vector<ofIndexType> polygonesIndices;
+    vector<ofVec3f> polygonesAttributes;
     vector<ofFloatColor> polygoneVerticesColor;
+    
+    //Utils
+    
+    vector<ofVec3f> getQuadVertices(float _size);
     
     //User inputs callbacks
     void onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback) override;
@@ -160,10 +190,10 @@ private:
     function<void()> levelEndCallback = nullptr;
     
     //Sounds
-
+    
     
     //XML files
-
+    
     void saveSceneToXML(string _fileName);
     
 public:

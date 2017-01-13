@@ -2,19 +2,15 @@
 uniform mat4 modelViewProjectionMatrix;
 
 attribute vec4 position;
-attribute vec4 color;
-attribute vec3 normal;
+attribute vec2 texcoord;
 
 // this is something we're creating for this shader
-
-varying vec3 vDistances;
-varying vec3 vBC;
+varying vec2 vTexCoords;
 
 void main()
 {
     
-    vDistances = normal;
-    vBC = color.rgb;
+    vTexCoords = texcoord;
     gl_Position = modelViewProjectionMatrix * position;
     
 }

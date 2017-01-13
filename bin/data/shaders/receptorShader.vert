@@ -11,11 +11,10 @@ varying vec2 vTexCoords;
 varying vec2 vTexCoordsOffseted;
 varying float vRadius;
 varying float percentFilled;
-varying vec4 vColor;
 
 void main()
 {
-    vColor = color;
+    
     vTexCoords = texcoord;
     
     //offset coordinates to begin the circle on top.
@@ -33,4 +32,5 @@ void main()
     vRadius = normal.x;
     percentFilled = normal.y;
     gl_Position = modelViewProjectionMatrix * position;
+    
 }
