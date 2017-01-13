@@ -384,6 +384,51 @@ void Scene::initializeGPUData(){
     polygonesVbo.setColorData(&polygoneVerticesColor[0], (int) polygoneVerticesColor.size(), GL_STATIC_DRAW);
     polygonesVbo.setNormalData(&polygonesAttributes[0], (int) polygonesAttributes.size(), GL_STATIC_DRAW);
     
+    //Polygones
+    
+    for(int i = 0; i < polygones.size(); i++){
+        
+        ofxTriangle triangles = polygones[i]->getTriangulatedPolygone();
+        
+        for(int j = 0; j < triangles.nTriangles; j++){
+         
+            ofVec3f p1 = ofVec3f(triangles.triangles[j].a.x, triangles.triangles[j].a.y, 0.0);
+            ofVec3f p2 = ofVec3f(triangles.triangles[j].b.x, triangles.triangles[j].b.y, 0.0);
+            ofVec3f p3 = ofVec3f(triangles.triangles[j].c.x, triangles.triangles[j].c.y, 0.0);
+            
+            polygonesVertices.push_back(p1);
+            polygonesVertices.push_back(p2);
+            polygonesVertices.push_back(p3);
+            
+            polygonesIndices.push_back(polygonesIndices.size());
+            polygonesIndices.push_back(polygonesIndices.size());
+            polygonesIndices.push_back(polygonesIndices.size());
+            
+            polygoneVerticesColor.push_back(ofFloatColor(1.0, 0.0, 0.0));
+            polygoneVerticesColor.push_back(ofFloatColor(0.0, 1.0, 0.0));
+            polygoneVerticesColor.push_back(ofFloatColor(0.0, 0.0, 1.0));
+            
+            float angle1 = (p1 - p2).angleRad(p1 - p3);
+            float angle2 = (p2 - p3).angleRad(p2 - p1);
+            float angle3 = (p3 - p2).angleRad(p3 - p1);
+            
+            float h1 = sin(angle2) * (p2 - p1).length();
+            float h2 = sin(angle3) * (p3 - p2).length();
+            float h3 = sin(angle1) * (p1 - p3).length();
+            
+            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
+            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
+            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
+            
+        }
+        
+    }
+    
+    polygonesVbo.setVertexData(&polygonesVertices[0], (int) polygonesVertices.size(), GL_STATIC_DRAW);
+    polygonesVbo.setIndexData(&polygonesIndices[0], (int) polygonesIndices.size(), GL_STATIC_DRAW);
+    polygonesVbo.setColorData(&polygoneVerticesColor[0], (int) polygoneVerticesColor.size(), GL_STATIC_DRAW);
+    polygonesVbo.setNormalData(&polygonesAttributes[0], (int) polygonesAttributes.size(), GL_STATIC_DRAW);
+    
 }
 
 //Where all the scene is rendered
@@ -458,6 +503,14 @@ void Scene::renderToScreen(){
     simpleQuadTextureProgram.setUniform1f("alpha", getAlpha() / 255.0);
     
     actuatorImg.bind();
+
+    //Draw polygones
+
+    polygoneProgram.begin();
+    polygonesVbo.drawElements(GL_TRIANGLES, (int) polygonesIndices.size());
+    polygoneProgram.end();
+    
+    ofSetColor(255, 255, 255, getAlpha());
     
     actuatorsVbo.drawElements(GL_TRIANGLES, (int) actuatorsIndices.size());
     
