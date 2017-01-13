@@ -54,7 +54,7 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     emitterImg.load("images/emitter.png");
     activeActuatorImg.load("images/actuator.png");
     particleImg.load("images/particleTex_1.png");
-    actuatorArrowImg.load("images/actuator_arrow.png");
+    actuatorArrowImg.load("images/actuator_arrow_2.png");
     
     //Load the font that will be used to display informations on the scene
     
@@ -359,6 +359,10 @@ void Scene::initializeGPUData(){
             polygonesIndices.push_back(polygonesIndices.size());
             polygonesIndices.push_back(polygonesIndices.size());
             
+            polygonesTexCoords.push_back(ofVec2f(0.5, 0));
+            polygonesTexCoords.push_back(ofVec2f(1, 1));
+            polygonesTexCoords.push_back(ofVec2f(-1, 1));
+            
             polygoneVerticesColor.push_back(ofFloatColor(1.0, 0.0, 0.0));
             polygoneVerticesColor.push_back(ofFloatColor(0.0, 1.0, 0.0));
             polygoneVerticesColor.push_back(ofFloatColor(0.0, 0.0, 1.0));
@@ -381,6 +385,7 @@ void Scene::initializeGPUData(){
     
     polygonesVbo.setVertexData(&polygonesVertices[0], (int) polygonesVertices.size(), GL_STATIC_DRAW);
     polygonesVbo.setIndexData(&polygonesIndices[0], (int) polygonesIndices.size(), GL_STATIC_DRAW);
+    polygonesVbo.setTexCoordData(&polygonesTexCoords[0], (int) polygonesTexCoords.size(), GL_STATIC_DRAW);
     polygonesVbo.setColorData(&polygoneVerticesColor[0], (int) polygoneVerticesColor.size(), GL_STATIC_DRAW);
     polygonesVbo.setNormalData(&polygonesAttributes[0], (int) polygonesAttributes.size(), GL_STATIC_DRAW);
     
@@ -876,9 +881,12 @@ void Scene::onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, str
     
     //Reset the active actuator
     
-    if(_touch.id < activeActuators.size()){
+    if(_touch.id < touches.size()){
         
-        if(activeActuators[_touch.id]->isDisabled()) activeActuators[_touch.id]->disable(false);
+        if(activeActuators[_touch.id] != nullptr){
+            if(activeActuators[_touch.id]->isDisabled()) activeActuators[_touch.id]->disable(false);
+        }
+    
         activeActuators[_touch.id] = nullptr;
         
     }
@@ -897,16 +905,20 @@ void Scene::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, s
     
     if(_touch.id < touches.size()){
         
-        //If the actuator linked with the current touch is disabled just update its radius else its position.
-        
-        if(!activeActuators[_touch.id]->isDisabled()){
+        if(activeActuators[_touch.id] != nullptr){
          
-            touches[_touch.id] = _touch;
+            //If the actuator linked with the current touch is disabled just update its radius else its position.
             
-        }else{
-            
-            float distance = (activeActuators[_touch.id]->getPosition() - _touch).length();
-            activeActuators[_touch.id]->setRadius(distance);
+            if(!activeActuators[_touch.id]->isDisabled()){
+                
+                touches[_touch.id] = _touch;
+                
+            }else{
+                
+                float distance = (activeActuators[_touch.id]->getPosition() - _touch).length();
+                activeActuators[_touch.id]->setRadius(distance);
+                
+            }
             
         }
         

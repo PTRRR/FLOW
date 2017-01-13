@@ -168,6 +168,7 @@ private:
     ofVbo polygonesVbo;
     vector<ofVec3f> polygonesVertices;
     vector<ofIndexType> polygonesIndices;
+    vector<ofVec2f> polygonesTexCoords;
     vector<ofVec3f> polygonesAttributes;
     vector<ofFloatColor> polygoneVerticesColor;
     
