@@ -326,13 +326,13 @@
 			name = "Game elements";
 			sourceTree = "<group>";
 		};
-		0E9BFFA91E055555007F9857 /* Scenes */ = {
+		0E9BFFA91E055555007F9857 /* Scene */ = {
 			isa = PBXGroup;
 			children = (
 				0E9BFFAD1E055958007F9857 /* Scene.mm */,
 				0E9BFFAE1E055958007F9857 /* Scene.h */,
 			);
-			name = Scenes;
+			name = Scene;
 			sourceTree = "<group>";
 		};
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
@@ -472,7 +472,7 @@
 				E4D8936C11527B74007E1F53 /* ofApp.h */,
 				0E9BFF8E1E043B97007F9857 /* GameManager.mm */,
 				0E9BFF8F1E043B97007F9857 /* GameManager.h */,
-				0E9BFFA91E055555007F9857 /* Scenes */,
+				0E9BFFA91E055555007F9857 /* Scene */,
 				0E9BFFA81E055548007F9857 /* Game elements */,
 				0E9BFF9C1E053BFD007F9857 /* Screens */,
 				0E9BFF941E043DFB007F9857 /* GUI */,

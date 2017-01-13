@@ -78,11 +78,6 @@ private:
     ofImage actuatorImg;
     ofImage activeActuatorImg;
     
-    //How much time the user have to stay still until he update the radius of the actuator.
-    
-    float timeToChange = 1200;
-    vector<float> actuatorsTimer;
-    
     vector<shared_ptr<Actuator>> actuators;
     vector<shared_ptr<Actuator>> activeActuators;
     
@@ -168,12 +163,15 @@ private:
     
     //Polygones
     
+    ofImage polygoneImg;
+    
     ofShader polygoneProgram;
     ofShader polygoneWireframeProgram;
     
     ofVbo polygonesVbo;
     vector<ofVec3f> polygonesVertices;
     vector<ofIndexType> polygonesIndices;
+    vector<ofVec2f> polygonesTexCoords;
     vector<ofVec3f> polygonesAttributes;
     vector<ofFloatColor> polygoneVerticesColor;
     
@@ -182,6 +180,9 @@ private:
     vector<ofVec3f> getQuadVertices(float _size);
     
     //User inputs callbacks
+    
+    bool db = false;
+    
     void onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback) override;
     void onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback) override;
     void onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback) override;
