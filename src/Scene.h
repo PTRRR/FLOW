@@ -159,6 +159,7 @@ private:
     vector<ofFloatColor> actuatorsRingColors;
     
     void updateActuatorsRenderingData();
+
     
     //Polygones
     
