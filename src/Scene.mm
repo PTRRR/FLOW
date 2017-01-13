@@ -220,20 +220,13 @@ void Scene::initializeGPUData(){
         actuatorsAttributes.push_back(ofVec3f(50, 0.0, 0.0));
         actuatorsAttributes.push_back(ofVec3f(50, 0.0, 0.0));
         
-        //Set colors
-        
-        actuatorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
-        actuatorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
-        actuatorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
-        actuatorsColors.push_back(ofFloatColor(1.0, 1.0, 1.0, getAlpha() / 255));
-        
         //Ring
         
         for(int j = 0; j < 8; j++){
             
             float angle = (float) (360.0 / 8.0) * j;
             
-            vector<ofVec3f> quadVertices = getQuadVertices(40);
+            vector<ofVec3f> quadVertices = getQuadVertices(36);
             
             ofMatrix4x4 mat;
             mat.glTranslate(actuators[i]->getPosition());
@@ -286,7 +279,6 @@ void Scene::initializeGPUData(){
     actuatorsVbo.setNormalData(&actuatorsAttributes[0], (int) actuatorsAttributes.size(), GL_STATIC_DRAW);
     actuatorsVbo.setIndexData(&actuatorsIndices[0], (int) actuatorsIndices.size(), GL_STATIC_DRAW);
     actuatorsVbo.setTexCoordData(&actuatorsTexCoords[0], (int) actuatorsTexCoords.size(), GL_STATIC_DRAW);
-    actuatorsVbo.setColorData(&actuatorsColors[0], (int) actuatorsColors.size(), GL_DYNAMIC_DRAW);
     
     actuatorsRingVbo.setVertexData(&actuatorsRingVertices[0], (int) actuatorsRingVertices.size(), GL_DYNAMIC_DRAW);
     actuatorsRingVbo.setIndexData(&actuatorsRingIndices[0], (int) actuatorsRingIndices.size(), GL_STATIC_DRAW);
@@ -444,8 +436,6 @@ void Scene::renderToScreen(){
     
     receptorImg.unbind();
     receptorProgram.end();
-    //
-    //    receptorsVbo.drawElements(GL_LINES, (int) receptorsIndices.size());
     
     //4 - Draw call
     //Draw all emitters
@@ -464,14 +454,16 @@ void Scene::renderToScreen(){
     //5 - Draw call
     //Draw all actuators
     
-    actuatorsProgram.begin();
+    simpleQuadTextureProgram.begin();
+    simpleQuadTextureProgram.setUniform1f("alpha", getAlpha() / 255.0);
     
     actuatorImg.bind();
     
     actuatorsVbo.drawElements(GL_TRIANGLES, (int) actuatorsIndices.size());
     
     actuatorImg.unbind();
-    actuatorsProgram.end();
+    
+    simpleQuadTextureProgram.end();
     
     //    actuatorsVbo.drawElements(GL_LINES, (int) actuatorsIndices.size());
     
@@ -496,20 +488,9 @@ void Scene::renderToScreen(){
     
     polygoneProgram.end();
     
-    ofSetColor(255, 255, 255, getAlpha());
-    
-    receptorImg.draw(20, 20);
-    receptorsVbo.drawElements(GL_LINES, (int) receptorsIndices.size());
-    
-    //Draw disabled actuators
-    
-    for(int i = 0; i < actuators.size(); i++){
-        if(!actuators[i]->getEnabled()){
-            actuatorImg.draw(actuators[i]->getPosition() - 100 , 200, 200);
-        }
-    }
-    
     //Draw interface
+    
+    ofSetColor(255, 255, 255, getAlpha());
     
     interface.draw();
     ofDisableAlphaBlending();
@@ -607,18 +588,13 @@ void Scene::updateActuatorsRenderingData(){
         
         float alpha = ((actuators[i]->getPosition().y - actuatorBox.height / 2) / (actuatorBox.height / 2));
         
-        actuatorsColors[i * 4] = ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255));
-        actuatorsColors[i * 4 + 1] = ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255));
-        actuatorsColors[i * 4 + 2] = ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255));
-        actuatorsColors[i * 4 + 3] = ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255));
-        
         //Ring
         
         for(int j = 0; j < 8; j++){
             
             float angle = (float) (360.0 / 8.0) * j;
             
-            vector<ofVec3f> quadVertices = getQuadVertices(40);
+            vector<ofVec3f> quadVertices = getQuadVertices(36);
             
             ofMatrix4x4 mat;
             mat.glTranslate(actuators[i]->getPosition());
@@ -644,7 +620,6 @@ void Scene::updateActuatorsRenderingData(){
     }
     
     actuatorsVbo.updateVertexData(&actuatorsVertices[0], (int) actuatorsVertices.size());
-    actuatorsVbo.updateColorData(&actuatorsColors[0], (int) actuatorsColors.size());
     
     actuatorsRingVbo.updateVertexData(&actuatorsRingVertices[0], (int) actuatorsRingVertices.size());
     actuatorsRingVbo.updateColorData(&actuatorsRingColors[0], (int) actuatorsRingColors.size());

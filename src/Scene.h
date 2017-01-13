@@ -151,7 +151,6 @@ private:
     vector<ofVec3f> actuatorsVertices;
     vector<ofVec2f> actuatorsTexCoords;
     vector<ofIndexType> actuatorsIndices;
-    vector<ofFloatColor> actuatorsColors;
     vector<ofVec3f> actuatorsAttributes;
     
     //Actuators ring
