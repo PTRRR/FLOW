@@ -190,6 +190,40 @@ void VboLine::addPoint(float _x, float _y){
     
 }
 
+void VboLine::close(){
+    
+    if(!isDrawing && path.size() - offsetLine <= 1) return;
+    
+    addPoint(path[offsetLine].x, path[offsetLine].y);
+    
+    ofVec2f lastLastPoint = path[path.size() - 2];
+    ofVec2f lastPoint = path[offsetLine];
+    ofVec2f currentPoint = path[offsetLine + 1];
+    
+    cout << lastLastPoint << " / " << lastPoint << " / " << currentPoint << endl;
+    
+    ofVec2f lastNormal = (lastPoint - lastLastPoint).getPerpendicular();
+    ofVec2f normal = (currentPoint - lastPoint).getPerpendicular();
+    
+    //Recalculate last line cap.
+    
+    ofVec2f recalculatedNormal = (lastNormal + normal).normalize();
+    
+    float amp = lastLineWidth / cos(lastNormal.angleRad(recalculatedNormal));
+    
+    vertices[vertices.size() - 3] = lastPoint + recalculatedNormal * amp * 0.5;
+    vertices[vertices.size() - 2] = lastPoint - recalculatedNormal * amp * 0.5;
+    
+    vertices[offsetLine * 4] = lastPoint + recalculatedNormal * amp * 0.5;
+    vertices[offsetLine * 4 + 3] = lastPoint - recalculatedNormal * amp * 0.5;
+    
+    vbo.setVertexData(&vertices[0], (int)vertices.size(), drawMode);
+    vbo.setIndexData(&indices[0], (int) indices.size(), drawMode);
+    vbo.setColorData(&colors[0], (int) colors.size(), drawMode);
+    vbo.setTexCoordData(&texCoords[0], (int) texCoords.size(), drawMode);
+    
+}
+
 void VboLine::setColor(float _r, float _g, float _b){
     
     color = ofFloatColor(_r, _g, _b, 1.0);

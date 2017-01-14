@@ -53,6 +53,7 @@ public:
     void end();
     
     void addPoint(float _x, float _y);
+    void close();
     
     //Set
     

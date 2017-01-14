@@ -19,17 +19,20 @@ TestScene::TestScene(shared_ptr<ofTrueTypeFont> _mainFont){
     
     vboLine.begin();
     
-    vboLine.addPoint(30, ofGetHeight() / 2);
-    vboLine.setLineWidth(20);
-    vboLine.setColor(1.0, 0, 0);
-    vboLine.addPoint(ofGetWidth() / 2 - 200, ofGetHeight() / 2);
-    vboLine.setLineWidth(30);
-    vboLine.addPoint(ofGetWidth() / 2, ofGetHeight() / 2 - 200);
-    vboLine.setLineWidth(20);
-    vboLine.addPoint(ofGetWidth() / 2 + 200, ofGetHeight() / 2);
-    vboLine.setLineWidth(10);
-    vboLine.setColor(1.0, 1.0, 1.0);
-    vboLine.addPoint(ofGetWidth() - 30, ofGetHeight() / 2);
+    int circleDef = 5;
+    
+    for(int i = 0; i < circleDef; i++){
+        
+        float angle = M_PI * 2.0 / circleDef * i;
+        vboLine.addPoint(cos(angle) * 100 + ofGetWidth() / 2, sin(angle) * 100 + ofGetHeight() / 2);
+        
+        if(i == circleDef - 1){
+            
+            vboLine.close();
+            
+        }
+        
+    }
     
     vboLine.end();
 
