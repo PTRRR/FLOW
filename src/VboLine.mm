@@ -81,11 +81,20 @@ void VboLine::addPoint(float _x, float _y){
     
     if(path.size() - offsetLine == 0){ //No points
         
+        //Just add one point but no mesh since we can't calculate the normals.
+        
         path.push_back(ofVec2f(_x, _y));
         
     }else if(path.size() - offsetLine > 0 && path.size() - offsetLine <= 1){ //Two points
         
+        //Add one point and calculate mesh according to the normal
+        //of the first segment and the current line width;
+        
         path.push_back(ofVec2f(_x, _y));
+        
+        //We have to know the position of the last point to get the normal.
+        //The normal is the perpendicular vector to the vector pointing from the point just added
+        //toward the last point.
         
         ofVec2f lastPoint = path[path.size() - 2];
         ofVec2f currentPoint = path[path.size() - 1];
@@ -126,6 +135,8 @@ void VboLine::addPoint(float _x, float _y){
         indices.push_back(indiceOffset);
         
     }else if(path.size() - offsetLine > 1){ //More than two points --> can recalculate line cap
+        
+        //Add one point, calculate the mesh and recalculate last segment to make a clean line cap.
         
         path.push_back(ofVec2f(_x, _y));
         

@@ -24,6 +24,7 @@ TestScene::TestScene(shared_ptr<ofTrueTypeFont> _mainFont){
     for(int i = 0; i < circleDef; i++){
         
         float angle = M_PI * 2.0 / circleDef * i;
+        vboLine.setColor(cos(angle), 0, 0);
         vboLine.addPoint(cos(angle) * 100 + ofGetWidth() / 2, sin(angle) * 100 + ofGetHeight() / 2);
         
         if(i == circleDef - 1){
