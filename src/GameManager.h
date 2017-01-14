@@ -22,6 +22,7 @@
 #include "End.h"
 #include "LevelCreator.h"
 #include "LoadLevelsCreator.h"
+#include "TestScene.h"
 
 class GameManager{
 
@@ -31,7 +32,7 @@ private:
     
     //Timer utilitie
     
-    int initialTimeout = 5000; //millis
+    int initialTimeout = 1000; //millis
     bool initialTimeoutIsOver = false;
     
     //Screens
@@ -47,6 +48,10 @@ private:
     shared_ptr<End> end;
     shared_ptr<LevelCreator> levelCreator;
     shared_ptr<LoadLevelsCreator> loadLevelsCreator;
+    
+    //Test scene is for experimentations
+    
+    shared_ptr<TestScene> testScene;
     
     //Scenes
     

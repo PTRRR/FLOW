@@ -22,6 +22,8 @@
 		0E4C31FE1E2196EA006B5AE4 /* ofxTriangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C31FA1E2196EA006B5AE4 /* ofxTriangle.cpp */; };
 		0E4C320A1E229D6D006B5AE4 /* Options.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C32081E229D6D006B5AE4 /* Options.mm */; };
 		0E4C320D1E229DDA006B5AE4 /* SceneMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C320B1E229DDA006B5AE4 /* SceneMenu.mm */; };
+		0E5382A21E2A2C5F00E27AB2 /* VboLine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E5382A01E2A2C5F00E27AB2 /* VboLine.mm */; };
+		0E5382A51E2A325900E27AB2 /* TestScene.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E5382A31E2A325900E27AB2 /* TestScene.mm */; };
 		0E934CB21E28628F00F136B5 /* LevelCreator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E934CAF1E28628F00F136B5 /* LevelCreator.mm */; };
 		0E934CB31E28628F00F136B5 /* LoadLevelsCreator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E934CB01E28628F00F136B5 /* LoadLevelsCreator.mm */; };
 		0E934CB41E28628F00F136B5 /* NextLevel.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E934CB11E28628F00F136B5 /* NextLevel.mm */; };
@@ -109,6 +111,10 @@
 		0E4C32091E229D6D006B5AE4 /* Options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Options.h; sourceTree = "<group>"; };
 		0E4C320B1E229DDA006B5AE4 /* SceneMenu.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SceneMenu.mm; sourceTree = "<group>"; };
 		0E4C320C1E229DDA006B5AE4 /* SceneMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneMenu.h; sourceTree = "<group>"; };
+		0E5382A01E2A2C5F00E27AB2 /* VboLine.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VboLine.mm; sourceTree = "<group>"; };
+		0E5382A11E2A2C5F00E27AB2 /* VboLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VboLine.h; sourceTree = "<group>"; };
+		0E5382A31E2A325900E27AB2 /* TestScene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TestScene.mm; sourceTree = "<group>"; };
+		0E5382A41E2A325900E27AB2 /* TestScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestScene.h; sourceTree = "<group>"; };
 		0E934CAC1E28628F00F136B5 /* LevelCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelCreator.h; sourceTree = "<group>"; };
 		0E934CAD1E28628F00F136B5 /* LoadLevelsCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadLevelsCreator.h; sourceTree = "<group>"; };
 		0E934CAE1E28628F00F136B5 /* NextLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NextLevel.h; sourceTree = "<group>"; };
@@ -322,6 +328,8 @@
 				0E078B7D1E16772F004595EF /* Polygone.h */,
 				0E078B871E168984004595EF /* Receptor.mm */,
 				0E078B881E168984004595EF /* Receptor.h */,
+				0E5382A01E2A2C5F00E27AB2 /* VboLine.mm */,
+				0E5382A11E2A2C5F00E27AB2 /* VboLine.h */,
 			);
 			name = "Game elements";
 			sourceTree = "<group>";
@@ -331,6 +339,8 @@
 			children = (
 				0E9BFFAD1E055958007F9857 /* Scene.mm */,
 				0E9BFFAE1E055958007F9857 /* Scene.h */,
+				0E5382A31E2A325900E27AB2 /* TestScene.mm */,
+				0E5382A41E2A325900E27AB2 /* TestScene.h */,
 			);
 			name = Scene;
 			sourceTree = "<group>";
@@ -603,8 +613,10 @@
 				0E4C320A1E229D6D006B5AE4 /* Options.mm in Sources */,
 				0E9BFFAF1E055958007F9857 /* Scene.mm in Sources */,
 				0E934CB71E2862AB00F136B5 /* End.mm in Sources */,
+				0E5382A51E2A325900E27AB2 /* TestScene.mm in Sources */,
 				0E4C31DF1E1EC7B0006B5AE4 /* Levels.mm in Sources */,
 				0E9BFF971E0442A3007F9857 /* Interface.mm in Sources */,
+				0E5382A21E2A2C5F00E27AB2 /* VboLine.mm in Sources */,
 				DDA2E262B07659E1DBBB4D5E /* ofxXmlSettings.cpp in Sources */,
 				0E9BFFA21E055051007F9857 /* ScreenPipeline.mm in Sources */,
 				0E9BFF9F1E053C25007F9857 /* Menu.mm in Sources */,

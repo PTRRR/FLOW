@@ -58,6 +58,11 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     
     loadLevelsCreator = shared_ptr<LoadLevelsCreator>(new LoadLevelsCreator(mainFont));
     loadLevelsCreator->setName("LOAD-LEVELS-CREATOR");
+    
+    //Test scene
+    
+    testScene = shared_ptr<TestScene>(new TestScene(mainFont));
+    testScene->setName("TEST-SCENE");
 
     //Screen pipeline setup
 
@@ -70,6 +75,7 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     screenPipeline.addScreen(end);
     screenPipeline.addScreen(levelCreator);
     screenPipeline.addScreen(loadLevelsCreator);
+    screenPipeline.addScreen(testScene);
 
     screenPipeline.setScreenActive(splashScreen);
     
@@ -86,7 +92,7 @@ void GameManager::update(){
     
     if(!initialTimeoutIsOver && ofGetElapsedTimeMillis() >= initialTimeout){
         
-        screenPipeline.setScreenActive(menu);
+        screenPipeline.setScreenActive(testScene);
         initialTimeoutIsOver = true;
         
     }
