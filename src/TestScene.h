@@ -34,6 +34,7 @@ private:
     
     //Elements
     
+    ofShader lineShader;
     VboLine vboLine;
     
     //Rendering

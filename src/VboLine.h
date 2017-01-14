@@ -17,6 +17,13 @@ class VboLine {
 
 private:
     
+    //Properties
+    
+    float lastLineWidth;
+    float lineWidth = 10.0;
+    ofFloatColor lastColor;
+    ofFloatColor color = ofFloatColor(1.0, 1.0, 1.0, 1.0);
+    
     int drawMode = 0;
     
     ofVbo vbo;
@@ -49,6 +56,9 @@ public:
     
     //Set
     
+    void setColor(float _r, float _g, float _b);
+    void setColor(float _r, float _g, float _b, float _a);
+    void setLineWidth(float _lineWidth);
     void setDrawMode(int _drawMode);
     
     //Get
