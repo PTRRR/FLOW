@@ -182,8 +182,6 @@ void GameManager::onEnd(){
 void GameManager::mouseDown(ofTouchEventArgs & _touch){
     
     string currentScreen = screenPipeline.getActiveScreen()->getName();
-    cout << "mouse down on: " + currentScreen << endl;
-    
     screenPipeline.getActiveScreen()->mouseDown(_touch, [&](string text, string action){});
     
 }
@@ -191,8 +189,6 @@ void GameManager::mouseDown(ofTouchEventArgs & _touch){
 void GameManager::mouseUp(ofTouchEventArgs & _touch){
     
     string currentScreen = screenPipeline.getActiveScreen()->getName();
-    cout << "mouse up on: " + currentScreen << endl;
-    
     screenPipeline.getActiveScreen()->mouseUp(_touch, [&](string text, string action){
         
         //Check if we are on the levels screen.
@@ -263,8 +259,6 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
             }
             
         }else if(screenPipeline.getActiveScreen()->getName() == "LOAD-LEVELS-CREATOR"){
-            
-            
             
             
             shared_ptr<LevelCreator> newLevelCreator = shared_ptr<LevelCreator>(new LevelCreator(mainFont));
@@ -349,8 +343,6 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
 void GameManager::mouseMove(ofTouchEventArgs & _touch){
     
     string currentScreen = screenPipeline.getActiveScreen()->getName();
-    cout << "mouse move on: " + currentScreen << endl;
-    
     screenPipeline.getActiveScreen()->mouseMove(_touch, [&](string text, string action){});
     
 }

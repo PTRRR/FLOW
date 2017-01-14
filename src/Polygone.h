@@ -60,6 +60,7 @@ public:
     vector<ofIndexType> getIndices();
     ofxTriangle getTriangulatedPolygone();
     vector<ofVec3f> getBaricentricCoords();
+    ofPolyline getRawPoligone();
 
     
 };

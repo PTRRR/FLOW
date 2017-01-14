@@ -230,6 +230,12 @@ vector<ofVec3f> Polygone::getBaricentricCoords(){
     
 }
 
+ofPolyline Polygone::getRawPoligone(){
+    
+    return polygone;
+    
+}
+
 //Private
 
 ofVec2f Polygone::getIntersectionTwoLines(ofVec2f _p1, ofVec2f _p2, ofVec2f _p3, ofVec2f _p4){
