@@ -26,13 +26,17 @@ private:
     
     int drawMode = 0;
     
-    ofVbo vbo;
     vector<ofVec2f> path;
+    
+    ofVbo vbo;
     vector<ofVec3f> vertices;
     vector<ofIndexType> indices;
     vector<ofFloatColor> colors;
     vector<ofVec2f> texCoords;
     
+    vector<int> linesLength;
+    
+    int offsetVertices = 0;
     int offsetLine = 0;
     int currentLineIndex = 0;
     bool isDrawing = false;
@@ -55,17 +59,23 @@ public:
     void addPoint(float _x, float _y);
     void close();
     
+    void computeLine(int _lineIndex);
+    void computeLines();
+    
     //Set
     
     void setColor(float _r, float _g, float _b);
     void setColor(float _r, float _g, float _b, float _a);
-    void setLineWidth(float _lineWidth);
+    void setWidth(float _width);
     void setDrawMode(int _drawMode);
+    
+    void updateLineVertices(int _lineIndex, vector<ofVec2f> _newLine);
+    void updateLineColors(int _lineIndex, vector<ofFloatColor> _newColors);
     
     //Get
     
     int getLineIndex();
-    vector<ofVec3f> getLineVertices(int _lineIndex);
+    vector<ofVec2f> getLine(int _lineIndex);
     
 };
 

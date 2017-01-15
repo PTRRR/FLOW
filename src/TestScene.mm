@@ -17,6 +17,7 @@ TestScene::TestScene(shared_ptr<ofTrueTypeFont> _mainFont){
     lineShader.load("shaders/lineShader");
     vboLine = VboLine(GL_STATIC_DRAW);
     
+    vboLine.setWidth(20);
     vboLine.begin();
     
     int circleDef = 5;
@@ -24,17 +25,23 @@ TestScene::TestScene(shared_ptr<ofTrueTypeFont> _mainFont){
     for(int i = 0; i < circleDef; i++){
         
         float angle = M_PI * 2.0 / circleDef * i;
-        vboLine.setColor(cos(angle), 0, 0);
         vboLine.addPoint(cos(angle) * 100 + ofGetWidth() / 2, sin(angle) * 100 + ofGetHeight() / 2);
-        
-        if(i == circleDef - 1){
-            
-            vboLine.close();
-            
-        }
         
     }
     
+    vboLine.close();
+    vboLine.end();
+    
+    vboLine.begin();
+    
+    for(int i = 0; i < circleDef; i++){
+        
+        float angle = M_PI * 2.0 / circleDef * i;
+        vboLine.addPoint(cos(angle) * 100 + ofGetWidth() / 2 + 200, sin(angle) * 100 + ofGetHeight() / 2 + 200);
+        
+    }
+    
+    vboLine.close();
     vboLine.end();
 
 }
@@ -47,13 +54,9 @@ void TestScene::update(){
 
 void TestScene::renderToScreen(){
     
-    ofSetColor(255, 255, 255);
-    
-    
     lineShader.begin();
     vboLine.draw();
     lineShader.end();
-//    vboLine.debugDraw();
     
 }
 
