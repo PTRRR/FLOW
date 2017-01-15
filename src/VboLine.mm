@@ -35,18 +35,31 @@ void VboLine::debugDraw(){
     ofSetColor(0, 255, 0);
     ofNoFill();
     
-    if(path.size() > 0){
+    if(linesLength.size() > 0){
         
-        ofBeginShape();
+        int offset = 0;
         
-        for(int i = 1; i < path.size(); i++){
+        for(int i = 0; i < linesLength.size(); i++){
             
-            ofVertex(path[i - 1].x, path[i - 1].y);
-            ofVertex(path[i].x, path[i].y);
+            int currentLength = linesLength[i];
+            
+            ofBeginShape();
+            
+            //Begin from the second point of the line to have directly access to two points at a time to
+            //draw a segment.
+            
+            for(int j = 1; j < currentLength; j++){
+                
+                ofVertex(path[offset + j - 1].x, path[offset + j - 1].y);
+                ofVertex(path[offset + j].x, path[offset + j].y);
+                
+            }
+            
+            ofEndShape();
+            
+            offset += currentLength;
             
         }
-        
-        ofEndShape();
         
     }
     
@@ -66,6 +79,8 @@ void VboLine::debugDraw(){
 void VboLine::begin(){
     
     isDrawing = true;
+    linesLength.push_back(0);
+    pathClosed.push_back(false);
     
 }
 
@@ -73,11 +88,13 @@ void VboLine::end(){
     
     isDrawing = false;
     currentLineIndex ++;
-    linesLength.push_back(path.size() - offsetLine);
-    cout << linesLength[0] << endl;
-    offsetVertices = vertices.size();
-    offsetLine = path.size();
     
+    if(autoBuild){
+     
+        build();
+        setVbo();
+        
+    }
     
 }
 
@@ -85,14 +102,11 @@ void VboLine::addPoint(float _x, float _y){
     
     if(!isDrawing) return;
     
+    linesLength[currentLineIndex] ++;
+    
     path.push_back(ofVec2f(_x, _y));
-    
-    computeLines();
-    
-    vbo.setVertexData(&vertices[0], (int)vertices.size(), drawMode);
-    vbo.setIndexData(&indices[0], (int) indices.size(), drawMode);
-    vbo.setColorData(&colors[0], (int) colors.size(), drawMode);
-    vbo.setTexCoordData(&texCoords[0], (int) texCoords.size(), drawMode);
+    pathRadiuses.push_back(lineWidth);
+    pathColors.push_back(color);
     
     lastLineWidth = lineWidth;
     lastColor = color;
@@ -101,28 +115,187 @@ void VboLine::addPoint(float _x, float _y){
 
 void VboLine::close(){
     
-    if(!isDrawing && path.size() - offsetLine <= 1) return;
+    if(!isDrawing) return;
     
-    addPoint(path[offsetLine].x, path[offsetLine].y);
+    int offset = 0;
     
-    ofVec2f lastLastPoint = path[path.size() - 2];
-    ofVec2f lastPoint = path[offsetLine];
-    ofVec2f currentPoint = path[offsetLine + 1];
+    for(int i = 0; i < currentLineIndex; i++){
+        offset += linesLength[i];
+    }
     
-    ofVec2f lastNormal = (lastPoint - lastLastPoint).getPerpendicular();
-    ofVec2f normal = (currentPoint - lastPoint).getPerpendicular();
+    cout << offset << endl;
     
-    //Recalculate last line cap.
+    addPoint(path[offset].x, path[offset].y);
     
-    ofVec2f recalculatedNormal = (lastNormal + normal).normalize();
+    pathClosed[currentLineIndex] = true;
     
-    float amp = lastLineWidth / cos(lastNormal.angleRad(recalculatedNormal));
+}
+
+void VboLine::build(){
     
-    vertices[vertices.size() - 3] = lastPoint + recalculatedNormal * amp * 0.5;
-    vertices[vertices.size() - 2] = lastPoint - recalculatedNormal * amp * 0.5;
+    if (isDrawing) return;
     
-    vertices[offsetVertices] = lastPoint + recalculatedNormal * amp * 0.5;
-    vertices[offsetVertices + 3] = lastPoint - recalculatedNormal * amp * 0.5;
+    vertices.erase(vertices.begin(), vertices.end());
+    indices.erase(indices.begin(), indices.end());
+    colors.erase(colors.begin(), colors.end());
+    texCoords.erase(texCoords.begin(), texCoords.end());
+    
+    int offset = 0;
+    
+    for(int i = 0; i < linesLength.size(); i++){
+        
+        for(int j = offset; j < offset + linesLength[i]; j++){
+            
+            if(j - offset == 1){ //Two points
+                
+                //Add one point and calculate mesh according to the normal
+                //of the first segment and the current line width.
+                //We have to know the position of the last point to get the normal.
+                //The normal is the perpendicular vector to the vector pointing from the point just added
+                //toward the last point.
+                
+                ofVec2f lastPoint = path[j - 1];
+                ofVec2f currentPoint = path[j];
+                
+                ofVec2f normal = (currentPoint - lastPoint).getPerpendicular();
+                
+                //Set vertices
+                
+                int indiceOffset = vertices.size();
+                
+                vertices.push_back(lastPoint + normal * pathRadiuses[j - 1] * 0.5);
+                vertices.push_back(currentPoint + normal * pathRadiuses[j] * 0.5);
+                vertices.push_back(currentPoint - normal * pathRadiuses[j] * 0.5);
+                vertices.push_back(lastPoint - normal * pathRadiuses[j - 1] * 0.5);
+                
+                //Set colors
+                
+                colors.push_back(pathColors[j - 1]);
+                colors.push_back(pathColors[j]);
+                colors.push_back(pathColors[j]);
+                colors.push_back(pathColors[j - 1]);
+                
+                //Set tex coords
+                
+                texCoords.push_back(ofVec2f(0, 0));
+                texCoords.push_back(ofVec2f(1, 0));
+                texCoords.push_back(ofVec2f(1, 1));
+                texCoords.push_back(ofVec2f(0, 1));
+                
+                //Set indices
+                
+                indices.push_back(indiceOffset);
+                indices.push_back(indiceOffset + 1);
+                indices.push_back(indiceOffset + 2);
+                
+                indices.push_back(indiceOffset + 2);
+                indices.push_back(indiceOffset + 3);
+                indices.push_back(indiceOffset);
+                
+            }else if(j - offset > 1){ //More than two points --> can recalculate line cap
+                
+                //Add one point, calculate the mesh and recalculate last segment to make a clean line cap.
+                
+                ofVec2f lastLastPoint = path[j - 2];
+                ofVec2f lastPoint = path[j - 1];
+                ofVec2f currentPoint = path[j];
+                
+                ofVec2f lastNormal = (lastPoint - lastLastPoint).getPerpendicular();
+                ofVec2f normal = (currentPoint - lastPoint).getPerpendicular();
+                
+                //Recalculate last line cap.
+                
+                ofVec2f recalculatedNormal = (lastNormal + normal).normalize();
+                
+                float amp = pathRadiuses[j - 1] / cos(lastNormal.angleRad(recalculatedNormal));
+                
+                vertices[vertices.size() - 3] = lastPoint + recalculatedNormal * amp * 0.5;
+                vertices[vertices.size() - 2] = lastPoint - recalculatedNormal * amp * 0.5;
+                
+                //Set vertices
+                
+                int indiceOffset = vertices.size();
+                
+                vertices.push_back(lastPoint + recalculatedNormal * amp * 0.5);
+                vertices.push_back(currentPoint + normal * pathRadiuses[j] * 0.5);
+                vertices.push_back(currentPoint - normal * pathRadiuses[j] * 0.5);
+                vertices.push_back(lastPoint - recalculatedNormal * amp * 0.5);
+                
+                //Set colors
+                
+                colors.push_back(pathColors[j - 1]);
+                colors.push_back(pathColors[j]);
+                colors.push_back(pathColors[j]);
+                colors.push_back(pathColors[j - 1]);
+                
+                //Set tex coords
+                
+                texCoords.push_back(ofVec2f(0, 0));
+                texCoords.push_back(ofVec2f(1, 0));
+                texCoords.push_back(ofVec2f(1, 1));
+                texCoords.push_back(ofVec2f(0, 1));
+                
+                //Set indices
+                
+                indices.push_back(indiceOffset);
+                indices.push_back(indiceOffset + 1);
+                indices.push_back(indiceOffset + 2);
+                
+                indices.push_back(indiceOffset + 2);
+                indices.push_back(indiceOffset + 3);
+                indices.push_back(indiceOffset);
+                
+            }
+            
+        }
+        
+        if (pathClosed[i]) {
+            
+            ofVec2f lastLastPoint = path[offset + linesLength[i] - 2];
+            ofVec2f lastPoint = path[offset];
+            ofVec2f currentPoint = path[offset + 1];
+            
+            ofVec2f lastNormal = (lastPoint - lastLastPoint).getPerpendicular();
+            ofVec2f normal = (currentPoint - lastPoint).getPerpendicular();
+            
+            //Recalculate last line cap.
+            
+            ofVec2f recalculatedNormal = (lastNormal + normal).normalize();
+            
+            float amp = lastLineWidth / cos(lastNormal.angleRad(recalculatedNormal));
+            
+            vertices[vertices.size() - 3] = lastPoint + recalculatedNormal * amp * 0.5;
+            vertices[vertices.size() - 2] = lastPoint - recalculatedNormal * amp * 0.5;
+            
+            vertices[offsetVertices] = lastPoint + recalculatedNormal * amp * 0.5;
+            vertices[offsetVertices + 3] = lastPoint - recalculatedNormal * amp * 0.5;
+            
+        }
+        
+        offset += linesLength[i];
+        
+    }
+
+}
+
+void VboLine::clear(){
+    
+    if(isDrawing) return;
+    
+    vbo.clear();
+    linesLength.erase(linesLength.begin(), linesLength.end());
+    path.erase(path.begin(), path.end());
+    pathClosed.erase(pathClosed.begin(), pathClosed.end());
+    pathRadiuses.erase(pathRadiuses.begin(), pathRadiuses.end());
+    pathColors.erase(pathColors.begin(), pathColors.end());
+    vertices.erase(vertices.begin(), vertices.end());
+    indices.erase(indices.begin(), indices.end());
+    colors.erase(colors.begin(), colors.end());
+    texCoords.erase(texCoords.begin(), texCoords.end());
+    
+}
+
+void VboLine::setVbo(){
     
     vbo.setVertexData(&vertices[0], (int)vertices.size(), drawMode);
     vbo.setIndexData(&indices[0], (int) indices.size(), drawMode);
@@ -131,122 +304,10 @@ void VboLine::close(){
     
 }
 
-void VboLine::computeLines(){
+void VboLine::updateVbo(){
     
-    int offset = 0;
-    
-    for(int i = 0; i < linesLength.size(); i++){
-        
-        for(int j = 0; j < linesLength[i]; j++){
-            
-            
-            
-        }
-        
-        offset += linesLength[i];
-        
-    }
-    
-    if(path.size() - offsetLine == 2){ //Two points
-        
-        //Add one point and calculate mesh according to the normal
-        //of the first segment and the current line width.
-        //We have to know the position of the last point to get the normal.
-        //The normal is the perpendicular vector to the vector pointing from the point just added
-        //toward the last point.
-        
-        ofVec2f lastPoint = path[path.size() - 2];
-        ofVec2f currentPoint = path[path.size() - 1];
-        
-        ofVec2f normal = (currentPoint - lastPoint).getPerpendicular();
-        
-        //Set vertices
-        
-        int indiceOffset = vertices.size();
-        
-        vertices.push_back(lastPoint + normal * lastLineWidth * 0.5);
-        vertices.push_back(currentPoint + normal * lineWidth * 0.5);
-        vertices.push_back(currentPoint - normal * lineWidth * 0.5);
-        vertices.push_back(lastPoint - normal * lastLineWidth * 0.5);
-        
-        //Set colors
-        
-        colors.push_back(lastColor);
-        colors.push_back(color);
-        colors.push_back(color);
-        colors.push_back(lastColor);
-        
-        //Set tex coords
-        
-        texCoords.push_back(ofVec2f(0, 0));
-        texCoords.push_back(ofVec2f(1, 0));
-        texCoords.push_back(ofVec2f(1, 1));
-        texCoords.push_back(ofVec2f(0, 1));
-        
-        //Set indices
-        
-        indices.push_back(indiceOffset);
-        indices.push_back(indiceOffset + 1);
-        indices.push_back(indiceOffset + 2);
-        
-        indices.push_back(indiceOffset + 2);
-        indices.push_back(indiceOffset + 3);
-        indices.push_back(indiceOffset);
-        
-    }else if(path.size() - offsetLine > 2){ //More than two points --> can recalculate line cap
-        
-        //Add one point, calculate the mesh and recalculate last segment to make a clean line cap.
-        
-        ofVec2f lastLastPoint = path[path.size() - 3];
-        ofVec2f lastPoint = path[path.size() - 2];
-        ofVec2f currentPoint = path[path.size() - 1];
-        
-        ofVec2f lastNormal = (lastPoint - lastLastPoint).getPerpendicular();
-        ofVec2f normal = (currentPoint - lastPoint).getPerpendicular();
-        
-        //Recalculate last line cap.
-        
-        ofVec2f recalculatedNormal = (lastNormal + normal).normalize();
-        
-        float amp = lastLineWidth / cos(lastNormal.angleRad(recalculatedNormal));
-        
-        vertices[vertices.size() - 3] = lastPoint + recalculatedNormal * amp * 0.5;
-        vertices[vertices.size() - 2] = lastPoint - recalculatedNormal * amp * 0.5;
-        
-        //Set vertices
-        
-        int indiceOffset = vertices.size();
-        
-        vertices.push_back(lastPoint + recalculatedNormal * amp * 0.5);
-        vertices.push_back(currentPoint + normal * lineWidth * 0.5);
-        vertices.push_back(currentPoint - normal * lineWidth * 0.5);
-        vertices.push_back(lastPoint - recalculatedNormal * amp * 0.5);
-        
-        //Set colors
-        
-        colors.push_back(lastColor);
-        colors.push_back(color);
-        colors.push_back(color);
-        colors.push_back(lastColor);
-        
-        //Set tex coords
-        
-        texCoords.push_back(ofVec2f(0, 0));
-        texCoords.push_back(ofVec2f(1, 0));
-        texCoords.push_back(ofVec2f(1, 1));
-        texCoords.push_back(ofVec2f(0, 1));
-        
-        //Set indices
-        
-        indices.push_back(indiceOffset);
-        indices.push_back(indiceOffset + 1);
-        indices.push_back(indiceOffset + 2);
-        
-        indices.push_back(indiceOffset + 2);
-        indices.push_back(indiceOffset + 3);
-        indices.push_back(indiceOffset);
-        
-    }
+    vbo.updateVertexData(&vertices[0], (int)vertices.size());
+    vbo.updateColorData(&colors[0], (int) colors.size());
     
 }
 
@@ -278,14 +339,59 @@ void VboLine::setDrawMode(int _drawMode){
     
 }
 
-void VboLine::updateLineVertices(int _lineIndex, vector<ofVec2f> _newLine){
+void VboLine::updateLine(int _lineIndex, vector<ofVec2f> _newLine){
     
+    if(_lineIndex > linesLength.size() - 1) return;
+    
+    int offset = 0;
+    
+    for(int i = 0; i < _lineIndex; i++){
+        offset += linesLength[i];
+    }
+    
+    for(int i = 0; i < _newLine.size(); i++){
+        
+        path[offset + i] = _newLine[i];
+        
+    }
+    
+    if(autoBuild){
+        
+        build();
+        updateVbo();
+        
+    }
     
 }
 
 void VboLine::updateLineColors(int _lineIndex, vector<ofFloatColor> _newColors){
     
+    if(_lineIndex > linesLength.size() - 1) return;
     
+    int offset = 0;
+    
+    for(int i = 0; i < _lineIndex; i++){
+        offset += linesLength[i];
+    }
+    
+    for(int i = 0; i < _newColors.size(); i++){
+        
+        colors[offset + i] = _newColors[i];
+        
+    }
+    
+    if(autoBuild){
+        
+        build();
+        updateVbo();
+        
+    }
+    
+}
+
+void VboLine::setAutoBuild(bool _autoBuild){
+    
+    autoBuild = _autoBuild;
     
 }
 
@@ -293,7 +399,7 @@ void VboLine::updateLineColors(int _lineIndex, vector<ofFloatColor> _newColors){
 
 int VboLine::getLineIndex(){
     
-    return linesLength.size();
+    return currentLineIndex;
     
 }
 
@@ -303,15 +409,15 @@ vector<ofVec2f> VboLine::getLine(int _lineIndex){
     
     if(_lineIndex > linesLength.size()) return returnedVertices;
     
-    int lineOffset = 0;
+    int offset = 0;
     
     for(int i = 0; i < _lineIndex; i++){
         
-        lineOffset += linesLength[i];
+        offset += linesLength[i];
         
     }
     
-    returnedVertices.insert(returnedVertices.begin(), path.begin() + lineOffset, path.begin() + lineOffset + linesLength[_lineIndex]);
+    returnedVertices.insert(returnedVertices.begin(), path.begin() + offset, path.begin() + offset + linesLength[_lineIndex]);
     
     return returnedVertices;
     

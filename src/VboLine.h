@@ -17,6 +17,8 @@ class VboLine {
 
 private:
     
+    bool autoBuild = true;
+    
     //Properties
     
     float lastLineWidth;
@@ -26,7 +28,12 @@ private:
     
     int drawMode = 0;
     
+    int currentLineIndex = 0;
+    vector<int> linesLength;
     vector<ofVec2f> path;
+    vector<bool> pathClosed;
+    vector<float> pathRadiuses;
+    vector<ofFloatColor> pathColors;
     
     ofVbo vbo;
     vector<ofVec3f> vertices;
@@ -34,11 +41,9 @@ private:
     vector<ofFloatColor> colors;
     vector<ofVec2f> texCoords;
     
-    vector<int> linesLength;
-    
     int offsetVertices = 0;
     int offsetLine = 0;
-    int currentLineIndex = 0;
+    
     bool isDrawing = false;
     
 public:
@@ -59,8 +64,11 @@ public:
     void addPoint(float _x, float _y);
     void close();
     
-    void computeLine(int _lineIndex);
-    void computeLines();
+    void build();
+    void setVbo();
+    void updateVbo();
+    
+    void clear();
     
     //Set
     
@@ -68,9 +76,11 @@ public:
     void setColor(float _r, float _g, float _b, float _a);
     void setWidth(float _width);
     void setDrawMode(int _drawMode);
+    void setAutoBuild(bool _autoBuild);
     
-    void updateLineVertices(int _lineIndex, vector<ofVec2f> _newLine);
+    void updateLine(int _lineIndex, vector<ofVec2f> _newLine);
     void updateLineColors(int _lineIndex, vector<ofFloatColor> _newColors);
+    void updateLineRadiuses(int _lineIndex, vector<ofFloatColor> _newRadiuses);
     
     //Get
     

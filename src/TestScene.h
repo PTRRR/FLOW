@@ -34,6 +34,8 @@ private:
     
     //Elements
     
+    float radius = 100;
+    
     ofShader lineShader;
     VboLine vboLine;
     
