@@ -46,6 +46,8 @@ private:
     
     bool isDrawing = false;
     
+    ofShader shader;
+    
 public:
     
     VboLine();
@@ -54,6 +56,7 @@ public:
     //Main
     
     void draw();
+    void drawShaded();
     void debugDraw();
     
     //Drawing functions.
@@ -84,8 +87,10 @@ public:
     
     //Get
     
+    int getLineNum();
     int getLineIndex();
     vector<ofVec2f> getLine(int _lineIndex);
+    vector<ofFloatColor> getLineColors(int _lineIndex);
     
 };
 

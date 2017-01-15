@@ -37,6 +37,12 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     
     actuatorBox.set(-1, -1, ofGetWidth() + 10, 0.05859375 * ofGetHeight());
     
+    //Receptor
+    
+    receptorStatusLines = VboLine(GL_DYNAMIC_DRAW);
+    receptorStatusLines.setWidth(3);
+    receptorStatusLines.setAutoBuild(false);
+    
     //Load all textures useful to render the differents objects of the game.
     
     actuatorImg.load("images/unactive_actuator.png");
@@ -55,7 +61,7 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     //Sounds
     //Create an array of sounds that will be plaed when particles touch someting.
     
-    for(int i = 0; i < 100; i++){
+    for(int i = 0; i < 0; i++){
         
         ofSoundPlayer newSound;
         newSound.load("sounds/bell"+ to_string((int) ofRandom(1, 5)) +".mp3");
@@ -82,6 +88,7 @@ void Scene::initializeGPUData(){
     quadTextureProgram.load("shaders/quadTextureShader");
     simpleQuadTextureProgram.load("shaders/simpleQuadTextureShader");
     dashedPolygoneProgram.load("shaders/dashedPolygoneShader");
+    linesProgram.load("shaders/lineShader");
     
     
     //HEADS.
@@ -295,7 +302,7 @@ void Scene::initializeGPUData(){
         
         //Set vertices
         
-        vector<ofVec3f> quadVertices = getQuadVertices(receptors[i]->getRadius() * 2);
+        vector<ofVec3f> quadVertices = getQuadVertices(50 * 2);
         
         ofMatrix4x4 mat;
         mat.glTranslate(receptors[i]->getPosition());
@@ -485,25 +492,33 @@ void Scene::renderToScreen(){
     
     ofEnableAlphaBlending();
     
+    //3 - Draw call
+    //Draw receptors rings
+    
+    linesProgram.begin();
+    linesProgram.setUniform1f("alpha", getAlpha() / 255.0);
+    receptorStatusLines.draw();
+    linesProgram.end();
+    
     //2 - Draw call
     //Draw all receptors
     
-    receptorProgram.begin();
+    quadTextureProgram.begin();
     receptorProgram.setUniform1f("alpha", getAlpha() / 255.0);
     receptorImg.bind();
     receptorsVbo.drawElements(GL_TRIANGLES, (int) receptorsIndices.size());
     receptorImg.unbind();
-    receptorProgram.end();
+    quadTextureProgram.end();
     
     //3 - Draw call
     //Draw all emitters
     
-    quadTextureProgram.begin();
+    simpleQuadTextureProgram.begin();
     quadTextureProgram.setUniform1f("alpha", getAlpha() / 255.0);
     emitterImg.bind();
     emittersVbo.drawElements(GL_TRIANGLES, (int) emittersIndices.size());
     emitterImg.unbind();
-    quadTextureProgram.end();
+    simpleQuadTextureProgram.end();
     
     //4 - Draw call
     //Draw all actuators
@@ -531,7 +546,7 @@ void Scene::renderToScreen(){
     ofEnableBlendMode(OF_BLENDMODE_ADD);
     ofEnablePointSprites();
     dashedPolygoneProgram.begin();
-    dashedPolygoneProgram.setUniform1f("alpha", getAlpha() / 255.0);
+    dashedPolygoneProgram.setUniform1f("alpha", ofClamp(getAlpha() / 255.0, 0.0, 0.5));
     dashedPolygoneImg.bind();
     dashedPolygonesVbo.draw(GL_POINTS, 0, (int) dashedPolygonesVertices.size());
     dashedPolygoneImg.unbind();
@@ -684,7 +699,7 @@ void Scene::updateReceptorsRenderingData(){
         
         //Set vertices
         
-        vector<ofVec3f> quadVertices = getQuadVertices(receptors[i]->getRadius() * 2);
+        vector<ofVec3f> quadVertices = getQuadVertices(100 * 2);
         
         ofMatrix4x4 mat;
         mat.glTranslate(receptors[i]->getPosition());
@@ -701,7 +716,42 @@ void Scene::updateReceptorsRenderingData(){
         receptorsAttributes[i * 4 + 2] = (ofVec3f(receptors[i]->getRadius(), receptors[i]->getPercentFill() * 0.01, 0.0));
         receptorsAttributes[i * 4 + 3] = (ofVec3f(receptors[i]->getRadius(), receptors[i]->getPercentFill() * 0.01, 0.0));
         
+        //Update receptors ring
+        
+        int amp = 5;
+        int num = 5;
+        float initRadius = 100;
+        
+        amp *= ofClamp(receptors[i]->getPercentFill() / 100.0, 0.2, 1.0);
+        
+        for(int j = 0; j < num; j++){
+            
+            vector<ofVec2f> line = receptorStatusLines.getLine(j + i * num);
+            vector<ofFloatColor> colors = receptorStatusLines.getLineColors(j + i * num);
+            
+            for(int k = 0; k < line.size(); k++){
+                
+                float angle = M_PI * 2.0 / (line.size() - 1) * k;
+                float random = ofNoise(cos(angle) * tan(angle) + ofGetElapsedTimeMillis() * 0.001, 0) * amp;
+                
+                line[k] = ofVec2f(cos(angle) * (initRadius + random) + receptors[i]->getPosition().x, sin(angle) * (initRadius + random) + receptors[i]->getPosition().y);
+                
+                float a = (float) j / num;
+                colors[k] = ofFloatColor(1.0, 1.0, 1.0, ofClamp((random / amp), 0.6, 1.0) * (1.0 - a));
+                
+            }
+            
+            initRadius += (float) 20 * receptors[i]->getPercentFill() / 100.0;
+            
+            receptorStatusLines.updateLineColors(j + i * num, colors);
+            receptorStatusLines.updateLine(j + i * num, line);
+            
+        }
+        
     }
+    
+    receptorStatusLines.build();
+    receptorStatusLines.updateVbo();
     
     receptorsVbo.updateVertexData(&receptorsVertices[0], (int) receptorsVertices.size());
     receptorsVbo.updateNormalData(&receptorsAttributes[0], (int) receptorsAttributes.size());
@@ -1288,6 +1338,34 @@ void Scene::XMLSetup(string _xmlFile){
             newReceptor->setDecreasingFactor(decreasingFactor);
             
             receptors.push_back(newReceptor);
+            
+            //Create status line
+            
+            int num = 5;
+            int def = 30;
+            int initRadius = 100;
+            
+            for(int j = 0; j < num; j++){
+                
+                receptorStatusLines.begin();
+                
+                receptorStatusLines.setColor(1.0, 1.0, 1.0, 1.0 - (float) j / num);
+                
+                for(int k = 0; k < def; k++){
+                    
+                    float angle = M_PI * 2.0 / (def - 1) * k;
+                    receptorStatusLines.addPoint(cos(angle) * initRadius + position.x, sin(angle) * initRadius + position.y);
+                    
+                }
+                
+                receptorStatusLines.end();
+                
+                initRadius += 20;
+                
+            }
+            
+            receptorStatusLines.build();
+            receptorStatusLines.setVbo();
             
             for(int j = 0; j < emitters.size(); j++){
                 emitters[j]->addReceptor(newReceptor);

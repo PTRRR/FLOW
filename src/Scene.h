@@ -14,6 +14,7 @@
 #include "Interface.h"
 #include "Button.h"
 
+#include "VboLine.h"
 #include "BaseElement.h"
 #include "ParticleSystem.h"
 #include "Receptor.h"
@@ -129,6 +130,9 @@ private:
     void updateParticlesRenderingData();
     
     //Receptors
+    
+    ofShader linesProgram;
+    VboLine receptorStatusLines;
     
     ofShader receptorProgram;
     

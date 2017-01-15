@@ -34,6 +34,8 @@ private:
     
     //Elements
     
+    int num = 10;
+    float amp = 5;
     float radius = 100;
     
     ofShader lineShader;

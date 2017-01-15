@@ -12,6 +12,7 @@ VboLine::VboLine(){
     
     drawMode = GL_STATIC_DRAW;
     vbo.clear();
+    shader.load("shaders/lineShader");
     
 }
 
@@ -19,12 +20,21 @@ VboLine::VboLine(int _drawMode){
     
     drawMode = _drawMode;
     vbo.clear();
+    shader.load("shaders/lineShader");
     
 }
 
 void VboLine::draw(){
     
     vbo.drawElements(GL_TRIANGLES, (int) indices.size());
+    
+}
+
+void VboLine::drawShaded(){
+    
+    shader.begin();
+    vbo.drawElements(GL_TRIANGLES, (int) indices.size());
+    shader.end();
     
 }
 
@@ -376,7 +386,7 @@ void VboLine::updateLineColors(int _lineIndex, vector<ofFloatColor> _newColors){
     
     for(int i = 0; i < _newColors.size(); i++){
         
-        colors[offset + i] = _newColors[i];
+        pathColors[offset + i] = _newColors[i];
         
     }
     
@@ -420,5 +430,31 @@ vector<ofVec2f> VboLine::getLine(int _lineIndex){
     returnedVertices.insert(returnedVertices.begin(), path.begin() + offset, path.begin() + offset + linesLength[_lineIndex]);
     
     return returnedVertices;
+    
+}
+
+vector<ofFloatColor> VboLine::getLineColors(int _lineIndex){
+    
+    vector<ofFloatColor> returnedColors;
+    
+    if(_lineIndex > pathColors.size()) return returnedColors;
+    
+    int offset = 0;
+    
+    for(int i = 0; i < _lineIndex; i++){
+        
+        offset += linesLength[i];
+        
+    }
+    
+    returnedColors.insert(returnedColors.begin(), pathColors.begin() + offset, pathColors.begin() + offset + linesLength[_lineIndex]);
+    
+    return returnedColors;
+    
+}
+
+int VboLine::getLineNum(){
+    
+    return linesLength.size();
     
 }
