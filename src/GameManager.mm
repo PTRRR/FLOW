@@ -84,7 +84,7 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     mainSound.load("sounds/main.mp3");
     mainSound.setLoop(true);
     mainSound.setVolume(0);
-    mainSound.play();
+//    mainSound.play();
     
 };
 

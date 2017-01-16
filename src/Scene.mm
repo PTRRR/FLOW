@@ -718,7 +718,7 @@ void Scene::updateReceptorsRenderingData(){
         
         //Update receptors ring
         
-        int amp = 5;
+        float amp = 5;
         int num = 5;
         float initRadius = 100;
         
@@ -737,11 +737,11 @@ void Scene::updateReceptorsRenderingData(){
                 line[k] = ofVec2f(cos(angle) * (initRadius + random) + receptors[i]->getPosition().x, sin(angle) * (initRadius + random) + receptors[i]->getPosition().y);
                 
                 float a = (float) j / num;
-                colors[k] = ofFloatColor(1.0, 1.0, 1.0, ofClamp((random / amp), 0.6, 1.0) * (1.0 - a));
+                colors[k] = ofFloatColor(1.0, 1.0, 1.0, ofClamp((random / amp), 0.6, 1.0) * (1.0 - a) * receptors[i]->getPercentFill() / 100.0);
                 
             }
             
-            initRadius += (float) 20 * receptors[i]->getPercentFill() / 100.0;
+            initRadius += 20;
             
             receptorStatusLines.updateLineColors(j + i * num, colors);
             receptorStatusLines.updateLine(j + i * num, line);
@@ -912,20 +912,7 @@ void Scene::checkForCollisions(){
 
                     //Trigger sounds
                     
-//                    if(ofGetElapsedTimeMillis() > lastPlay + playOffset){
-//                        for(int k = 0; k < particlesSounds.size(); k++){
-//                            
-//                            if(!particlesSounds[k].isPlaying()){
-//                                particlesSounds[k].play();
-//                                cout << k << endl;
-//                                lastPlay = ofGetElapsedTimeMillis();
-//                                playOffset = ofRandom(50.0, 100.0);
-//                                break;
-//                            }
-//                            
-//                        }
-//                    }
-                    
+                     
                 }
             
             }
@@ -981,8 +968,6 @@ void Scene::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, s
     interface.mouseDown(_touch, [&](string _text, string _action){
         _callback(_text, _action);
     });
-    
-    cout << "down" << endl;
     
 }
 
