@@ -129,10 +129,43 @@ void Interface::mouseUp(ofVec2f _position, function<void(string _text, string _a
     
 }
 
+//Get
+
+shared_ptr<Button> Interface::getButton(string _text){
+    
+    for(int i = 0; i < buttons.size(); i++){
+        
+        if(_text == buttons[i]->getText()){
+            return buttons[i];
+            break;
+        }
+        
+    }
+    
+    return nullptr;
+    
+}
+
+vector<shared_ptr<Button>> Interface::getButtons(){
+    
+    return buttons;
+    
+}
+
 //Set
 
 void Interface::setFont(shared_ptr<ofTrueTypeFont> _font){
     
     font = _font;
+    
+}
+
+void Interface::setPosition(ofVec2f _position){
+    
+    Interface::BaseElement::setPosition(_position);
+    
+    for(int i = 0; i < buttons.size(); i++){
+        
+    }
     
 }

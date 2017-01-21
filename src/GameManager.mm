@@ -58,6 +58,11 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     
     loadLevelsCreator = shared_ptr<LoadLevelsCreator>(new LoadLevelsCreator(mainFont));
     loadLevelsCreator->setName("LOAD-LEVELS-CREATOR");
+    
+    //Test scene
+    
+    testScene = shared_ptr<TestScene>(new TestScene(mainFont));
+    testScene->setName("TEST-SCENE");
 
     //Screen pipeline setup
 
@@ -70,6 +75,7 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     screenPipeline.addScreen(end);
     screenPipeline.addScreen(levelCreator);
     screenPipeline.addScreen(loadLevelsCreator);
+    screenPipeline.addScreen(testScene);
 
     screenPipeline.setScreenActive(splashScreen);
     
@@ -78,7 +84,7 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     mainSound.load("sounds/main.mp3");
     mainSound.setLoop(true);
     mainSound.setVolume(0);
-    mainSound.play();
+//    mainSound.play();
     
 };
 
@@ -86,6 +92,7 @@ void GameManager::update(){
     
     if(!initialTimeoutIsOver && ofGetElapsedTimeMillis() >= initialTimeout){
         
+        loadLevelsCreator->setup();
         screenPipeline.setScreenActive(menu);
         initialTimeoutIsOver = true;
         
@@ -326,7 +333,8 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
                 
             }else if(action == "LEVEL-CREATOR"){
                 
-                screenPipeline.setScreenActive(levelCreator);
+                loadLevelsCreator->setup();
+                screenPipeline.setScreenActive(loadLevelsCreator);
                 
             }else if(action == "LOAD"){
                 

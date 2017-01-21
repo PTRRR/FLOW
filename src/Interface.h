@@ -43,8 +43,14 @@ public:
     void mouseDrag(ofVec2f _position, function<void(string _text, string _action)> callback);
     void mouseUp(ofVec2f _position, function<void(string _text, string _action)> callback);
     
+    //Get
+    
+    shared_ptr<Button> getButton(string _text);
+    vector<shared_ptr<Button>> getButtons();
+    
     //Set
     
+    void setPosition(ofVec2f _position);
     void setFont(shared_ptr<ofTrueTypeFont> _font);
     void removeButton(shared_ptr<Button> _button);
     

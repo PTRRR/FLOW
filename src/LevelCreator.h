@@ -10,6 +10,7 @@
 #define LevelCreator_hpp
 
 #include <stdio.h>
+#include "BaseElement.h"
 #include "Screen.h"
 #include "Interface.h"
 #include "Polygone.h"
@@ -41,12 +42,6 @@ private:
     int columns = 23;
     
     long PGCD(long a, long b);
-
-    vector<ofVec2f> points;
-    
-    bool noPolyline = true;
-    ofPolyline currentPolyline;
-    vector<ofPolyline> polylines;
     
     ofVec2f getClosestPoint(ofVec2f _position);
     
@@ -56,12 +51,30 @@ private:
     void load();
     void save();
     
+    //Game elements
+    
+    Interface tools;
+    float lastTime = 0.0f;
+    float timeElapsedSinceDown = 0.0f; //ms
+    float timeToDisplayTools = 700.0; //ms
+    bool toolsAreDisplayed = false;
+    
+    bool isDrawing = false;
+    bool isErasing = false;
+    shared_ptr<ofVec2f> currentTouch;
+    vector<ofPolyline> polygones;
+    
+    void removeLastVertice();
+    
     vector<ofVec2f> emitters;
     vector<ofVec2f> receptors;
+    
+    //Grid
     
     ofVbo gridVbo;
     vector<ofVec3f> gridVertices;
     vector<ofIndexType> gridIndices;
+    vector<ofVec2f> points;
     
     //Inputs
     

@@ -37,6 +37,19 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     
     actuatorBox.set(-1, -1, ofGetWidth() + 10, 0.05859375 * ofGetHeight());
     
+    //Actuators
+    
+    actuatorsLines = VboLine(GL_DYNAMIC_DRAW);
+    actuatorsLines.setAutoBuild(false);
+    actuatorsLines.setWidth(3);
+    actuatorsLines.setColor(1.0, 1.0, 1.0);
+    
+    //Receptor
+    
+    receptorStatusLines = VboLine(GL_DYNAMIC_DRAW);
+    receptorStatusLines.setWidth(3);
+    receptorStatusLines.setAutoBuild(false);
+    
     //Load all textures useful to render the differents objects of the game.
     
     actuatorImg.load("images/unactive_actuator.png");
@@ -55,7 +68,7 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     //Sounds
     //Create an array of sounds that will be plaed when particles touch someting.
     
-    for(int i = 0; i < 100; i++){
+    for(int i = 0; i < 0; i++){
         
         ofSoundPlayer newSound;
         newSound.load("sounds/bell"+ to_string((int) ofRandom(1, 5)) +".mp3");
@@ -82,7 +95,7 @@ void Scene::initializeGPUData(){
     quadTextureProgram.load("shaders/quadTextureShader");
     simpleQuadTextureProgram.load("shaders/simpleQuadTextureShader");
     dashedPolygoneProgram.load("shaders/dashedPolygoneShader");
-    
+    linesProgram.load("shaders/lineShader");
     
     //HEADS.
     //Set un vbo for rendering the particles head.
@@ -224,7 +237,7 @@ void Scene::initializeGPUData(){
         actuatorsAttributes.push_back(ofVec3f(50, 0.0, 0.0));
         actuatorsAttributes.push_back(ofVec3f(50, 0.0, 0.0));
         
-        //Ring
+        //Ring && lines
         
         for(int j = 0; j < 8; j++){
             
@@ -275,9 +288,22 @@ void Scene::initializeGPUData(){
             
             currentRingVertexIndex += 4;
             
+            //Set line
+            
+            ofVec3f origin = ofVec3f(actuators[i]->getPosition().x, actuators[i]->getPosition().y, 0.0);
+            ofVec3f target = origin * mat;
+            
+            actuatorsLines.begin();
+            actuatorsLines.addPoint(origin.x, origin.y);
+            actuatorsLines.addPoint(target.x, target.y);
+            actuatorsLines.end();
+            
         }
         
     }
+    
+    actuatorsLines.build();
+    actuatorsLines.setVbo();
     
     actuatorsVbo.setVertexData(&actuatorsVertices[0], (int) actuatorsVertices.size(), GL_DYNAMIC_DRAW);
     actuatorsVbo.setNormalData(&actuatorsAttributes[0], (int) actuatorsAttributes.size(), GL_STATIC_DRAW);
@@ -295,7 +321,7 @@ void Scene::initializeGPUData(){
         
         //Set vertices
         
-        vector<ofVec3f> quadVertices = getQuadVertices(receptors[i]->getRadius() * 2);
+        vector<ofVec3f> quadVertices = getQuadVertices(50 * 2);
         
         ofMatrix4x4 mat;
         mat.glTranslate(receptors[i]->getPosition());
@@ -486,26 +512,34 @@ void Scene::renderToScreen(){
     ofEnableAlphaBlending();
     
     //2 - Draw call
+    //Draw receptors rings
+    
+    linesProgram.begin();
+    linesProgram.setUniform1f("alpha", getAlpha() / 255.0);
+    receptorStatusLines.draw();
+    linesProgram.end();
+    
+    //3 - Draw call
     //Draw all receptors
     
-    receptorProgram.begin();
+    quadTextureProgram.begin();
     receptorProgram.setUniform1f("alpha", getAlpha() / 255.0);
     receptorImg.bind();
     receptorsVbo.drawElements(GL_TRIANGLES, (int) receptorsIndices.size());
     receptorImg.unbind();
-    receptorProgram.end();
+    quadTextureProgram.end();
     
-    //3 - Draw call
+    //4 - Draw call
     //Draw all emitters
     
-    quadTextureProgram.begin();
+    simpleQuadTextureProgram.begin();
     quadTextureProgram.setUniform1f("alpha", getAlpha() / 255.0);
     emitterImg.bind();
     emittersVbo.drawElements(GL_TRIANGLES, (int) emittersIndices.size());
     emitterImg.unbind();
-    quadTextureProgram.end();
+    simpleQuadTextureProgram.end();
     
-    //4 - Draw call
+    //5 - Draw call
     //Draw all actuators
     
     simpleQuadTextureProgram.begin();
@@ -515,7 +549,7 @@ void Scene::renderToScreen(){
     actuatorImg.unbind();
     simpleQuadTextureProgram.end();
     
-    //5 - Draw call
+    //6 - Draw call
     //Draw all actuators ring
     
     quadTextureProgram.begin();
@@ -524,14 +558,22 @@ void Scene::renderToScreen(){
     actuatorArrowImg.unbind();
     quadTextureProgram.end();
     
-    //6 - Draw call
+    //7 - Draw call
+    //Draw all actuators lines
+    
+    linesProgram.begin();
+    linesProgram.setUniform1f("alpha", getAlpha() / 255.0);
+    actuatorsLines.draw();
+    linesProgram.end();
+    
+    //8 - Draw call
     //Draw dashed polygones,
     
     ofEnableAlphaBlending();
     ofEnableBlendMode(OF_BLENDMODE_ADD);
     ofEnablePointSprites();
     dashedPolygoneProgram.begin();
-    dashedPolygoneProgram.setUniform1f("alpha", getAlpha() / 255.0);
+    dashedPolygoneProgram.setUniform1f("alpha", ofClamp(getAlpha() / 255.0, 0.0, 0.5));
     dashedPolygoneImg.bind();
     dashedPolygonesVbo.draw(GL_POINTS, 0, (int) dashedPolygonesVertices.size());
     dashedPolygoneImg.unbind();
@@ -539,7 +581,7 @@ void Scene::renderToScreen(){
     ofDisablePointSprites();
     ofDisableBlendMode();
     
-    //Draw interface -- NOT GPU BASED
+    //Draw interface -- NOT GPU BASED.
     ofEnableAlphaBlending();
     
     ofSetColor(255, 255, 255, getAlpha());
@@ -640,7 +682,7 @@ void Scene::updateActuatorsRenderingData(){
         
         float alpha = ((actuators[i]->getPosition().y - actuatorBox.height / 2) / (actuatorBox.height / 2));
         
-        //Ring
+        //Ring && lines
         
         for(int j = 0; j < 8; j++){
             
@@ -667,9 +709,32 @@ void Scene::updateActuatorsRenderingData(){
             
             currentRingVertexIndex += 4;
             
+            //Set line
+            
+            float percentOfRadius = 0.4;
+            float lineLength = actuators[i]->getRadius() * percentOfRadius;
+            float lengthToRemoveOnBothSides = (actuators[i]->getRadius() - lineLength) * 0.5;
+            
+            ofVec3f target = ofVec3f(0.0) * mat;
+            ofVec3f direction = (ofVec3f(actuators[i]->getPosition().x, actuators[i]->getPosition().y, 0.0) - target).normalize();
+            ofVec3f origin = ofVec3f(actuators[i]->getPosition().x, actuators[i]->getPosition().y, 0.0) - direction * lengthToRemoveOnBothSides;
+            target += direction * lengthToRemoveOnBothSides;
+            
+            vector<ofVec2f> line;
+            
+            line.push_back(ofVec2f(origin.x, origin.y));
+            line.push_back(ofVec2f(target.x, target.y));
+            
+            vector<ofFloatColor> color = vector<ofFloatColor>(2, ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255)));
+
+            
+            actuatorsLines.updateLine(j + i * 8, line);
+            actuatorsLines.updateLineColors(j + i * 8, color);
         }
-        
     }
+    
+    actuatorsLines.build();
+    actuatorsLines.updateVbo();
     
     actuatorsVbo.updateVertexData(&actuatorsVertices[0], (int) actuatorsVertices.size());
     
@@ -684,7 +749,7 @@ void Scene::updateReceptorsRenderingData(){
         
         //Set vertices
         
-        vector<ofVec3f> quadVertices = getQuadVertices(receptors[i]->getRadius() * 2);
+        vector<ofVec3f> quadVertices = getQuadVertices(100 * 2);
         
         ofMatrix4x4 mat;
         mat.glTranslate(receptors[i]->getPosition());
@@ -701,7 +766,42 @@ void Scene::updateReceptorsRenderingData(){
         receptorsAttributes[i * 4 + 2] = (ofVec3f(receptors[i]->getRadius(), receptors[i]->getPercentFill() * 0.01, 0.0));
         receptorsAttributes[i * 4 + 3] = (ofVec3f(receptors[i]->getRadius(), receptors[i]->getPercentFill() * 0.01, 0.0));
         
+        //Update receptors ring
+        
+        float amp = 5;
+        int num = 5;
+        float initRadius = 100;
+        
+        amp *= ofClamp(receptors[i]->getPercentFill() / 100.0, 0.2, 1.0);
+        
+        for(int j = 0; j < num; j++){
+            
+            vector<ofVec2f> line = receptorStatusLines.getLine(j + i * num);
+            vector<ofFloatColor> colors = receptorStatusLines.getLineColors(j + i * num);
+            
+            for(int k = 0; k < line.size(); k++){
+                
+                float angle = M_PI * 2.0 / (line.size() - 1) * k;
+                float random = ofNoise(cos(angle) * tan(angle) + ofGetElapsedTimeMillis() * 0.001, 0) * amp;
+                
+                line[k] = ofVec2f(cos(angle) * (initRadius + random) + receptors[i]->getPosition().x, sin(angle) * (initRadius + random) + receptors[i]->getPosition().y);
+                
+                float a = (float) j / num;
+                colors[k] = ofFloatColor(1.0, 1.0, 1.0, ofClamp((random / amp), 0.6, 1.0) * (1.0 - a) * receptors[i]->getPercentFill() / 100.0);
+                
+            }
+            
+            initRadius += 20;
+            
+            receptorStatusLines.updateLineColors(j + i * num, colors);
+            receptorStatusLines.updateLine(j + i * num, line);
+            
+        }
+        
     }
+    
+    receptorStatusLines.build();
+    receptorStatusLines.updateVbo();
     
     receptorsVbo.updateVertexData(&receptorsVertices[0], (int) receptorsVertices.size());
     receptorsVbo.updateNormalData(&receptorsAttributes[0], (int) receptorsAttributes.size());
@@ -833,56 +933,132 @@ void Scene::checkForCollisions(){
     
     for(int i = 0; i < allParticles.size(); i++){
         
-        ofVec2f currentPos = allParticles[i]->getPosition() + allParticles[i]->getVelocity();
-        ofVec2f direction = -allParticles[i]->getVelocity().normalize();
-        float maxDistRay = allParticles[i]->getVelocity().length() * 30;
+        //OLD ALGORITHM --- SCKETCHY BUT WORKING
         
-        //First check if inside bounding box
+//        ofVec2f currentPos = allParticles[i]->getPosition() + allParticles[i]->getVelocity();
+//        ofVec2f direction = -allParticles[i]->getVelocity().normalize();
+//        float maxDistRay = allParticles[i]->getVelocity().length() * 30;
+//        
+//        //First check if inside bounding box
+//        
+//        for(int j = 0; j < polygones.size(); j++){
+//            
+//            shared_ptr<Polygone> currentPoly = polygones[j];
+//            
+//            if(currentPoly->insideBoundingBox(currentPos)){
+//                
+//                if(currentPoly->inside(currentPos)){
+//                    
+//                    bool intersectionDetected = false;
+//                    
+//                    currentPoly->getParticleCollisionsInformations(currentPos, direction, maxDistRay, [&](ofVec2f intersection, ofVec2f normal){
+//                        
+//                        allParticles[i]->setPosition(intersection + normal);
+//                        float angle = direction.normalize().angleRad(normal.normalize());
+//                        ofVec2f bounceDirection = normal.rotateRad(angle).normalize();
+//                        allParticles[i]->setVelocity(allParticles[i]->getVelocity().length() * bounceDirection * 0.7);
+//                        
+//                        intersectionDetected = true;
+//                        
+//                    });
+//
+//                    //Trigger sounds
+//                    
+//                     
+//                }
+//            
+//            }
+//            
+//        }
+        
+        // NEW ALGORITHM --- NOT WORKING WELL....
+        
+        shared_ptr<Particle> currentParticle = allParticles[i];
+        ofVec2f currentPos = currentParticle->getPosition();
+        ofVec2f lastPos = currentParticle->getLastPosition();
         
         for(int j = 0; j < polygones.size(); j++){
             
-            shared_ptr<Polygone> currentPoly = polygones[j];
-            
-            if(currentPoly->insideBoundingBox(currentPos)){
+            if(polygones[j]->insideBoundingBox(currentParticle->getPosition())){
                 
-                if(currentPoly->inside(currentPos)){
+                if(polygones[j]->inside(currentParticle->getPosition())){
                     
-                    bool intersectionDetected = false;
-                    
-                    currentPoly->getParticleCollisionsInformations(currentPos, direction, maxDistRay, [&](ofVec2f intersection, ofVec2f normal){
+                    for(int k = 1; k < polygones[j]->getVertices().size(); k++){
                         
-                        allParticles[i]->setPosition(intersection + normal);
-                        float angle = direction.normalize().angleRad(normal.normalize());
-                        ofVec2f bounceDirection = normal.rotateRad(angle).normalize();
-                        allParticles[i]->setVelocity(allParticles[i]->getVelocity().length() * bounceDirection * 0.7);
+                        ofVec2f currentVertice = polygones[j]->getVertices()[k];
+                        ofVec2f lastVertice = polygones[j]->getVertices()[k - 1];
+                        ofVec2f particuleDirection = (currentParticle->getPosition() - currentParticle->getLastPosition()).normalize();
                         
-                        intersectionDetected = true;
+                        shared_ptr<ofVec2f> intersection = getIntersection(currentParticle->getLastPosition() - particuleDirection * 100, currentParticle->getPosition(), lastVertice, currentVertice);
                         
-                    });
-
-                    //Trigger sounds
-                    
-//                    if(ofGetElapsedTimeMillis() > lastPlay + playOffset){
-//                        for(int k = 0; k < particlesSounds.size(); k++){
-//                            
-//                            if(!particlesSounds[k].isPlaying()){
-//                                particlesSounds[k].play();
-//                                cout << k << endl;
-//                                lastPlay = ofGetElapsedTimeMillis();
-//                                playOffset = ofRandom(50.0, 100.0);
-//                                break;
-//                            }
-//                            
-//                        }
-//                    }
+                        if(intersection != nullptr){
+                            
+                            ofVec2f normal = (lastVertice - currentVertice).getPerpendicular();
+                            ofVec2f particuleDirection = (currentParticle->getLastPosition() - currentParticle->getPosition()).normalize();
+                            float angle = particuleDirection.angleRad(normal);
+                            ofVec2f bounceDirection = normal.rotateRad(angle).normalize();
+                            
+                            currentParticle->setPosition(ofVec2f(intersection->x, intersection->y) + normal * 0.5);
+                            currentParticle->setVelocity(allParticles[i]->getVelocity().length() * bounceDirection * 0.7);
+                            
+//                            beforeImpact.push_back(currentParticle->getLastPosition());
+//                            impacts.push_back(ofVec2f(intersection->x, intersection->y));
+//                            inside.push_back(particles[i]->getPosition());
+                            
+                        }
+                        
+                    }
                     
                 }
-            
+                
             }
             
         }
         
     }
+    
+}
+
+shared_ptr<ofVec2f> Scene::getIntersection(ofVec2f _p1, ofVec2f _p2, ofVec2f _p3, ofVec2f _p4){
+    
+    // Store the values for fast access and easy
+    // equations-to-code conversion
+    float x1 = _p1.x, x2 = _p2.x, x3 = _p3.x, x4 = _p4.x;
+    float y1 = _p1.y, y2 = _p2.y, y3 = _p3.y, y4 = _p4.y;
+    
+    float d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+    // If d is zero, there is no intersection
+    if (d == 0) return nullptr;
+    
+    // Get the x and y
+    float pre = (x1*y2 - y1*x2), post = (x3*y4 - y3*x4);
+    float x = ( pre * (x3 - x4) - (x1 - x2) * post ) / d;
+    float y = ( pre * (y3 - y4) - (y1 - y2) * post ) / d;
+    
+    // Check if the x and y coordinates are within both lines
+    if ( x < min(x1, x2) || x > max(x1, x2) ||
+        x < min(x3, x4) || x > max(x3, x4) ) return nullptr;
+    if ( y < min(y1, y2) || y > max(y1, y2) ||
+        y < min(y3, y4) || y > max(y3, y4) ) return nullptr;
+    
+    // Return the point of intersection
+    shared_ptr<ofVec2f> intersection = shared_ptr<ofVec2f>(new ofVec2f());
+    intersection->x = x;
+    intersection->y = y;
+    return intersection;
+    
+}
+
+bool Scene::segmentIntersection(ofVec2f _intersection, ofVec2f _p1, ofVec2f _p2, ofVec2f _p3, ofVec2f _p4){
+    
+    float distance1 = (_p1 - _p2).length() + 0.0001; //Add a minimum value to compensate floating error
+    float distance2 = (_p3 - _p4).length() + 0.0001; //Add a minimum value to compensate floating error
+    
+    if(((_p1 - _intersection).length() + (_p2 - _intersection).length()) <= distance1 && ((_p3 - _intersection).length() + (_p4 - _intersection).length()) <= distance2){ //Check if less or equal to compensate floating error
+        return true;
+    }
+    
+    return false;
     
 }
 
@@ -931,8 +1107,6 @@ void Scene::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, s
     interface.mouseDown(_touch, [&](string _text, string _action){
         _callback(_text, _action);
     });
-    
-    cout << "down" << endl;
     
 }
 
@@ -1244,7 +1418,6 @@ void Scene::XMLSetup(string _xmlFile){
             shared_ptr<Actuator> newActuator = shared_ptr<Actuator>(new Actuator());
             newActuator->setPosition(position);
             newActuator->setRadius(100 + ofRandom(350));
-            newActuator->setOverRadius(100);
             newActuator->setMass(20);
             newActuator->setDamping(0.83);
             newActuator->setMaxVelocity(100);
@@ -1288,6 +1461,34 @@ void Scene::XMLSetup(string _xmlFile){
             newReceptor->setDecreasingFactor(decreasingFactor);
             
             receptors.push_back(newReceptor);
+            
+            //Create status line
+            
+            int num = 5;
+            int def = 30;
+            int initRadius = 100;
+            
+            for(int j = 0; j < num; j++){
+                
+                receptorStatusLines.begin();
+                
+                receptorStatusLines.setColor(1.0, 1.0, 1.0, 1.0 - (float) j / num);
+                
+                for(int k = 0; k < def; k++){
+                    
+                    float angle = M_PI * 2.0 / (def - 1) * k;
+                    receptorStatusLines.addPoint(cos(angle) * initRadius + position.x, sin(angle) * initRadius + position.y);
+                    
+                }
+                
+                receptorStatusLines.end();
+                
+                initRadius += 20;
+                
+            }
+            
+            receptorStatusLines.build();
+            receptorStatusLines.setVbo();
             
             for(int j = 0; j < emitters.size(); j++){
                 emitters[j]->addReceptor(newReceptor);
