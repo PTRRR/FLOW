@@ -37,10 +37,8 @@ void Actuator::update(){
     
     //Interpolation
     
-    radius += (radiusTarget - radius) * 0.2;
-    
-    radius = ofClamp(radius, 50, 400);
-
+    radius += (radiusTarget - radius) * 0.3;
+    radius = ofClamp(radius, 120, 400);
     
 }
 
@@ -94,7 +92,7 @@ ofVec2f Actuator::getForceAtPoint(ofVec2f _position){
 bool Actuator::isOver(ofVec2f _position){
     
     float distance = (getPosition() - _position).length();
-    return distance <= overRadius;
+    return distance <= getRadius() * 0.5;
     
 }
 

@@ -37,6 +37,13 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     
     actuatorBox.set(-1, -1, ofGetWidth() + 10, 0.05859375 * ofGetHeight());
     
+    //Actuators
+    
+    actuatorsLines = VboLine(GL_DYNAMIC_DRAW);
+    actuatorsLines.setAutoBuild(false);
+    actuatorsLines.setWidth(3);
+    actuatorsLines.setColor(1.0, 1.0, 1.0);
+    
     //Receptor
     
     receptorStatusLines = VboLine(GL_DYNAMIC_DRAW);
@@ -89,7 +96,6 @@ void Scene::initializeGPUData(){
     simpleQuadTextureProgram.load("shaders/simpleQuadTextureShader");
     dashedPolygoneProgram.load("shaders/dashedPolygoneShader");
     linesProgram.load("shaders/lineShader");
-    
     
     //HEADS.
     //Set un vbo for rendering the particles head.
@@ -231,7 +237,7 @@ void Scene::initializeGPUData(){
         actuatorsAttributes.push_back(ofVec3f(50, 0.0, 0.0));
         actuatorsAttributes.push_back(ofVec3f(50, 0.0, 0.0));
         
-        //Ring
+        //Ring && lines
         
         for(int j = 0; j < 8; j++){
             
@@ -282,9 +288,22 @@ void Scene::initializeGPUData(){
             
             currentRingVertexIndex += 4;
             
+            //Set line
+            
+            ofVec3f origin = ofVec3f(actuators[i]->getPosition().x, actuators[i]->getPosition().y, 0.0);
+            ofVec3f target = origin * mat;
+            
+            actuatorsLines.begin();
+            actuatorsLines.addPoint(origin.x, origin.y);
+            actuatorsLines.addPoint(target.x, target.y);
+            actuatorsLines.end();
+            
         }
         
     }
+    
+    actuatorsLines.build();
+    actuatorsLines.setVbo();
     
     actuatorsVbo.setVertexData(&actuatorsVertices[0], (int) actuatorsVertices.size(), GL_DYNAMIC_DRAW);
     actuatorsVbo.setNormalData(&actuatorsAttributes[0], (int) actuatorsAttributes.size(), GL_STATIC_DRAW);
@@ -492,7 +511,7 @@ void Scene::renderToScreen(){
     
     ofEnableAlphaBlending();
     
-    //3 - Draw call
+    //2 - Draw call
     //Draw receptors rings
     
     linesProgram.begin();
@@ -500,7 +519,7 @@ void Scene::renderToScreen(){
     receptorStatusLines.draw();
     linesProgram.end();
     
-    //2 - Draw call
+    //3 - Draw call
     //Draw all receptors
     
     quadTextureProgram.begin();
@@ -510,7 +529,7 @@ void Scene::renderToScreen(){
     receptorImg.unbind();
     quadTextureProgram.end();
     
-    //3 - Draw call
+    //4 - Draw call
     //Draw all emitters
     
     simpleQuadTextureProgram.begin();
@@ -520,7 +539,7 @@ void Scene::renderToScreen(){
     emitterImg.unbind();
     simpleQuadTextureProgram.end();
     
-    //4 - Draw call
+    //5 - Draw call
     //Draw all actuators
     
     simpleQuadTextureProgram.begin();
@@ -530,7 +549,7 @@ void Scene::renderToScreen(){
     actuatorImg.unbind();
     simpleQuadTextureProgram.end();
     
-    //5 - Draw call
+    //6 - Draw call
     //Draw all actuators ring
     
     quadTextureProgram.begin();
@@ -539,7 +558,15 @@ void Scene::renderToScreen(){
     actuatorArrowImg.unbind();
     quadTextureProgram.end();
     
-    //6 - Draw call
+    //7 - Draw call
+    //Draw all actuators lines
+    
+    linesProgram.begin();
+    linesProgram.setUniform1f("alpha", getAlpha() / 255.0);
+    actuatorsLines.draw();
+    linesProgram.end();
+    
+    //8 - Draw call
     //Draw dashed polygones,
     
     ofEnableAlphaBlending();
@@ -554,7 +581,7 @@ void Scene::renderToScreen(){
     ofDisablePointSprites();
     ofDisableBlendMode();
     
-    //Draw interface -- NOT GPU BASED
+    //Draw interface -- NOT GPU BASED.
     ofEnableAlphaBlending();
     
     ofSetColor(255, 255, 255, getAlpha());
@@ -655,7 +682,7 @@ void Scene::updateActuatorsRenderingData(){
         
         float alpha = ((actuators[i]->getPosition().y - actuatorBox.height / 2) / (actuatorBox.height / 2));
         
-        //Ring
+        //Ring && lines
         
         for(int j = 0; j < 8; j++){
             
@@ -682,9 +709,32 @@ void Scene::updateActuatorsRenderingData(){
             
             currentRingVertexIndex += 4;
             
+            //Set line
+            
+            float percentOfRadius = 0.4;
+            float lineLength = actuators[i]->getRadius() * percentOfRadius;
+            float lengthToRemoveOnBothSides = (actuators[i]->getRadius() - lineLength) * 0.5;
+            
+            ofVec3f target = ofVec3f(0.0) * mat;
+            ofVec3f direction = (ofVec3f(actuators[i]->getPosition().x, actuators[i]->getPosition().y, 0.0) - target).normalize();
+            ofVec3f origin = ofVec3f(actuators[i]->getPosition().x, actuators[i]->getPosition().y, 0.0) - direction * lengthToRemoveOnBothSides;
+            target += direction * lengthToRemoveOnBothSides;
+            
+            vector<ofVec2f> line;
+            
+            line.push_back(ofVec2f(origin.x, origin.y));
+            line.push_back(ofVec2f(target.x, target.y));
+            
+            vector<ofFloatColor> color = vector<ofFloatColor>(2, ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255)));
+
+            
+            actuatorsLines.updateLine(j + i * 8, line);
+            actuatorsLines.updateLineColors(j + i * 8, color);
         }
-        
     }
+    
+    actuatorsLines.build();
+    actuatorsLines.updateVbo();
     
     actuatorsVbo.updateVertexData(&actuatorsVertices[0], (int) actuatorsVertices.size());
     
@@ -883,6 +933,8 @@ void Scene::checkForCollisions(){
     
     for(int i = 0; i < allParticles.size(); i++){
         
+        //OLD ALGORITHM --- SCKETCHY BUT WORKING
+        
 //        ofVec2f currentPos = allParticles[i]->getPosition() + allParticles[i]->getVelocity();
 //        ofVec2f direction = -allParticles[i]->getVelocity().normalize();
 //        float maxDistRay = allParticles[i]->getVelocity().length() * 30;
@@ -918,6 +970,8 @@ void Scene::checkForCollisions(){
 //            }
 //            
 //        }
+        
+        // NEW ALGORITHM --- NOT WORKING WELL....
         
         shared_ptr<Particle> currentParticle = allParticles[i];
         ofVec2f currentPos = currentParticle->getPosition();
@@ -1364,7 +1418,6 @@ void Scene::XMLSetup(string _xmlFile){
             shared_ptr<Actuator> newActuator = shared_ptr<Actuator>(new Actuator());
             newActuator->setPosition(position);
             newActuator->setRadius(100 + ofRandom(350));
-            newActuator->setOverRadius(100);
             newActuator->setMass(20);
             newActuator->setDamping(0.83);
             newActuator->setMaxVelocity(100);

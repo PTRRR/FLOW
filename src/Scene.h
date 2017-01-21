@@ -164,6 +164,10 @@ private:
     vector<ofIndexType> actuatorsRingIndices;
     vector<ofFloatColor> actuatorsRingColors;
     
+    //Actuators lines
+    
+    VboLine actuatorsLines;
+    
     void updateActuatorsRenderingData();
     
     //Polygones

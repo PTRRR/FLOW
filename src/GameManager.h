@@ -32,7 +32,7 @@ private:
     
     //Timer utilitie
     
-    int initialTimeout = 1000; //millis
+    int initialTimeout = 5000; //millis
     bool initialTimeoutIsOver = false;
     
     //Screens

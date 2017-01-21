@@ -92,7 +92,8 @@ void GameManager::update(){
     
     if(!initialTimeoutIsOver && ofGetElapsedTimeMillis() >= initialTimeout){
         
-        screenPipeline.setScreenActive(levelCreator);
+        loadLevelsCreator->setup();
+        screenPipeline.setScreenActive(menu);
         initialTimeoutIsOver = true;
         
     }
@@ -332,7 +333,8 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
                 
             }else if(action == "LEVEL-CREATOR"){
                 
-                screenPipeline.setScreenActive(levelCreator);
+                loadLevelsCreator->setup();
+                screenPipeline.setScreenActive(loadLevelsCreator);
                 
             }else if(action == "LOAD"){
                 
