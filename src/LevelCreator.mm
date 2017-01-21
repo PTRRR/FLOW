@@ -380,6 +380,8 @@ void LevelCreator::printLevel(){
     
     xml.copyXmlToString(content);
     
+    cout << content << endl;
+    
 }
 
 void LevelCreator::setup(string _xmlFile){
@@ -623,7 +625,7 @@ void LevelCreator::onMouseUp(ofTouchEventArgs & _touch, function<void(string _te
         
         vector<shared_ptr<Button>> buttons = interface.getButtons();
         
-        if(text == "PRINT" || text == "R" || text == "E" || text == "V")
+        if(text == "R" || text == "E" || text == "V")
         {
             for(int i = 0; i < buttons.size(); i++)
             {
