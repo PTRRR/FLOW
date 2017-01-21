@@ -43,10 +43,6 @@ private:
     
     long PGCD(long a, long b);
     
-    bool noPolyline = true;
-    ofPolyline currentPolyline;
-    vector<ofPolyline> polylines;
-    
     ofVec2f getClosestPoint(ofVec2f _position);
     
     string content;
@@ -57,13 +53,15 @@ private:
     
     //Game elements
     
+    Interface tools;
     float lastTime = 0.0f;
     float timeElapsedSinceDown = 0.0f; //ms
-    float timeToDisplayMenu = 2000.0; //ms
-    bool menuIsDisplayed = false;
-    BaseElement menu;
+    float timeToDisplayTools = 700.0; //ms
+    bool toolsAreDisplayed = false;
     
     bool isDrawing = false;
+    bool isErasing = false;
+    shared_ptr<ofVec2f> currentTouch;
     vector<ofPolyline> polygones;
     
     void removeLastVertice();
@@ -93,7 +91,6 @@ private:
 public:
     
     void setup(string _xmlFile);
-    void update() override;
     
     LevelCreator();
     LevelCreator(shared_ptr<ofTrueTypeFont> _font);

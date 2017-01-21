@@ -159,3 +159,13 @@ void Interface::setFont(shared_ptr<ofTrueTypeFont> _font){
     font = _font;
     
 }
+
+void Interface::setPosition(ofVec2f _position){
+    
+    Interface::BaseElement::setPosition(_position);
+    
+    for(int i = 0; i < buttons.size(); i++){
+        
+    }
+    
+}

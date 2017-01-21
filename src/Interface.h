@@ -50,6 +50,7 @@ public:
     
     //Set
     
+    void setPosition(ofVec2f _position);
     void setFont(shared_ptr<ofTrueTypeFont> _font);
     void removeButton(shared_ptr<Button> _button);
     

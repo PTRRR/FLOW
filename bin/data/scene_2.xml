@@ -10,10 +10,20 @@
     <MAX_ACTUATORS_NUM>4</MAX_ACTUATORS_NUM>
 </actuators>
 <fixedActuators />
+<general>
+    <UNLOCKED>0</UNLOCKED>
+    <ORIGINAL_WIDTH>1536</ORIGINAL_WIDTH>
+    <ORIGINAL_HEIGHT>2048</ORIGINAL_HEIGHT>
+    <MAX_PARTICLES>1000</MAX_PARTICLES>
+    <MAX_TAIL_LENGTH>25</MAX_TAIL_LENGTH>
+    <MAX_ACTUATORS_NUM>4</MAX_ACTUATORS_NUM>
+</general>
+<actuators>
+    <MAX_ACTUATORS_NUM>4</MAX_ACTUATORS_NUM>
+</actuators>
+<fixedActuators />
 <emitters>
-    
     <emitter>
-        
         <X>0.500000000</X>
         <Y>0.112500004</Y>
         <boxX>0.006510417</boxX>
@@ -24,9 +34,7 @@
     </emitter>
 </emitters>
 <receptors>
-    
     <receptor>
-        
         <X>0.500000000</X>
         <Y>0.887499988</Y>
         <radius>0.130208328</radius>
@@ -36,48 +44,38 @@
     </receptor>
 </receptors>
 <polygones>
-    
     <polygone>
-        
         <vertices>
-            
             <vertex>
-                
                 <X>0.500000000</X>
                 <Y>0.400000006</Y>
                 <Z>0.000000000</Z>
             </vertex>
             <vertex>
-                
                 <X>0.333333343</X>
                 <Y>0.525000036</Y>
                 <Z>0.000000000</Z>
             </vertex>
             <vertex>
-                
                 <X>0.350000024</X>
                 <Y>0.537500024</Y>
                 <Z>0.000000000</Z>
             </vertex>
             <vertex>
-                
                 <X>0.500000000</X>
                 <Y>0.425000012</Y>
                 <Z>0.000000000</Z>
             </vertex>
             <vertex>
-                
                 <X>0.650000036</X>
                 <Y>0.537500024</Y>
                 <Z>0.000000000</Z>
             </vertex>
             <vertex>
-                
                 <X>0.666666687</X>
                 <Y>0.525000036</Y>
                 <Z>0.000000000</Z>
             </vertex>
         </vertices>
     </polygone>
-    
 </polygones>
