@@ -711,7 +711,7 @@ void Scene::updateActuatorsRenderingData(){
             
             //Set line
             
-            float percentOfRadius = 0.4;
+            float percentOfRadius = 0.15;
             float lineLength = actuators[i]->getRadius() * percentOfRadius;
             float lengthToRemoveOnBothSides = (actuators[i]->getRadius() - lineLength) * 0.5;
             
@@ -1093,11 +1093,19 @@ void Scene::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, s
         
         for(int i = 0; i < actuators.size(); i++){
             
-            if(actuators[i]->isOver(_touch)){
+            float distance = (actuators[i]->getPosition() - _touch).length();
+            float distanceFromBorder = abs(actuators[i]->getRadius() - distance);
+            
+            if (distanceFromBorder <= 50)
+            {
+                activeActuators[_touch.id] = actuators[i];
+                activeActuators[_touch.id]->disable(true);
                 
+            }
+            else if(distanceFromBorder > 50 && actuators[i]->isOver(_touch))
+            {
                 activeActuators[_touch.id] = actuators[i];
                 break;
-                
             }
             
         }
@@ -1165,20 +1173,23 @@ void Scene::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, s
 
 void Scene::onDoubleClick(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
     
-    if(_touch.id < touches.size()){
-        
-        for(int i = 0; i < actuators.size(); i++){
-            
-            if (actuators[i]->isOver(_touch)) {
-                
-                activeActuators[_touch.id] = actuators[i];
-                activeActuators[_touch.id]->disable(true);
-                
-            }
-            
-        }
-        
-    }
+//    if(_touch.id < touches.size()){
+//        
+//        for(int i = 0; i < actuators.size(); i++){
+//            
+//            float distance = (actuators[i]->getPosition() - _touch).length();
+//            float distanceFromBorder = abs(actuators[i]->getRadius() - distance);
+//            
+//            if (distanceFromBorder < 50) {
+//                
+//                activeActuators[_touch.id] = actuators[i];
+//                activeActuators[_touch.id]->disable(true);
+//                
+//            }
+//            
+//        }
+//        
+//    }
     
 }
 
@@ -1417,7 +1428,7 @@ void Scene::XMLSetup(string _xmlFile){
             
             shared_ptr<Actuator> newActuator = shared_ptr<Actuator>(new Actuator());
             newActuator->setPosition(position);
-            newActuator->setRadius(100 + ofRandom(350));
+            newActuator->setRadius(120 + ofRandom(100));
             newActuator->setMass(20);
             newActuator->setDamping(0.83);
             newActuator->setMaxVelocity(100);
