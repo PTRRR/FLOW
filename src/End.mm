@@ -15,7 +15,7 @@ End::End(shared_ptr<ofTrueTypeFont> _font){
     font = _font;
     interface.setFont(font);
     
-    interface.addText("THE END", ofVec2f(ofGetWidth() / 2, ofGetHeight() * 0.06 / 2));
+//    interface.addText("THE END", ofVec2f(ofGetWidth() / 2, ofGetHeight() * 0.06 / 2));
     interface.addButton("RESTART", "RESTART", ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2));
     interface.addButton("MENU", "MENU", ofVec2f(ofGetWidth() / 2, ofGetHeight() - ofGetHeight() * 0.06 / 2));
     
@@ -23,7 +23,7 @@ End::End(shared_ptr<ofTrueTypeFont> _font){
 
 void End::renderToScreen(){
     
-    ofSetColor(255, 255, 255, getAlpha());
+    ofSetColor(180, getAlpha());
     interface.draw();
     
 }

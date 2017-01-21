@@ -14,6 +14,8 @@ void Receptor::update(){
     
     Receptor::Actuator::update();
     
+    particleReceptionFeedbackRadius += (0.0 - particleReceptionFeedbackRadius) * 0.1;
+    
     if(!filled){
         particlesCount -= getDeltatime() * decreasingFactor * (particlesCount / maxParticles);
         particlesCount = ofClamp(particlesCount, 0, maxParticles);
@@ -38,6 +40,7 @@ void Receptor::debugDraw(){
 void Receptor::addOneParticleToCount(){
     
     if(!filled) particlesCount ++;
+    particleReceptionFeedbackRadius += 5;
     
 }
 
@@ -82,5 +85,11 @@ float Receptor::getDecreasingFactor(){
 int Receptor::getMaxParticles(){
     
     return maxParticles;
+    
+}
+
+float Receptor::getParticleReceptionFeedbackRadius(){
+    
+    return particleReceptionFeedbackRadius;
     
 }

@@ -19,6 +19,8 @@ private:
     float particlesCount = 0;
     float decreasingFactor = 0.022;
     
+    float particleReceptionFeedbackRadius = 0.0;
+    
     float maxParticles = 300;
     
     bool filled = false;
@@ -43,6 +45,7 @@ public:
     bool isFilled();
     float getDecreasingFactor();
     int getMaxParticles();
+    float getParticleReceptionFeedbackRadius();
     
     
 };

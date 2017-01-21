@@ -52,7 +52,7 @@ void SplashScreen::renderToScreen(){
     ofSetColor(0, 0, 0, getAlpha());
     ofDrawRectangle(0, 0, ofGetWidth() + 1, ofGetHeight());
     
-    ofSetColor(255, 255, 255, getAlpha());
+    ofSetColor(180, getAlpha());
     
     for(int i = 0; i < letterElements.size(); i++){
         

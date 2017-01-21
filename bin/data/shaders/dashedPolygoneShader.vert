@@ -16,7 +16,7 @@ void main()
 
     // send the vertices to the fragment shader
 //    gl_PointSize = normal.x;
-    gl_PointSize = 6.0;
+    gl_PointSize = normal.x;
     gl_Position = modelViewProjectionMatrix * position;
     
     

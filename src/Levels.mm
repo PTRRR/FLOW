@@ -17,7 +17,7 @@ Levels::Levels(shared_ptr<ofTrueTypeFont> _font){
     interface.setMaxVelocity(100);
     interface.setDamping(0.9);
     interface.setFont(_font);
-    interface.addText("LEVELS", ofVec2f(ofGetWidth() / 2, ofGetHeight() * 0.06 / 2));
+//    interface.addText("LEVELS", ofVec2f(ofGetWidth() / 2, ofGetHeight() * 0.06 / 2));
     
     backButtonImg.load("images/back_button.png");
     shared_ptr<Button> backButton = interface.addButton("BACK", "BACK", ofVec2f(0.0390625 * ofGetWidth()));
@@ -176,7 +176,7 @@ void Levels::renderToScreen(){
     ofSetColor(0, 0, 0, getAlpha());
     ofDrawRectangle(0, 0, ofGetWidth() + 1, ofGetHeight());
     
-    ofSetColor(255, 255, 255, getAlpha());
+    ofSetColor(180, getAlpha());
     interface.draw();
     
     for(int i = 0; i < buttons.size(); i++){

@@ -144,6 +144,10 @@ private:
     vector<ofIndexType> receptorsIndices;
     vector<ofVec3f> receptorsAttributes;
     
+    ofVbo particleReceptionFeedbackVbo;
+    vector<ofVec3f> particleReceptionFeedbackVertices;
+    vector<ofVec3f> particleReceptionFeedbackAttributes;
+
     //Actuators
     
     ofShader actuatorsProgram;

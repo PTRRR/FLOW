@@ -42,7 +42,7 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     actuatorsLines = VboLine(GL_DYNAMIC_DRAW);
     actuatorsLines.setAutoBuild(false);
     actuatorsLines.setWidth(3);
-    actuatorsLines.setColor(1.0, 1.0, 1.0);
+    actuatorsLines.setColor(0.7, 0.7, 0.7);
     
     //Receptor
     
@@ -63,7 +63,7 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     
     //Load the font that will be used to display informations on the scene
     
-    infosFont.load("GT-Cinetype-Mono.ttf", 0.009765625 * ofGetWidth());
+    infosFont.load("GT-Pressura-Mono-Light.ttf", 0.009765625 * ofGetWidth());
     
     //Sounds
     //Create an array of sounds that will be plaed when particles touch someting.
@@ -326,9 +326,9 @@ void Scene::initializeGPUData(){
         ofMatrix4x4 mat;
         mat.glTranslate(receptors[i]->getPosition());
         
-        for(int i = 0; i < quadVertices.size(); i++){
+        for(int j = 0; j < quadVertices.size(); j++){
             
-            quadVertices[i] = quadVertices[i] * mat;
+            quadVertices[j] = quadVertices[j] * mat;
             
         }
         
@@ -362,6 +362,11 @@ void Scene::initializeGPUData(){
         receptorsAttributes.push_back(ofVec3f(receptors[i]->getRadius(), 0.0, 0.0));
         receptorsAttributes.push_back(ofVec3f(receptors[i]->getRadius(), 0.0, 0.0));
         
+        //Set particle reception feedback
+        
+        particleReceptionFeedbackVertices.push_back(ofVec3f(receptors[i]->getPosition().x, receptors[i]->getPosition().y, 0.0));
+        particleReceptionFeedbackAttributes.push_back(ofVec3f(30.0));
+        
     }
     
     receptorsVbo.setVertexData(&receptorsVertices[0], (int) receptorsVertices.size(), GL_DYNAMIC_DRAW);
@@ -369,55 +374,58 @@ void Scene::initializeGPUData(){
     receptorsVbo.setIndexData(&receptorsIndices[0], (int) receptorsIndices.size(), GL_STATIC_DRAW);
     receptorsVbo.setTexCoordData(&receptorsTexCoords[0], (int) receptorsTexCoords.size(), GL_STATIC_DRAW);
     
+    particleReceptionFeedbackVbo.setVertexData(&particleReceptionFeedbackVertices[0], (int) particleReceptionFeedbackVertices.size(), GL_STATIC_DRAW);
+    particleReceptionFeedbackVbo.setNormalData(&particleReceptionFeedbackAttributes[0], (int) particleReceptionFeedbackAttributes.size(), GL_DYNAMIC_DRAW);
+    
     //Polygones
     
-    for(int i = 0; i < polygones.size(); i++){
-        
-        ofxTriangle triangles = polygones[i]->getTriangulatedPolygone();
-        
-        for(int j = 0; j < triangles.nTriangles; j++){
-            
-            ofVec3f p1 = ofVec3f(triangles.triangles[j].a.x, triangles.triangles[j].a.y, 0.0);
-            ofVec3f p2 = ofVec3f(triangles.triangles[j].b.x, triangles.triangles[j].b.y, 0.0);
-            ofVec3f p3 = ofVec3f(triangles.triangles[j].c.x, triangles.triangles[j].c.y, 0.0);
-            
-            polygonesVertices.push_back(p1);
-            polygonesVertices.push_back(p2);
-            polygonesVertices.push_back(p3);
-            
-            polygonesIndices.push_back(polygonesIndices.size());
-            polygonesIndices.push_back(polygonesIndices.size());
-            polygonesIndices.push_back(polygonesIndices.size());
-            
-            polygonesTexCoords.push_back(ofVec2f(0.5, 0));
-            polygonesTexCoords.push_back(ofVec2f(1, 1));
-            polygonesTexCoords.push_back(ofVec2f(0, 1));
-            
-            polygoneVerticesColor.push_back(ofFloatColor(1.0, 0.0, 0.0));
-            polygoneVerticesColor.push_back(ofFloatColor(0.0, 1.0, 0.0));
-            polygoneVerticesColor.push_back(ofFloatColor(0.0, 0.0, 1.0));
-            
-            float angle1 = (p1 - p2).angleRad(p1 - p3);
-            float angle2 = (p2 - p3).angleRad(p2 - p1);
-            float angle3 = (p3 - p2).angleRad(p3 - p1);
-            
-            float h1 = sin(angle2) * (p2 - p1).length();
-            float h2 = sin(angle3) * (p3 - p2).length();
-            float h3 = sin(angle1) * (p1 - p3).length();
-            
-            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
-            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
-            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
-            
-        }
-        
-    }
-    
-    polygonesVbo.setVertexData(&polygonesVertices[0], (int) polygonesVertices.size(), GL_STATIC_DRAW);
-    polygonesVbo.setIndexData(&polygonesIndices[0], (int) polygonesIndices.size(), GL_STATIC_DRAW);
-    polygonesVbo.setTexCoordData(&polygonesTexCoords[0], (int) polygonesTexCoords.size(), GL_STATIC_DRAW);
-    polygonesVbo.setColorData(&polygoneVerticesColor[0], (int) polygoneVerticesColor.size(), GL_STATIC_DRAW);
-    polygonesVbo.setNormalData(&polygonesAttributes[0], (int) polygonesAttributes.size(), GL_STATIC_DRAW);
+//    for(int i = 0; i < polygones.size(); i++){
+//        
+//        ofxTriangle triangles = polygones[i]->getTriangulatedPolygone();
+//        
+//        for(int j = 0; j < triangles.nTriangles; j++){
+//            
+//            ofVec3f p1 = ofVec3f(triangles.triangles[j].a.x, triangles.triangles[j].a.y, 0.0);
+//            ofVec3f p2 = ofVec3f(triangles.triangles[j].b.x, triangles.triangles[j].b.y, 0.0);
+//            ofVec3f p3 = ofVec3f(triangles.triangles[j].c.x, triangles.triangles[j].c.y, 0.0);
+//            
+//            polygonesVertices.push_back(p1);
+//            polygonesVertices.push_back(p2);
+//            polygonesVertices.push_back(p3);
+//            
+//            polygonesIndices.push_back(polygonesIndices.size());
+//            polygonesIndices.push_back(polygonesIndices.size());
+//            polygonesIndices.push_back(polygonesIndices.size());
+//            
+//            polygonesTexCoords.push_back(ofVec2f(0.5, 0));
+//            polygonesTexCoords.push_back(ofVec2f(1, 1));
+//            polygonesTexCoords.push_back(ofVec2f(0, 1));
+//            
+//            polygoneVerticesColor.push_back(ofFloatColor(1.0, 0.0, 0.0));
+//            polygoneVerticesColor.push_back(ofFloatColor(0.0, 1.0, 0.0));
+//            polygoneVerticesColor.push_back(ofFloatColor(0.0, 0.0, 1.0));
+//            
+//            float angle1 = (p1 - p2).angleRad(p1 - p3);
+//            float angle2 = (p2 - p3).angleRad(p2 - p1);
+//            float angle3 = (p3 - p2).angleRad(p3 - p1);
+//            
+//            float h1 = sin(angle2) * (p2 - p1).length();
+//            float h2 = sin(angle3) * (p3 - p2).length();
+//            float h3 = sin(angle1) * (p1 - p3).length();
+//            
+//            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
+//            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
+//            polygonesAttributes.push_back(ofVec3f(h1, h2, h3));
+//            
+//        }
+//        
+//    }
+//    
+//    polygonesVbo.setVertexData(&polygonesVertices[0], (int) polygonesVertices.size(), GL_STATIC_DRAW);
+//    polygonesVbo.setIndexData(&polygonesIndices[0], (int) polygonesIndices.size(), GL_STATIC_DRAW);
+//    polygonesVbo.setTexCoordData(&polygonesTexCoords[0], (int) polygonesTexCoords.size(), GL_STATIC_DRAW);
+//    polygonesVbo.setColorData(&polygoneVerticesColor[0], (int) polygoneVerticesColor.size(), GL_STATIC_DRAW);
+//    polygonesVbo.setNormalData(&polygonesAttributes[0], (int) polygonesAttributes.size(), GL_STATIC_DRAW);
     
 //    //First test but cool for other project
     
@@ -476,7 +484,7 @@ void Scene::initializeGPUData(){
             ofPoint currentVertice = processedPolygone.getVertices()[j];
             
             dashedPolygonesVertices.push_back(currentVertice);
-            dashedPolygonesAttributes.push_back(ofVec3f(ofRandom(4.0, 7.0)));
+            dashedPolygonesAttributes.push_back(ofVec3f(6.0));
             
         }
         
@@ -528,6 +536,31 @@ void Scene::renderToScreen(){
     receptorsVbo.drawElements(GL_TRIANGLES, (int) receptorsIndices.size());
     receptorImg.unbind();
     quadTextureProgram.end();
+    
+    ofPushStyle();
+    ofSetColor(200, getAlpha());
+    
+    for(int i = 0; i < receptors.size(); i++){
+        string text = "[" + to_string((int) floor(receptors[i]->getPercentFill())) + " / 100]";
+        infosFont.drawString(text, receptors[i]->getPosition().x - infosFont.stringWidth(text) / 2, receptors[i]->getPosition().y + receptors[i]->getRadius() * 0.8);
+    }
+    
+    ofPopStyle();
+    
+    //Draw particle reception feedback circle
+    
+    ofEnableAlphaBlending();
+    ofEnableBlendMode(OF_BLENDMODE_ADD);
+    ofEnablePointSprites();
+    dashedPolygoneProgram.begin();
+    dashedPolygoneProgram.setUniform1f("alpha", getAlpha() / 255.0);
+    dashedPolygoneImg.bind();
+    particleReceptionFeedbackVbo.draw(GL_POINTS, 0, (int) particleReceptionFeedbackVertices.size());
+    dashedPolygoneImg.unbind();
+    dashedPolygoneProgram.end();
+    ofDisablePointSprites();
+    ofDisableBlendMode();
+    ofEnableAlphaBlending();
     
     //4 - Draw call
     //Draw all emitters
@@ -798,6 +831,8 @@ void Scene::updateReceptorsRenderingData(){
             
         }
         
+        particleReceptionFeedbackAttributes[i] = ofVec3f(receptors[i]->getParticleReceptionFeedbackRadius());
+        
     }
     
     receptorStatusLines.build();
@@ -805,6 +840,8 @@ void Scene::updateReceptorsRenderingData(){
     
     receptorsVbo.updateVertexData(&receptorsVertices[0], (int) receptorsVertices.size());
     receptorsVbo.updateNormalData(&receptorsAttributes[0], (int) receptorsAttributes.size());
+    
+    particleReceptionFeedbackVbo.updateNormalData(&particleReceptionFeedbackAttributes[0], (int) particleReceptionFeedbackAttributes.size());
     
 }
 
@@ -935,85 +972,85 @@ void Scene::checkForCollisions(){
         
         //OLD ALGORITHM --- SCKETCHY BUT WORKING
         
-//        ofVec2f currentPos = allParticles[i]->getPosition() + allParticles[i]->getVelocity();
-//        ofVec2f direction = -allParticles[i]->getVelocity().normalize();
-//        float maxDistRay = allParticles[i]->getVelocity().length() * 30;
-//        
-//        //First check if inside bounding box
-//        
-//        for(int j = 0; j < polygones.size(); j++){
-//            
-//            shared_ptr<Polygone> currentPoly = polygones[j];
-//            
-//            if(currentPoly->insideBoundingBox(currentPos)){
-//                
-//                if(currentPoly->inside(currentPos)){
-//                    
-//                    bool intersectionDetected = false;
-//                    
-//                    currentPoly->getParticleCollisionsInformations(currentPos, direction, maxDistRay, [&](ofVec2f intersection, ofVec2f normal){
-//                        
-//                        allParticles[i]->setPosition(intersection + normal);
-//                        float angle = direction.normalize().angleRad(normal.normalize());
-//                        ofVec2f bounceDirection = normal.rotateRad(angle).normalize();
-//                        allParticles[i]->setVelocity(allParticles[i]->getVelocity().length() * bounceDirection * 0.7);
-//                        
-//                        intersectionDetected = true;
-//                        
-//                    });
-//
-//                    //Trigger sounds
-//                    
-//                     
-//                }
-//            
-//            }
-//            
-//        }
+        ofVec2f currentPos = allParticles[i]->getPosition() + allParticles[i]->getVelocity();
+        ofVec2f direction = -allParticles[i]->getVelocity().normalize();
+        float maxDistRay = allParticles[i]->getVelocity().length() * 30;
         
-        // NEW ALGORITHM --- NOT WORKING WELL....
-        
-        shared_ptr<Particle> currentParticle = allParticles[i];
-        ofVec2f currentPos = currentParticle->getPosition();
-        ofVec2f lastPos = currentParticle->getLastPosition();
+        //First check if inside bounding box
         
         for(int j = 0; j < polygones.size(); j++){
             
-            if(polygones[j]->insideBoundingBox(currentParticle->getPosition())){
+            shared_ptr<Polygone> currentPoly = polygones[j];
+            
+            if(currentPoly->insideBoundingBox(currentPos)){
                 
-                if(polygones[j]->inside(currentParticle->getPosition())){
+                if(currentPoly->inside(currentPos)){
                     
-                    for(int k = 1; k < polygones[j]->getVertices().size(); k++){
-                        
-                        ofVec2f currentVertice = polygones[j]->getVertices()[k];
-                        ofVec2f lastVertice = polygones[j]->getVertices()[k - 1];
-                        ofVec2f particuleDirection = (currentParticle->getPosition() - currentParticle->getLastPosition()).normalize();
-                        
-                        shared_ptr<ofVec2f> intersection = getIntersection(currentParticle->getLastPosition() - particuleDirection * 100, currentParticle->getPosition(), lastVertice, currentVertice);
-                        
-                        if(intersection != nullptr){
-                            
-                            ofVec2f normal = (lastVertice - currentVertice).getPerpendicular();
-                            ofVec2f particuleDirection = (currentParticle->getLastPosition() - currentParticle->getPosition()).normalize();
-                            float angle = particuleDirection.angleRad(normal);
-                            ofVec2f bounceDirection = normal.rotateRad(angle).normalize();
-                            
-                            currentParticle->setPosition(ofVec2f(intersection->x, intersection->y) + normal * 0.5);
-                            currentParticle->setVelocity(allParticles[i]->getVelocity().length() * bounceDirection * 0.7);
-                            
-//                            beforeImpact.push_back(currentParticle->getLastPosition());
-//                            impacts.push_back(ofVec2f(intersection->x, intersection->y));
-//                            inside.push_back(particles[i]->getPosition());
-                            
-                        }
-                        
-                    }
+                    bool intersectionDetected = false;
                     
+                    currentPoly->getParticleCollisionsInformations(currentPos, direction, maxDistRay, [&](ofVec2f intersection, ofVec2f normal){
+                        
+                        allParticles[i]->setPosition(intersection + normal);
+                        float angle = direction.normalize().angleRad(normal.normalize());
+                        ofVec2f bounceDirection = normal.rotateRad(angle).normalize();
+                        allParticles[i]->setVelocity(allParticles[i]->getVelocity().length() * bounceDirection * 0.7);
+                        
+                        intersectionDetected = true;
+                        
+                    });
+
+                    //Trigger sounds
+                    
+                     
                 }
-                
+            
             }
             
         }
+        
+        // NEW ALGORITHM --- NOT WORKING WELL....
+        
+//        shared_ptr<Particle> currentParticle = allParticles[i];
+//        ofVec2f currentPos = currentParticle->getPosition();
+//        ofVec2f lastPos = currentParticle->getLastPosition();
+//        
+//        for(int j = 0; j < polygones.size(); j++){
+//            
+//            if(polygones[j]->insideBoundingBox(currentParticle->getPosition())){
+//                
+//                if(polygones[j]->inside(currentParticle->getPosition())){
+//                    
+//                    for(int k = 1; k < polygones[j]->getVertices().size(); k++){
+//                        
+//                        ofVec2f currentVertice = polygones[j]->getVertices()[k];
+//                        ofVec2f lastVertice = polygones[j]->getVertices()[k - 1];
+//                        ofVec2f particuleDirection = (currentParticle->getPosition() - currentParticle->getLastPosition()).normalize();
+//                        
+//                        shared_ptr<ofVec2f> intersection = getIntersection(currentParticle->getLastPosition() - particuleDirection * 100, currentParticle->getPosition(), lastVertice, currentVertice);
+//                        
+//                        if(intersection != nullptr){
+//                            
+//                            ofVec2f normal = (lastVertice - currentVertice).getPerpendicular();
+//                            ofVec2f particuleDirection = (currentParticle->getLastPosition() - currentParticle->getPosition()).normalize();
+//                            float angle = particuleDirection.angleRad(normal);
+//                            ofVec2f bounceDirection = normal.rotateRad(angle).normalize();
+//                            
+//                            currentParticle->setPosition(ofVec2f(intersection->x, intersection->y) + normal * 0.5);
+//                            currentParticle->setVelocity(allParticles[i]->getVelocity().length() * bounceDirection * 0.7);
+//                            
+////                            beforeImpact.push_back(currentParticle->getLastPosition());
+////                            impacts.push_back(ofVec2f(intersection->x, intersection->y));
+////                            inside.push_back(particles[i]->getPosition());
+//                            
+//                        }
+//                        
+//                    }
+//                    
+//                }
+//                
+//            }
+//            
+//        }
         
     }
     
@@ -1172,6 +1209,8 @@ void Scene::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, s
 }
 
 void Scene::onDoubleClick(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
+    
+    //OLD RESIZE INTERACTION
     
 //    if(_touch.id < touches.size()){
 //        
