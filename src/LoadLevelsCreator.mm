@@ -19,7 +19,7 @@ LoadLevelsCreator::LoadLevelsCreator(shared_ptr<ofTrueTypeFont> _font){
     interface.setFont(_font);
     interface.addText("LEVELS", ofVec2f(ofGetWidth() / 2, ofGetHeight() * 0.06 / 2));
     
-    backButtonImg.load("images/backButton.png");
+    backButtonImg.load("images/back_button.png");
     shared_ptr<Button> backButton = interface.addButton("BACK", "BACK", ofVec2f(0.0390625 * ofGetWidth()));
     backButton->setDimensions(ofVec2f(0.0390625 * ofGetWidth()));
     backButton->setImage(backButtonImg);

@@ -90,6 +90,8 @@ private:
     
     vector<shared_ptr<Polygone>> polygones;
     void checkForCollisions();
+    shared_ptr<ofVec2f> getIntersection(ofVec2f _p1, ofVec2f _p2, ofVec2f _p3, ofVec2f _p4);
+    bool segmentIntersection(ofVec2f _intersection, ofVec2f _p1, ofVec2f _p2, ofVec2f _p3, ofVec2f _p4);
     
     //GPU rendering variables.
     
@@ -163,7 +165,6 @@ private:
     vector<ofFloatColor> actuatorsRingColors;
     
     void updateActuatorsRenderingData();
-
     
     //Polygones
     

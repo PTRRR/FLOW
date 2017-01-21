@@ -25,7 +25,7 @@ private:
     float offset = 25;
     ofVec2f size;
     bool active = true;
-    
+    bool isHighlighted = false;
     
     //Content
     
@@ -46,6 +46,7 @@ public:
     void setImage(ofImage _image);
     void setDimensions(ofVec2f _dimensions);
     void setActive(bool _active);
+    void setHighlight(bool _highlight);
     
     //Get
     

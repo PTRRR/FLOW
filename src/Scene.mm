@@ -883,43 +883,128 @@ void Scene::checkForCollisions(){
     
     for(int i = 0; i < allParticles.size(); i++){
         
-        ofVec2f currentPos = allParticles[i]->getPosition() + allParticles[i]->getVelocity();
-        ofVec2f direction = -allParticles[i]->getVelocity().normalize();
-        float maxDistRay = allParticles[i]->getVelocity().length() * 30;
+//        ofVec2f currentPos = allParticles[i]->getPosition() + allParticles[i]->getVelocity();
+//        ofVec2f direction = -allParticles[i]->getVelocity().normalize();
+//        float maxDistRay = allParticles[i]->getVelocity().length() * 30;
+//        
+//        //First check if inside bounding box
+//        
+//        for(int j = 0; j < polygones.size(); j++){
+//            
+//            shared_ptr<Polygone> currentPoly = polygones[j];
+//            
+//            if(currentPoly->insideBoundingBox(currentPos)){
+//                
+//                if(currentPoly->inside(currentPos)){
+//                    
+//                    bool intersectionDetected = false;
+//                    
+//                    currentPoly->getParticleCollisionsInformations(currentPos, direction, maxDistRay, [&](ofVec2f intersection, ofVec2f normal){
+//                        
+//                        allParticles[i]->setPosition(intersection + normal);
+//                        float angle = direction.normalize().angleRad(normal.normalize());
+//                        ofVec2f bounceDirection = normal.rotateRad(angle).normalize();
+//                        allParticles[i]->setVelocity(allParticles[i]->getVelocity().length() * bounceDirection * 0.7);
+//                        
+//                        intersectionDetected = true;
+//                        
+//                    });
+//
+//                    //Trigger sounds
+//                    
+//                     
+//                }
+//            
+//            }
+//            
+//        }
         
-        //First check if inside bounding box
+        shared_ptr<Particle> currentParticle = allParticles[i];
+        ofVec2f currentPos = currentParticle->getPosition();
+        ofVec2f lastPos = currentParticle->getLastPosition();
         
         for(int j = 0; j < polygones.size(); j++){
             
-            shared_ptr<Polygone> currentPoly = polygones[j];
-            
-            if(currentPoly->insideBoundingBox(currentPos)){
+            if(polygones[j]->insideBoundingBox(currentParticle->getPosition())){
                 
-                if(currentPoly->inside(currentPos)){
+                if(polygones[j]->inside(currentParticle->getPosition())){
                     
-                    bool intersectionDetected = false;
+                    for(int k = 1; k < polygones[j]->getVertices().size(); k++){
+                        
+                        ofVec2f currentVertice = polygones[j]->getVertices()[k];
+                        ofVec2f lastVertice = polygones[j]->getVertices()[k - 1];
+                        ofVec2f particuleDirection = (currentParticle->getPosition() - currentParticle->getLastPosition()).normalize();
+                        
+                        shared_ptr<ofVec2f> intersection = getIntersection(currentParticle->getLastPosition() - particuleDirection * 100, currentParticle->getPosition(), lastVertice, currentVertice);
+                        
+                        if(intersection != nullptr){
+                            
+                            ofVec2f normal = (lastVertice - currentVertice).getPerpendicular();
+                            ofVec2f particuleDirection = (currentParticle->getLastPosition() - currentParticle->getPosition()).normalize();
+                            float angle = particuleDirection.angleRad(normal);
+                            ofVec2f bounceDirection = normal.rotateRad(angle).normalize();
+                            
+                            currentParticle->setPosition(ofVec2f(intersection->x, intersection->y) + normal * 0.5);
+                            currentParticle->setVelocity(allParticles[i]->getVelocity().length() * bounceDirection * 0.7);
+                            
+//                            beforeImpact.push_back(currentParticle->getLastPosition());
+//                            impacts.push_back(ofVec2f(intersection->x, intersection->y));
+//                            inside.push_back(particles[i]->getPosition());
+                            
+                        }
+                        
+                    }
                     
-                    currentPoly->getParticleCollisionsInformations(currentPos, direction, maxDistRay, [&](ofVec2f intersection, ofVec2f normal){
-                        
-                        allParticles[i]->setPosition(intersection + normal);
-                        float angle = direction.normalize().angleRad(normal.normalize());
-                        ofVec2f bounceDirection = normal.rotateRad(angle).normalize();
-                        allParticles[i]->setVelocity(allParticles[i]->getVelocity().length() * bounceDirection * 0.7);
-                        
-                        intersectionDetected = true;
-                        
-                    });
-
-                    //Trigger sounds
-                    
-                     
                 }
-            
+                
             }
             
         }
         
     }
+    
+}
+
+shared_ptr<ofVec2f> Scene::getIntersection(ofVec2f _p1, ofVec2f _p2, ofVec2f _p3, ofVec2f _p4){
+    
+    // Store the values for fast access and easy
+    // equations-to-code conversion
+    float x1 = _p1.x, x2 = _p2.x, x3 = _p3.x, x4 = _p4.x;
+    float y1 = _p1.y, y2 = _p2.y, y3 = _p3.y, y4 = _p4.y;
+    
+    float d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+    // If d is zero, there is no intersection
+    if (d == 0) return nullptr;
+    
+    // Get the x and y
+    float pre = (x1*y2 - y1*x2), post = (x3*y4 - y3*x4);
+    float x = ( pre * (x3 - x4) - (x1 - x2) * post ) / d;
+    float y = ( pre * (y3 - y4) - (y1 - y2) * post ) / d;
+    
+    // Check if the x and y coordinates are within both lines
+    if ( x < min(x1, x2) || x > max(x1, x2) ||
+        x < min(x3, x4) || x > max(x3, x4) ) return nullptr;
+    if ( y < min(y1, y2) || y > max(y1, y2) ||
+        y < min(y3, y4) || y > max(y3, y4) ) return nullptr;
+    
+    // Return the point of intersection
+    shared_ptr<ofVec2f> intersection = shared_ptr<ofVec2f>(new ofVec2f());
+    intersection->x = x;
+    intersection->y = y;
+    return intersection;
+    
+}
+
+bool Scene::segmentIntersection(ofVec2f _intersection, ofVec2f _p1, ofVec2f _p2, ofVec2f _p3, ofVec2f _p4){
+    
+    float distance1 = (_p1 - _p2).length() + 0.0001; //Add a minimum value to compensate floating error
+    float distance2 = (_p3 - _p4).length() + 0.0001; //Add a minimum value to compensate floating error
+    
+    if(((_p1 - _intersection).length() + (_p2 - _intersection).length()) <= distance1 && ((_p3 - _intersection).length() + (_p4 - _intersection).length()) <= distance2){ //Check if less or equal to compensate floating error
+        return true;
+    }
+    
+    return false;
     
 }
 

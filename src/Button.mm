@@ -34,6 +34,13 @@ void Button::draw(){
         
     }
     
+    if(isHighlighted){
+        
+        ofSetColor(255.0, 255.0, 255.0);
+        ofDrawLine(getPosition().x - dimensions.x / 2, getPosition().y - dimensions.y / 5, getPosition().x + dimensions.x / 2, getPosition().y - dimensions.y / 5);
+        
+    }
+    
 }
 
 //Set
@@ -74,6 +81,12 @@ void Button::setDimensions(ofVec2f _dimensions){
 void Button::setActive(bool _active){
     
     active = _active;
+    
+}
+
+void Button::setHighlight(bool _highlight){
+    
+    isHighlighted = _highlight;
     
 }
 

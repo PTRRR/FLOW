@@ -92,7 +92,7 @@ void GameManager::update(){
     
     if(!initialTimeoutIsOver && ofGetElapsedTimeMillis() >= initialTimeout){
         
-        screenPipeline.setScreenActive(menu);
+        screenPipeline.setScreenActive(levelCreator);
         initialTimeoutIsOver = true;
         
     }

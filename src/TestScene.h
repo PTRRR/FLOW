@@ -34,16 +34,24 @@ private:
     
     //Elements
     
-    int num = 10;
-    float amp = 5;
-    float radius = 100;
+    vector<ofVec2f> beforeImpact;
+    vector<ofVec2f> impacts;
+    vector<ofVec2f> inside;
     
-    ofShader lineShader;
-    VboLine vboLine;
+    vector<shared_ptr<Particle>> particles;
+    void addParticle();
+    
+    
+    shared_ptr<Particle> particle;
+    Polygone polygone;
     
     //Rendering
     
     void renderToScreen() override;
+    
+    //Collision
+    
+    shared_ptr<ofVec2f> getIntersection(ofVec2f _p1, ofVec2f _p2, ofVec2f _p3, ofVec2f _p4);
     
     //User inputs
     

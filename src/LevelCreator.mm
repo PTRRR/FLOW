@@ -17,25 +17,23 @@ LevelCreator::LevelCreator(shared_ptr<ofTrueTypeFont> _font){
     
     interface.addButton("MENU", "MENU", ofVec2f(ofGetWidth() - 100, 40));
     interface.addButton("PRINT", "PRINT", ofVec2f(ofGetWidth() - 400, 40));
-    interface.addButton("V", "V", ofVec2f(ofGetWidth() - 600, 40));
+    interface.addButton("V", "V", ofVec2f(ofGetWidth() - 600, 40))->setHighlight(true);
     interface.addButton("E", "E", ofVec2f(ofGetWidth() - 800, 40));
     interface.addButton("R", "R", ofVec2f(ofGetWidth() - 1000, 40));
     interface.addButton("LOAD", "LOAD", ofVec2f(ofGetWidth() - 1200, 40));
     interface.addButton("SAVE", "SAVE", ofVec2f(ofGetWidth() - 1400, 40));
     
-    rows = (int) ofGetHeight() / (512 * 0.05);
-    columns = (int) ofGetWidth() / (512 * 0.05);
+    rows = (int) ofGetHeight() / (512 * 0.08);
+    columns = (int) ofGetWidth() / (512 * 0.08);
     
-    //Set points
+    //Set grid
     
-    for(int i = 1; i < rows; i++){
-        
-        for(int j = 1; j < columns; j++){
-            
+    for(int i = 1; i < rows; i++)
+    {
+        for(int j = 1; j < columns; j++)
+        {
             points.push_back(ofVec2f( (float) ofGetWidth() / columns * j, (float) ofGetHeight() / rows * i ));
-            
         }
-        
     }
     
     for(int i = 0; i < rows; i++){
@@ -56,6 +54,27 @@ LevelCreator::LevelCreator(shared_ptr<ofTrueTypeFont> _font){
     
 }
 
+void LevelCreator::update()
+{
+    if(down)
+    {
+        float deltaTime = ofGetElapsedTimeMillis() - lastTime;
+        timeElapsedSinceDown += deltaTime;
+        
+        if(timeElapsedSinceDown >= timeToDisplayMenu)
+        {
+            menuIsDisplayed = true;
+        }
+    }
+    else
+    {
+        timeElapsedSinceDown = 0.0;
+        menuIsDisplayed = false;
+    }
+    
+    lastTime = ofGetElapsedTimeMillis();
+}
+
 void LevelCreator::renderToScreen(){
     
     ofPushStyle();
@@ -66,65 +85,7 @@ void LevelCreator::renderToScreen(){
     
     gridVbo.draw(GL_LINES, 0, (int) gridVertices.size());
     
-    //Draw polygones
-    
-    ofNoFill();
-    ofSetColor(255, 255, 255, getAlpha());
-    
-    for(int i = 0; i < polylines.size(); i++){
-        
-        ofBeginShape();
-        
-        for(int j = 0; j < polylines[i].getVertices().size(); j++){
-            
-            ofVertex(polylines[i].getVertices()[j].x, polylines[i].getVertices()[j].y);
-            ofDrawCircle(polylines[i].getVertices()[j] , 6);
-            
-            if(j == polylines[i].getVertices().size() - 1){
-                
-                ofVertex(polylines[i].getVertices()[0].x, polylines[i].getVertices()[0].y);
-                
-            }
-            
-        }
-        
-        ofEndShape();
-        
-    }
-    
-    //Draw emitters
-    
-    ofSetColor(255, 0, 0, getAlpha());
-    
-    for(int i = 0; i < emitters.size(); i++){
-        
-        ofDrawCircle(emitters[i], 40);
-        ofDrawBitmapString("emitter " + to_string(i), emitters[i]);
-        
-    }
-    
-    ofSetColor(0, 255, 0, getAlpha());
-    
-    for(int i = 0; i < receptors.size(); i++){
-        
-        ofDrawCircle(receptors[i], 40);
-        ofDrawBitmapString("receptors " + to_string(i), receptors[i]);
-        
-    }
-    
-    if(down){
-        
-        ofDrawLine(touch.x, touch.y - 100, touch.x, touch.y + 100);
-        ofDrawLine(touch.x - 100, touch.y, touch.x + 100, touch.y);
-        ofDrawCircle(touch, 70);
-        
-    }
-    
     ofPopStyle();
-    
-    ofDrawBitmapString(content, 20, 20);
-    
-    ofSetColor(255, 255, 255, getAlpha());
     
     interface.draw();
     
@@ -458,169 +419,183 @@ void LevelCreator::setup(string _xmlFile){
 
 void LevelCreator::onMouseDown(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
     
-    touch = getClosestPoint(_touch);
-    
     interface.mouseDown(_touch, [&](string text, string action){
         callback(text, action);
         button = true;
     });
     
-    if(!button){
-        
-        if(v && !db){
+    touch = getClosestPoint(_touch);
+    
+    if(!button)
+    {
+        if(v && !db)
+        {
+            //If no polygone already exists then add one
             
-            if(noPolyline){
-                
-                polylines.push_back(ofPolyline());
-                
-                ofVec2f closestPoint = getClosestPoint(_touch);
-                polylines[polylines.size() - 1].addVertex(closestPoint.x, closestPoint.y);
-                polylines[polylines.size() - 1].close();
-                
-                noPolyline = false;
-                
-            }else{
-                
-                ofVec2f closestPoint = getClosestPoint(_touch);
-                ofVec2f lastPoint = polylines[polylines.size() - 1].getVertices()[polylines[polylines.size() - 1].getVertices().size() - 1];
-                
-                if (polylines[polylines.size() - 1].getVertices().size() > 1 && closestPoint.x == polylines[polylines.size() - 1].getVertices()[0].x && closestPoint.y == polylines[polylines.size() - 1].getVertices()[0].y) {
-                    
-                    noPolyline = true;
-                    
-                }else if(closestPoint.x == lastPoint.x && closestPoint.y == lastPoint.y){
-                    
-                    vector<ofPoint> vertices = polylines[polylines.size() - 1].getVertices();
-                    vertices.erase(vertices.begin() + vertices.size() - 1);
-                    
-                    polylines[polylines.size() - 1].clear();
-                    polylines[polylines.size() - 1].addVertices(vertices);
-                    cout << "remove" << endl;
-                    
-                }else if(polylines[polylines.size() - 1].getVertices().size() == 1 && closestPoint.x == lastPoint.x && closestPoint.y == lastPoint.y){
-                    
-                    polylines[polylines.size() - 1].clear();
-                    polylines.erase(polylines.begin() + polylines.size() - 1);
-                    
-                }else{
-                    
-                    polylines[polylines.size() - 1].addVertex(closestPoint.x, closestPoint.y);
-                    polylines[polylines.size() - 1].close();
-                    
-                }
-                
+            if(polygones.size() == 0 || !isDrawing)
+            {
+                polygones.push_back(ofPolyline());
+                isDrawing = true;
             }
             
-        }else if(e){
-            
-            ofVec2f closestPoint = getClosestPoint(_touch);
-            
-            bool removed = false;
-            
-            for(int i = 0; i < emitters.size(); i++){
-                
-                if(closestPoint.x == emitters[i].x && closestPoint.y == emitters[i].y){
-                    emitters.erase(emitters.begin() + emitters.size() - 1);
-                    removed = true;
-                    break;
-                }
-                
-            }
-            
-            if(!removed) emitters.push_back(closestPoint);
-            
-        }else if(r){
-            
-            ofVec2f closestPoint = getClosestPoint(_touch);
-            
-            bool removed = false;
-            
-            for(int i = 0; i < receptors.size(); i++){
-                
-                if(closestPoint.x == receptors[i].x && closestPoint.y == receptors[i].y){
-                    receptors.erase(receptors.begin() + receptors.size() - 1);
-                    removed = true;
-                    break;
-                }
-                
-            }
-            
-            if(!removed) receptors.push_back(closestPoint);
-            
+            polygones[polygones.size() - 1].addVertex(touch);
         }
-        
-        if(db){
+        else if(v && db)
+        {
             
-            polylines.erase(polylines.begin() + polylines.size() - 1);
-            db = false;
+            removeLastVertice();
             
+//            if(polygones.size() > 0 && isDrawing)
+//            {
+//                polygones.erase(polygones.begin() + polygones.size() - 1);
+//                isDrawing = false;
+//            }
+//            else if()
+//            {
+//                
+//            }
+            
+            for(int i = 0; i < polygones.size() - 1; i++)
+            {
+                if(polygones[i].inside(_touch))
+                {
+                    polygones.erase(polygones.begin() + i);
+                }
+            }
         }
-        
     }
     
     down = true;
     
-    
-
 }
 
 void LevelCreator::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
     
+    interface.mouseMove(_touch, [&](string text, string action){
+        callback(text, action);
+    });
+    
     touch = getClosestPoint(_touch);
     
-    if(polylines.size() > 0 && !button){
-     
-        vector<ofPoint> vertices = polylines[polylines.size() - 1].getVertices();
-        vertices.erase(vertices.begin() + vertices.size() - 1);
-        vertices.push_back(getClosestPoint(_touch));
-        
-        polylines[polylines.size() - 1].clear();
-        polylines[polylines.size() - 1].addVertices(vertices);
-        
-        interface.mouseMove(_touch, [&](string text, string action){
-            callback(text, action);
-        });
-        
+    if(!button)
+    {
+        if(v)
+        {
+            if(polygones[polygones.size() - 1].getVertices().size() > 0)
+            {
+                removeLastVertice();
+                polygones[polygones.size() - 1].addVertex(touch);
+            }
+        }
     }
-    
 }
 
 void LevelCreator::onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
     
     interface.mouseUp(_touch, [&](string text, string action){
         
-        if(action == "PRINT"){
+        if(action == "PRINT")
+        {
             printLevel();
-        }else if(action == "R"){
-            
+        }
+        else if(action == "R")
+        {
             r = true;
             v = false;
             e = false;
-            
-        }else if(action == "E"){
-            
+        }
+        else if(action == "E")
+        {
             r = false;
             v = false;
             e = true;
-            
-        }else if(action == "V"){
-            
+        }
+        else if(action == "V")
+        {
             r = false;
             v = true;
             e = false;
-            
-        }else if(action == "MENU"){
+        }
+        else if(action == "MENU")
+        {
             polylines.erase(polylines.begin(), polylines.end());
             emitters.erase(emitters.begin(), emitters.end());
             receptors.erase(receptors.begin(), receptors.end());
-        }else if(action == "SAVE"){
+        }
+        else if(action == "SAVE")
+        {
             save();
+        }
+        
+        //Hightlight buttons
+        
+        vector<shared_ptr<Button>> buttons = interface.getButtons();
+        
+        if(text == "PRINT" || text == "R" || text == "E" || text == "V")
+        {
+            for(int i = 0; i < buttons.size(); i++)
+            {
+                if(text != buttons[i]->getText())
+                {
+                    buttons[i]->setHighlight(false);
+                }else
+                {
+                    buttons[i]->setHighlight(true);
+                }
+            }
         }
         
         callback(text, action);
         
     });
     
+    if(!button)
+    {
+        if(v)
+        {
+            vector<ofPoint> currentVertices = polygones[polygones.size() - 1].getVertices();
+            ofVec2f currentPoint = currentVertices[currentVertices.size() - 1];
+            ofVec2f firstPoint = currentVertices[0];
+            
+            //Check if the current point is on the last one. If so erase the last point.
+            
+            if(currentVertices.size() > 2)
+            {
+                ofVec2f lastPoint = currentVertices[currentVertices.size() - 2];
+                
+                if(currentPoint.x == lastPoint.x && currentPoint.y == lastPoint.y)
+                {
+                    //Update vertices
+                    
+                    currentVertices.erase(currentVertices.begin() + currentVertices.size() - 2);
+                    
+                    //Update current polygone with new vertices.
+                    //Here we change only the last one to make it follow the finger of the user.
+                    
+                    polygones[polygones.size() - 1].clear();
+//                    polygones[polygones.size() - 1].addVertices(currentVertices);
+                }
+            }
+            
+            //Check if the user has closed the shape.
+            
+            if(currentPoint.x == firstPoint.x && currentPoint.y == firstPoint.y && currentVertices.size() > 2)
+            {
+                isDrawing = false;
+            }
+            
+        }
+        else if(e)
+        {
+            
+        }
+        else if(r)
+        {
+            
+        }
+    }
+    
+    db = false;
     down = false;
     button = false;
     
@@ -628,22 +603,21 @@ void LevelCreator::onMouseUp(ofTouchEventArgs & _touch, function<void(string _te
 
 void LevelCreator::onDoubleClick(ofTouchEventArgs & _touch, function<void(string _text, string _action)> callback){
     
-    if(polylines[polylines.size() - 1].getVertices().size() == 1){
-     
-        for(int i = 0; i < polylines.size(); i++){
-            
-            if(polylines[i].inside(_touch)){
-                
-                polylines.erase(polylines.begin() + i);
-                break;
-                
-            }
-            
-        }
-        
-        db = true;
-        noPolyline = true;
-        
-    }
+    db = true;
     
+}
+
+void LevelCreator::removeLastVertice()
+{
+    vector<ofPoint> currentVertices = polygones[polygones.size() - 1].getVertices();
+    
+    //Update vertices
+    
+    currentVertices.erase(currentVertices.begin() + currentVertices.size() - 1);
+    
+    //Update current polygone with new vertices.
+    //Here we change only the last one to make it follow the finger of the user.
+    
+    polygones[polygones.size() - 1].clear();
+    polygones[polygones.size() - 1].addVertices(currentVertices);
 }
