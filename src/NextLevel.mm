@@ -15,9 +15,9 @@ NextLevel::NextLevel(shared_ptr<ofTrueTypeFont> _font){
     font = _font;
     interface.setFont(font);
     
-    interface.addText("LEVEL FINISHED", ofVec2f(ofGetWidth() / 2, ofGetHeight() * 0.06 / 2));
+//    interface.addText("LEVEL FINISHED", ofVec2f(ofGetWidth() / 2, ofGetHeight() * 0.06 / 2));
     interface.addButton("RESTART", "RESTART", ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2 - ofGetHeight() * 0.06 / 2));
-//    interface.addButton("NEXT LEVEL", "NEXT-LEVEL", ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2 + ofGetHeight() * 0.06 / 2));
+    interface.addButton("NEXT LEVEL", "NEXT-LEVEL", ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2 + ofGetHeight() * 0.06 / 2));
     interface.addButton("MENU", "MENU", ofVec2f(ofGetWidth() / 2, ofGetHeight() - ofGetHeight() * 0.06 / 2));
     
 }

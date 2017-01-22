@@ -144,6 +144,7 @@ private:
     vector<ofIndexType> receptorsIndices;
     vector<ofVec3f> receptorsAttributes;
     
+    ofImage particleReceptionFeedbackImg;
     ofVbo particleReceptionFeedbackVbo;
     vector<ofVec3f> particleReceptionFeedbackVertices;
     vector<ofVec3f> particleReceptionFeedbackAttributes;

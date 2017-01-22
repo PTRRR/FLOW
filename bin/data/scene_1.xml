@@ -1,19 +1,38 @@
 <general>
-    <UNLOCKED>1</UNLOCKED>
+    <UNLOCKED>0</UNLOCKED>
     <ORIGINAL_WIDTH>1536</ORIGINAL_WIDTH>
     <ORIGINAL_HEIGHT>2048</ORIGINAL_HEIGHT>
     <MAX_PARTICLES>1000</MAX_PARTICLES>
     <MAX_TAIL_LENGTH>25</MAX_TAIL_LENGTH>
     <MAX_ACTUATORS_NUM>4</MAX_ACTUATORS_NUM>
 </general>
-<emitters>
-</emitters>
 <actuators>
     <MAX_ACTUATORS_NUM>4</MAX_ACTUATORS_NUM>
 </actuators>
 <fixedActuators />
+<emitters>
+    
+    <emitter>
+        
+        <X>0.500000060</X>
+        <Y>0.122807018</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000.000000000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+</emitters>
 <receptors>
+    
+    <receptor>
+        
+        <X>0.500000000</X>
+        <Y>0.887499988</Y>
+        <radius>0.130208328</radius>
+        <strength>5.000000000</strength>
+        <maxParticles>300</maxParticles>
+        <decreasingFactor>0.022000000</decreasingFactor>
+    </receptor>
 </receptors>
-<polygones>
-  
-</polygones>
+<polygones></polygones>

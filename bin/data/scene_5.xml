@@ -3,17 +3,74 @@
     <ORIGINAL_WIDTH>1536</ORIGINAL_WIDTH>
     <ORIGINAL_HEIGHT>2048</ORIGINAL_HEIGHT>
     <MAX_PARTICLES>1000</MAX_PARTICLES>
-    <MAX_TAIL_LENGTH>25</MAX_TAIL_LENGTH>
-    <MAX_ACTUATORS_NUM>4</MAX_ACTUATORS_NUM>
+    <MAX_TAIL_LENGTH>35</MAX_TAIL_LENGTH>
+    <MAX_ACTUATORS_NUM>1</MAX_ACTUATORS_NUM>
 </general>
-<emitters>
-</emitters>
 <actuators>
-    <MAX_ACTUATORS_NUM>4</MAX_ACTUATORS_NUM>
+    <MAX_ACTUATORS_NUM>1</MAX_ACTUATORS_NUM>
 </actuators>
 <fixedActuators />
+<emitters>
+    
+    <emitter>
+        
+        <X>0.833333313</X>
+        <Y>0.140350878</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>100.000000000</rate>
+        <maxParticles>1000.000000000</maxParticles>
+        <maxTailLength>35</maxTailLength>
+    </emitter>
+</emitters>
 <receptors>
+    
+    <receptor>
+        
+        <X>0.166666672</X>
+        <Y>0.859649122</Y>
+        <radius>0.130208328</radius>
+        <strength>5.000000000</strength>
+        <maxParticles>200</maxParticles>
+        <decreasingFactor>0.018000000</decreasingFactor>
+    </receptor>
 </receptors>
 <polygones>
-  
+    
+    <polygone>
+        
+        <vertices>
+            
+            <vertex>
+                
+                <X>0.333333343</X>
+                <Y>0.596491218</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.357142895</X>
+                <Y>0.614035070</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.666666687</X>
+                <Y>0.385964930</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.642857134</X>
+                <Y>0.368421048</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.333333343</X>
+                <Y>0.596491218</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+        </vertices>
+    </polygone>
 </polygones>

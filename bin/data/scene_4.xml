@@ -6,14 +6,83 @@
     <MAX_TAIL_LENGTH>25</MAX_TAIL_LENGTH>
     <MAX_ACTUATORS_NUM>4</MAX_ACTUATORS_NUM>
 </general>
-<emitters>
-</emitters>
 <actuators>
-    <MAX_ACTUATORS_NUM>4</MAX_ACTUATORS_NUM>
+    <MAX_ACTUATORS_NUM>3</MAX_ACTUATORS_NUM>
 </actuators>
 <fixedActuators />
+<emitters>
+    
+    <emitter>
+        
+        <X>0.500000060</X>
+        <Y>0.122807018</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>90.000000000</rate>
+        <maxParticles>1000.000000000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+</emitters>
 <receptors>
+    
+    <receptor>
+        
+        <X>0.500000060</X>
+        <Y>0.894736826</Y>
+        <radius>0.130208328</radius>
+        <strength>5.000000000</strength>
+        <maxParticles>300</maxParticles>
+        <decreasingFactor>0.022000000</decreasingFactor>
+    </receptor>
 </receptors>
 <polygones>
-  
+    
+    <polygone>
+        
+        <vertices>
+            
+            <vertex>
+                
+                <X>0.500000060</X>
+                <Y>0.438596487</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.595238149</X>
+                <Y>0.508771956</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.571428597</X>
+                <Y>0.526315808</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.500000060</X>
+                <Y>0.473684222</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.428571463</X>
+                <Y>0.526315808</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.404761910</X>
+                <Y>0.508771956</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.500000060</X>
+                <Y>0.438596487</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+        </vertices>
+    </polygone>
 </polygones>

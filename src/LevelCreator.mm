@@ -380,6 +380,10 @@ void LevelCreator::printLevel(){
     
     xml.copyXmlToString(content);
     
+    cout << "-----------------------------------" << endl;
+    cout << "-----------------------------------" << endl;
+    cout << "-----------------------------------" << endl;
+    
     cout << content << endl;
     
 }

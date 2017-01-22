@@ -42,7 +42,7 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     actuatorsLines = VboLine(GL_DYNAMIC_DRAW);
     actuatorsLines.setAutoBuild(false);
     actuatorsLines.setWidth(3);
-    actuatorsLines.setColor(0.7, 0.7, 0.7);
+    actuatorsLines.setColor(0.0, 0.0, 0.0);
     
     //Receptor
     
@@ -60,6 +60,7 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     actuatorArrowImg.load("images/actuator_arrow_2.png");
     polygoneImg.load("images/polygone_tex.png");
     dashedPolygoneImg.load("images/dashed_polygone.png");
+    particleReceptionFeedbackImg.load("images/particleReceptionFeedback.png");
     
     //Load the font that will be used to display informations on the scene
     
@@ -509,7 +510,7 @@ void Scene::renderToScreen(){
     //1 - Draw call
     //Draw particles tail.
     
-    glLineWidth(2.0);
+    glLineWidth(1.0);
     
     ofEnableBlendMode(OF_BLENDMODE_ADD);
     particleTailProgram.begin();
@@ -554,9 +555,9 @@ void Scene::renderToScreen(){
     ofEnablePointSprites();
     dashedPolygoneProgram.begin();
     dashedPolygoneProgram.setUniform1f("alpha", getAlpha() / 255.0);
-    dashedPolygoneImg.bind();
+    particleReceptionFeedbackImg.bind();
     particleReceptionFeedbackVbo.draw(GL_POINTS, 0, (int) particleReceptionFeedbackVertices.size());
-    dashedPolygoneImg.unbind();
+    particleReceptionFeedbackImg.unbind();
     dashedPolygoneProgram.end();
     ofDisablePointSprites();
     ofDisableBlendMode();
@@ -653,10 +654,10 @@ void Scene::updateParticlesRenderingData(){
             vector<ofVec2f> points = allParticles[i]->getPoints();
             
             for(int j = 0; j < MAX_TAIL_LENGTH; j++){
-                
                 tailPoints[i * MAX_TAIL_LENGTH + j] = points[j];
-                float alphaMutl = (float) j / MAX_TAIL_LENGTH + 0.05;
-                tailColors[i * MAX_TAIL_LENGTH + j].a = allParticles[i]->getLifeLeft() / allParticles[i]->getLifeSpan() * alphaMutl - 0.1;
+                float alphaMult = (float) j / MAX_TAIL_LENGTH;
+//                alphaMutl = 0.8;
+                tailColors[i * MAX_TAIL_LENGTH + j].a = ofClamp(allParticles[i]->getLifeLeft() / allParticles[i]->getLifeSpan() * (alphaMult + 0.4), 0.0, 0.7);
                 
                 //Fade out between screens
                 
@@ -735,10 +736,10 @@ void Scene::updateActuatorsRenderingData(){
             
             //Set color
             
-            actuatorsRingColors[currentRingVertexIndex] = ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255));
-            actuatorsRingColors[currentRingVertexIndex + 1] = ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255));
-            actuatorsRingColors[currentRingVertexIndex + 2] = ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255));
-            actuatorsRingColors[currentRingVertexIndex + 3] = ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255));
+            actuatorsRingColors[currentRingVertexIndex] = ofFloatColor(0.8, 0.8, 0.8, ofClamp(alpha, 0, getAlpha() / 255));
+            actuatorsRingColors[currentRingVertexIndex + 1] = ofFloatColor(0.8, 0.8, 0.8, ofClamp(alpha, 0, getAlpha() / 255));
+            actuatorsRingColors[currentRingVertexIndex + 2] = ofFloatColor(0.8, 0.8, 0.8, ofClamp(alpha, 0, getAlpha() / 255));
+            actuatorsRingColors[currentRingVertexIndex + 3] = ofFloatColor(0.8, 0.8, 0.8, ofClamp(alpha, 0, getAlpha() / 255));
             
             currentRingVertexIndex += 4;
             
@@ -758,7 +759,7 @@ void Scene::updateActuatorsRenderingData(){
             line.push_back(ofVec2f(origin.x, origin.y));
             line.push_back(ofVec2f(target.x, target.y));
             
-            vector<ofFloatColor> color = vector<ofFloatColor>(2, ofFloatColor(1.0, 1.0, 1.0, ofClamp(alpha, 0, getAlpha() / 255)));
+            vector<ofFloatColor> color = vector<ofFloatColor>(2, ofFloatColor(0.6, 0.6, 0.6, ofClamp(alpha, 0, getAlpha() / 255)));
 
             
             actuatorsLines.updateLine(j + i * 8, line);
@@ -895,7 +896,9 @@ void Scene::update(){
             
             actuators[i]->enable(false);
             
-            ofVec2f position = ofVec2f((ofGetWidth() / 2) - (ofGetWidth() / 4) + i * ((ofGetWidth() / 2) / (actuators.size() - 1)), actuatorBox.height / 2);
+            float actuatorSpacing = ofGetWidth() * 0.1;
+            
+            ofVec2f position = ofVec2f(ofGetWidth() / 2 - (actuatorSpacing * (actuators.size() - 1)) / 2 + i * actuatorSpacing, actuatorBox.height / 2);
             
             ofVec2f force = (position - actuators[i]->getPosition());
             actuators[i]->applyForce(force);
