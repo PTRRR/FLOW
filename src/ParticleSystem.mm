@@ -99,7 +99,7 @@ void ParticleSystem::update(){
             force += actuators[j]->getForceAtPoint(particles[i]->getPosition());
             
         }
-        
+                
         //Check if particle is eaten by the receptor.
         
         for(int j = 0; j < receptors.size(); j++){

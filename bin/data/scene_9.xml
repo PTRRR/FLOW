@@ -4,16 +4,321 @@
     <ORIGINAL_HEIGHT>2048</ORIGINAL_HEIGHT>
     <MAX_PARTICLES>1000</MAX_PARTICLES>
     <MAX_TAIL_LENGTH>25</MAX_TAIL_LENGTH>
-    <MAX_ACTUATORS_NUM>4</MAX_ACTUATORS_NUM>
+    <MAX_ACTUATORS_NUM>7</MAX_ACTUATORS_NUM>
 </general>
-<emitters>
-</emitters>
 <actuators>
-    <MAX_ACTUATORS_NUM>4</MAX_ACTUATORS_NUM>
+    <MAX_ACTUATORS_NUM>7</MAX_ACTUATORS_NUM>
 </actuators>
 <fixedActuators />
+<emitters>
+    
+    <emitter>
+        
+        <X>0.809523821</X>
+        <Y>0.140350878</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>30.000000000</rate>
+        <maxParticles>333.000000000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.500000060</X>
+        <Y>0.140350878</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>30.000000000</rate>
+        <maxParticles>333.000000000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+    <emitter>
+        
+        <X>0.190476194</X>
+        <Y>0.140350878</Y>
+        <boxX>0.006510417</boxX>
+        <boxY>0.000488281</boxY>
+        <rate>30.000000000</rate>
+        <maxParticles>333.000000000</maxParticles>
+        <maxTailLength>25</maxTailLength>
+    </emitter>
+</emitters>
 <receptors>
+    
+    <receptor>
+        
+        <X>0.500000060</X>
+        <Y>0.877192974</Y>
+        <radius>0.130208328</radius>
+        <strength>5.000000000</strength>
+        <maxParticles>300</maxParticles>
+        <decreasingFactor>0.022000000</decreasingFactor>
+    </receptor>
 </receptors>
 <polygones>
-  
+    
+    <polygone>
+        
+        <vertices>
+            
+            <vertex>
+                
+                <X>0.809523821</X>
+                <Y>0.333333343</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.690476239</X>
+                <Y>0.245614037</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.714285791</X>
+                <Y>0.228070170</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.809523821</X>
+                <Y>0.298245609</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.904761970</X>
+                <Y>0.228070170</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.928571463</X>
+                <Y>0.245614037</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.809523821</X>
+                <Y>0.333333343</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+        </vertices>
+    </polygone>
+    <polygone>
+        
+        <vertices>
+            
+            <vertex>
+                
+                <X>0.500000060</X>
+                <Y>0.456140339</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.333333343</X>
+                <Y>0.578947365</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.357142895</X>
+                <Y>0.596491218</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.500000060</X>
+                <Y>0.491228074</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.642857134</X>
+                <Y>0.596491218</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.666666687</X>
+                <Y>0.578947365</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.500000060</X>
+                <Y>0.456140339</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+        </vertices>
+    </polygone>
+    <polygone>
+        
+        <vertices>
+            
+            <vertex>
+                
+                <X>0.071428575</X>
+                <Y>0.754385948</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.095238097</X>
+                <Y>0.736842096</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.285714298</X>
+                <Y>0.877192974</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.261904776</X>
+                <Y>0.894736826</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.071428575</X>
+                <Y>0.754385948</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+        </vertices>
+    </polygone>
+    <polygone>
+        
+        <vertices>
+            
+            <vertex>
+                
+                <X>0.904761970</X>
+                <Y>0.736842096</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.928571463</X>
+                <Y>0.754385948</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.738095284</X>
+                <Y>0.894736826</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.714285791</X>
+                <Y>0.877192974</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.904761970</X>
+                <Y>0.736842096</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+        </vertices>
+    </polygone>
+    <polygone>
+        
+        <vertices>
+            
+            <vertex>
+                
+                <X>0.500000060</X>
+                <Y>0.298245609</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.595238149</X>
+                <Y>0.228070170</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.619047642</X>
+                <Y>0.245614037</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.500000060</X>
+                <Y>0.333333343</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.380952388</X>
+                <Y>0.245614037</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.404761910</X>
+                <Y>0.228070170</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.500000060</X>
+                <Y>0.298245609</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+        </vertices>
+    </polygone>
+    <polygone>
+        
+        <vertices>
+            
+            <vertex>
+                
+                <X>0.190476194</X>
+                <Y>0.298245609</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.285714298</X>
+                <Y>0.228070170</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.309523821</X>
+                <Y>0.245614037</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.190476194</X>
+                <Y>0.333333343</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.071428575</X>
+                <Y>0.245614037</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.095238097</X>
+                <Y>0.228070170</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+            <vertex>
+                
+                <X>0.190476194</X>
+                <Y>0.298245609</Y>
+                <Z>0.000000000</Z>
+            </vertex>
+        </vertices>
+    </polygone>
 </polygones>
