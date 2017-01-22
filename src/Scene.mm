@@ -76,7 +76,6 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
         particlesSounds.push_back(newSound);
         
     }
-    
 };
 
 //This function is called once at the set up of the scene, at the end of the XMLSetup function.
@@ -866,6 +865,7 @@ void Scene::update(){
         
         emitters[i]->update();
         emitters[i]->applyGravity(ofVec2f(0.0, 0.1));
+        emitters[i]->setMainVolume(getVolume());
         
     }
     

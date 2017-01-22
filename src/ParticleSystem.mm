@@ -20,12 +20,14 @@ ParticleSystem::ParticleSystem(){
     toEmit = 0;
     maxTailLength = 0;
     
-    for(int i = 0; i < 100; i++)
-    {
-        ofSoundPlayer sound;
-        sound.load("sounds/tic.mp3", false);
-        receptionSounds.push_back(sound);
-    }
+    receptionSound.load("sounds/sons_tic.mp3");
+    receptionSound.setVolume(0.0);
+    receptionSound.setLoop(true);
+    receptionSound.play();
+
+}
+
+ParticleSystem::~ParticleSystem(){
 
 }
 
@@ -121,17 +123,7 @@ void ParticleSystem::update(){
                 particles.erase(particles.begin() + i);
                 receptors[j]->addOneParticleToCount();
                 
-                if(ofGetFrameNum() % 5 == 0)
-                {
-                    for(int i = 0; i < receptionSounds.size(); i++)
-                    {
-                        if(!receptionSounds[i].isPlaying())
-                        {
-//                            receptionSounds[i].play();
-                            break;
-                        }
-                    }
-                }
+                receptionSoundVolume = 1.0;
             }
             
             //Check if the receptor is full.
@@ -154,8 +146,11 @@ void ParticleSystem::update(){
         //Update the current particle,
         
         particles[i]->update();
-        
+
     }
+    
+    receptionSoundVolume += (0.0 - receptionSoundVolume) * 0.1;
+    receptionSound.setVolume(receptionSoundVolume * mainVolume);
     
     //Check dead particles.
     
@@ -285,6 +280,12 @@ void ParticleSystem::setPause(bool _pause){
     for(int i = 0; i < particles.size(); i++){
         particles[i]->disable(_pause);
     }
+    
+}
+
+void ParticleSystem::setMainVolume(float _mainVolume){
+    
+    mainVolume = _mainVolume;
     
 }
 

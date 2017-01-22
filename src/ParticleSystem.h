@@ -15,6 +15,8 @@
 #include "Actuator.h"
 #include "Receptor.h"
 
+#import "AVSoundPlayer.h"
+
 class ParticleSystem : public BaseElement{
 
 private:
@@ -48,12 +50,15 @@ private:
     vector<ofFloatColor> tailColors;
     vector<ofIndexType> tailIndices;
     
+    float mainVolume = 0.0;
+    float receptionSoundVolume = 0.0;
     ofSoundPlayer receptionSound;
-    vector<ofSoundPlayer> receptionSounds;
+    vector<ofSoundPlayer> sounds;
     
 public:
 
     ParticleSystem();
+    ~ParticleSystem();
     
     //Main
     
@@ -76,6 +81,7 @@ public:
     void setMaxParticles(int _maxParticles);
     void setMaxTailLength(int _length);
     void setPause(bool _pause);
+    void setMainVolume(float _mainVolume);
     
     //Get
     

@@ -24,6 +24,8 @@
 #include "ofxXmlSettings.h"
 #include "ofxOpenALSoundPlayer.h"
 
+#import "AVSoundPlayer.h"
+
 class Scene : public Screen{
     
 private:
