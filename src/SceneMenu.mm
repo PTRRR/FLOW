@@ -20,6 +20,11 @@ SceneMenu::SceneMenu(shared_ptr<ofTrueTypeFont> _font){
     interface.addButton("LEVELS", "PLAY", ofVec2f(ofGetWidth() / 2, ofGetHeight() / 2 + ofGetHeight() * 0.06 / 2));
     interface.addButton("EXIT", "EXIT", ofVec2f(ofGetWidth() / 2, ofGetHeight() - ofGetHeight() * 0.06 / 2));
     
+    mainSound.load("sounds/main.mp3");
+    mainSound.setLoop(true);
+    mainSound.setVolume(getVolume());
+    mainSound.play();
+    
 }
 
 void SceneMenu::renderToScreen(){

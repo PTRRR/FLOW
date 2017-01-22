@@ -25,6 +25,11 @@ Levels::Levels(shared_ptr<ofTrueTypeFont> _font){
     backButton->setImage(backButtonImg);
     
     downloadLevelsToIOSDirectory();
+    
+    mainSound.load("sounds/main.mp3");
+    mainSound.setLoop(true);
+    mainSound.setVolume(getVolume());
+    mainSound.play();
 
 }
 

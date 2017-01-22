@@ -85,13 +85,6 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
 
     screenPipeline.setScreenActive(splashScreen);
     
-    //Main sound
-    
-    mainSound.load("sounds/main.mp3");
-    mainSound.setLoop(true);
-    mainSound.setVolume(0);
-//    mainSound.play();
-    
 };
 
 void GameManager::update(){
@@ -99,16 +92,8 @@ void GameManager::update(){
     if(!initialTimeoutIsOver && ofGetElapsedTimeMillis() >= initialTimeout){
         
         loadLevelsCreator->setup();
-        screenPipeline.setScreenActive(credits);
+        screenPipeline.setScreenActive(menu);
         initialTimeoutIsOver = true;
-        
-    }
-    
-    //First fade in volume.
-    
-    if(mainSound.getVolume() < 1){
-     
-        mainSound.setVolume(mainSound.getVolume() + 0.003);
         
     }
     
@@ -120,6 +105,15 @@ void GameManager::update(){
         if(screenPipeline.getActiveScreen() != currentScene){
             currentScene->update();
         }
+    }
+    
+    //Always update main sound of all screens
+    
+    vector<shared_ptr<Screen>> screens = screenPipeline.getScreens();
+    
+    for(int i = 0; i < screens.size(); i++)
+    {
+        screens[i]->updateSound();
     }
     
 }

@@ -19,6 +19,13 @@ ParticleSystem::ParticleSystem(){
     elapsedTime = 0;
     toEmit = 0;
     maxTailLength = 0;
+    
+    for(int i = 0; i < 100; i++)
+    {
+        ofSoundPlayer sound;
+        sound.load("sounds/tic.mp3", false);
+        receptionSounds.push_back(sound);
+    }
 
 }
 
@@ -113,6 +120,18 @@ void ParticleSystem::update(){
             if(distance < 20){
                 particles.erase(particles.begin() + i);
                 receptors[j]->addOneParticleToCount();
+                
+                if(ofGetFrameNum() % 5 == 0)
+                {
+                    for(int i = 0; i < receptionSounds.size(); i++)
+                    {
+                        if(!receptionSounds[i].isPlaying())
+                        {
+//                            receptionSounds[i].play();
+                            break;
+                        }
+                    }
+                }
             }
             
             //Check if the receptor is full.

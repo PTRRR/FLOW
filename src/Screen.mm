@@ -25,10 +25,16 @@ Screen::Screen(){
 
 }
 
+void Screen::updateSound()
+{
+    volume += (targetVolume - volume) * 0.05;
+    setVolume(volume);
+}
+
 void Screen::draw(){
     
 //    fbo.begin();
-    mainAlpha += (alphaTarget - mainAlpha) * 0.2;
+    mainAlpha += (alphaTarget - mainAlpha) * 0.16;
     
     if(mainAlpha > 1){
         ofPushStyle();
@@ -129,6 +135,7 @@ void Screen::setAlphaTarget(float _alphaTarget){
     //Clamp the value between 0 and 1
     
     alphaTarget = ofClamp(_alphaTarget, 0.0f, 255.0f);
+    targetVolume = ofClamp(_alphaTarget / 255.0, 0.0, 1.0);
     
 }
 
@@ -147,6 +154,13 @@ void Screen::setActive(bool _active){
 void Screen::setName(string _name){
     
     this->name = _name;
+    
+}
+
+void Screen::setVolume(float _volume){
+    
+    volume = _volume;
+    mainSound.setVolume(_volume);
     
 }
 
@@ -186,6 +200,12 @@ bool Screen::isActive(){
 string Screen::getName(){
     
     return name;
+    
+}
+
+float Screen::getVolume(){
+    
+    return volume;
     
 }
 

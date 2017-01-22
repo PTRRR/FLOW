@@ -40,12 +40,22 @@ private:
     
     ofFbo fbo;
     
+    //Sound
+    
+    float volume = 0.0;
+    float targetVolume = 0.0;
+    
+protected:
+    
+    ofSoundPlayer mainSound;
+    
 public:
     
     Screen();
 
     void draw();
     virtual void update(){};
+    void updateSound();
     
     //Inputs
     
@@ -61,6 +71,7 @@ public:
     void setIndex(int _index);
     void setActive(bool _active);
     void setName(string _name);
+    void setVolume(float _volume);
     
     //Get
     float getAlpha();
@@ -68,6 +79,7 @@ public:
     int getIndex();
     bool isActive();
     string getName();
+    float getVolume();
     
     //XML
     

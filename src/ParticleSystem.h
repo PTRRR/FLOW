@@ -48,6 +48,9 @@ private:
     vector<ofFloatColor> tailColors;
     vector<ofIndexType> tailIndices;
     
+    ofSoundPlayer receptionSound;
+    vector<ofSoundPlayer> receptionSounds;
+    
 public:
 
     ParticleSystem();

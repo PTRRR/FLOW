@@ -36,7 +36,7 @@ public:
     //Get
     shared_ptr<Screen> getActiveScreen();
     shared_ptr<Screen> getLastActiveScreen();
-    
+    vector<shared_ptr<Screen>> getScreens();
 };
 
 #endif /* ScreenPipeline_h */

@@ -79,3 +79,7 @@ shared_ptr<Screen> ScreenPipeline::getLastActiveScreen(){
     return lastActiveScreen;
     
 }
+
+vector<shared_ptr<Screen>> ScreenPipeline::getScreens(){
+    return pipeline;
+}
