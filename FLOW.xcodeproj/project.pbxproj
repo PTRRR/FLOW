@@ -24,6 +24,7 @@
 		0E4C320D1E229DDA006B5AE4 /* SceneMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C320B1E229DDA006B5AE4 /* SceneMenu.mm */; };
 		0E5382A21E2A2C5F00E27AB2 /* VboLine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E5382A01E2A2C5F00E27AB2 /* VboLine.mm */; };
 		0E5382A51E2A325900E27AB2 /* TestScene.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E5382A31E2A325900E27AB2 /* TestScene.mm */; };
+		0E5C4A3D1E35024A00E2CFE7 /* Credits.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C4A3B1E35024A00E2CFE7 /* Credits.mm */; };
 		0E934CB21E28628F00F136B5 /* LevelCreator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E934CAF1E28628F00F136B5 /* LevelCreator.mm */; };
 		0E934CB31E28628F00F136B5 /* LoadLevelsCreator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E934CB01E28628F00F136B5 /* LoadLevelsCreator.mm */; };
 		0E934CB41E28628F00F136B5 /* NextLevel.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E934CB11E28628F00F136B5 /* NextLevel.mm */; };
@@ -115,6 +116,8 @@
 		0E5382A11E2A2C5F00E27AB2 /* VboLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VboLine.h; sourceTree = "<group>"; };
 		0E5382A31E2A325900E27AB2 /* TestScene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TestScene.mm; sourceTree = "<group>"; };
 		0E5382A41E2A325900E27AB2 /* TestScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestScene.h; sourceTree = "<group>"; };
+		0E5C4A3B1E35024A00E2CFE7 /* Credits.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Credits.mm; sourceTree = "<group>"; };
+		0E5C4A3C1E35024A00E2CFE7 /* Credits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Credits.h; sourceTree = "<group>"; };
 		0E934CAC1E28628F00F136B5 /* LevelCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelCreator.h; sourceTree = "<group>"; };
 		0E934CAD1E28628F00F136B5 /* LoadLevelsCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadLevelsCreator.h; sourceTree = "<group>"; };
 		0E934CAE1E28628F00F136B5 /* NextLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NextLevel.h; sourceTree = "<group>"; };
@@ -309,6 +312,8 @@
 				0E4C32091E229D6D006B5AE4 /* Options.h */,
 				0E4C320B1E229DDA006B5AE4 /* SceneMenu.mm */,
 				0E4C320C1E229DDA006B5AE4 /* SceneMenu.h */,
+				0E5C4A3B1E35024A00E2CFE7 /* Credits.mm */,
+				0E5C4A3C1E35024A00E2CFE7 /* Credits.h */,
 			);
 			name = Screens;
 			sourceTree = "<group>";
@@ -604,6 +609,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E5C4A3D1E35024A00E2CFE7 /* Credits.mm in Sources */,
 				0E4C320D1E229DDA006B5AE4 /* SceneMenu.mm in Sources */,
 				0E4C31FE1E2196EA006B5AE4 /* ofxTriangle.cpp in Sources */,
 				0E934CB31E28628F00F136B5 /* LoadLevelsCreator.mm in Sources */,

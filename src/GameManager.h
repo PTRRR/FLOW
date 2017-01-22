@@ -23,6 +23,7 @@
 #include "LevelCreator.h"
 #include "LoadLevelsCreator.h"
 #include "TestScene.h"
+#include "Credits.h"
 
 class GameManager{
 
@@ -48,6 +49,7 @@ private:
     shared_ptr<End> end;
     shared_ptr<LevelCreator> levelCreator;
     shared_ptr<LoadLevelsCreator> loadLevelsCreator;
+    shared_ptr<Credits> credits;
     
     //Test scene is for experimentations
     

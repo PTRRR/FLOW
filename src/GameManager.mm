@@ -63,6 +63,11 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     
     testScene = shared_ptr<TestScene>(new TestScene(mainFont));
     testScene->setName("TEST-SCENE");
+    
+    //Credits screen
+    
+    credits = shared_ptr<Credits>(new Credits(mainFont));
+    credits->setName("CREDITS");
 
     //Screen pipeline setup
 
@@ -76,6 +81,7 @@ GameManager::GameManager(shared_ptr<ofTrueTypeFont> _mainFont){
     screenPipeline.addScreen(levelCreator);
     screenPipeline.addScreen(loadLevelsCreator);
     screenPipeline.addScreen(testScene);
+    screenPipeline.addScreen(credits);
 
     screenPipeline.setScreenActive(splashScreen);
     
@@ -93,7 +99,7 @@ void GameManager::update(){
     if(!initialTimeoutIsOver && ofGetElapsedTimeMillis() >= initialTimeout){
         
         loadLevelsCreator->setup();
-        screenPipeline.setScreenActive(menu);
+        screenPipeline.setScreenActive(credits);
         initialTimeoutIsOver = true;
         
     }
@@ -283,13 +289,22 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
                 levels->setup();
                 screenPipeline.setScreenActive(levels);
                 
+            }else if(action == "CREDITS"){
+                
+                screenPipeline.setScreenActive(credits);
+                
             }else if(action == "MENU"){
                 
                 if(screenPipeline.getActiveScreen() == currentScene){
                     currentScene->setPause(true);
                 }
                 
+                levels->setup();
                 screenPipeline.setScreenActive(levels);
+                
+            }else if(action == "FIRST-MENU"){
+                
+                screenPipeline.setScreenActive(menu);
                 
             }else if(action == "EXIT"){
                 

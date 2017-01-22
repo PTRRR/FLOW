@@ -28,7 +28,7 @@ Screen::Screen(){
 void Screen::draw(){
     
 //    fbo.begin();
-    mainAlpha += (alphaTarget - mainAlpha) * 0.1;
+    mainAlpha += (alphaTarget - mainAlpha) * 0.2;
     
     if(mainAlpha > 1){
         ofPushStyle();

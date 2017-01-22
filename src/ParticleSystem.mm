@@ -130,7 +130,7 @@ void ParticleSystem::update(){
         
         //Apply random force to add some randomness to the movements.
         
-        particles[i]->applyForce(ofVec2f(ofRandomf() * 0.3));
+        particles[i]->applyForce(ofVec2f(ofRandomf() * 0.1));
         
         //Update the current particle,
         
