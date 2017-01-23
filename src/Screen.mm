@@ -135,7 +135,7 @@ void Screen::setAlphaTarget(float _alphaTarget){
     //Clamp the value between 0 and 1
     
     alphaTarget = ofClamp(_alphaTarget, 0.0f, 255.0f);
-    targetVolume = ofClamp(_alphaTarget / 255.0, 0.0, 1.0);
+    targetVolume = ofClamp(_alphaTarget / 255.0, 0.0, 0.7);
     
 }
 

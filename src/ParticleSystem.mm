@@ -20,7 +20,7 @@ ParticleSystem::ParticleSystem(){
     toEmit = 0;
     maxTailLength = 0;
     
-    receptionSound.load("sounds/sons_tic.mp3");
+    receptionSound.load("sounds/reception_sound.mp3");
     receptionSound.setVolume(0.0);
     receptionSound.setLoop(true);
     receptionSound.play();

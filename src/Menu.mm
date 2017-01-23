@@ -22,7 +22,7 @@ Menu::Menu(shared_ptr<ofTrueTypeFont> _font){
     
 //    interface.addButton("LEVEL-CREATOR", "LEVEL-CREATOR", ofVec2f(ofGetWidth() / 2, ofGetHeight() - ofGetHeight() * 0.06 * 1.5));
     
-    mainSound.load("sounds/main.mp3");
+    mainSound.load("sounds/menu.mp3");
     mainSound.setLoop(true);
     mainSound.setVolume(getVolume());
     mainSound.play();

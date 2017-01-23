@@ -26,7 +26,7 @@ Levels::Levels(shared_ptr<ofTrueTypeFont> _font){
     
     downloadLevelsToIOSDirectory();
     
-    mainSound.load("sounds/main.mp3");
+    mainSound.load("sounds/menu.mp3");
     mainSound.setLoop(true);
     mainSound.setVolume(getVolume());
     mainSound.play();
@@ -85,7 +85,7 @@ void Levels::setup(){
         
         if(XMLTemp.getValue("general:UNLOCKED", 0) == 0){
             
-            newButton->setActive(false);
+            newButton->setActive(true);
             
         }else{
             

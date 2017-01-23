@@ -67,15 +67,12 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     infosFont.load("GT-Pressura-Mono-Light.ttf", 0.009765625 * ofGetWidth());
     
     //Sounds
-    //Create an array of sounds that will be plaed when particles touch someting.
     
-    for(int i = 0; i < 0; i++){
-        
-        ofSoundPlayer newSound;
-        newSound.load("sounds/bell"+ to_string((int) ofRandom(1, 5)) +".mp3");
-        particlesSounds.push_back(newSound);
-        
-    }
+    hitSound.load("sounds/hit_polygones.mp3");
+    hitSound.setLoop(true);
+    hitSound.play();
+    hitSound.setVolume(0.0);
+    
 };
 
 //This function is called once at the set up of the scene, at the end of the XMLSetup function.
@@ -938,6 +935,16 @@ void Scene::update(){
     
 }
 
+void Scene::updateSound(){
+    
+    Scene::Screen::updateSound();
+    
+    float hitSoundVolume = hitSound.getVolume();
+    hitSoundVolume += (0.0 - hitSoundVolume) * 0.1;
+    hitSound.setVolume(hitSoundVolume * getVolume());
+    
+}
+
 vector<ofVec3f> Scene::getQuadVertices(float _size){
     
     vector<ofVec3f> vertices;
@@ -998,12 +1005,14 @@ void Scene::checkForCollisions(){
                         ofVec2f bounceDirection = normal.rotateRad(angle).normalize();
                         allParticles[i]->setVelocity(allParticles[i]->getVelocity().length() * bounceDirection * 0.7);
                         
+                        if(getVolume() > 0.01)
+                        {
+                            hitSound.setVolume(1.0);
+                        }
+    
                         intersectionDetected = true;
                         
                     });
-
-                    //Trigger sounds
-                    
                      
                 }
             
@@ -1390,13 +1399,19 @@ void Scene::saveSceneToXML(string _fileName){
 
 void Scene::XMLSetup(string _xmlFile){
     
+    int sceneSoundIndex = (int) round(ofRandom(2));
+    
+    mainSound.load("sounds/scene_"+ to_string(sceneSoundIndex) +".mp3");
+    mainSound.setLoop(true);
+    mainSound.play();
+    mainSound.setVolume(0.0);
+    
     ofxXmlSettings _XML;
     
     _XML.load(ofxiOSGetDocumentsDirectory() + _xmlFile);
     
     loadXML(_xmlFile, [&](ofxXmlSettings _XMLA){
         
-        logXML(_xmlFile);
         XML = _XML;
         
         //Multitouch

@@ -221,7 +221,7 @@ private:
     
     float lastPlay = 0;
     float playOffset = 100.0;
-    vector<ofSoundPlayer> particlesSounds;
+    ofSoundPlayer hitSound;
     
     //XML files
     
@@ -233,6 +233,7 @@ public:
     Scene(shared_ptr<ofTrueTypeFont> _mainFont);
     
     void update() override;
+    void updateSound() override;
     void initializeGPUData();
     void setPause(bool _pause);
     void onEnd(function<void()> _levelEndCallback);

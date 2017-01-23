@@ -55,7 +55,7 @@ public:
 
     void draw();
     virtual void update(){};
-    void updateSound();
+    virtual void updateSound();
     
     //Inputs
     
