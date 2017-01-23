@@ -85,7 +85,7 @@ void Levels::setup(){
         
         if(XMLTemp.getValue("general:UNLOCKED", 0) == 0){
             
-            newButton->setActive(true);
+            newButton->setActive(false);
             
         }else{
             
