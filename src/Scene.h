@@ -28,7 +28,7 @@
 
 class Scene : public Screen{
     
-private:
+protected:
     
     //Level
     

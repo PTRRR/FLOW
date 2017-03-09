@@ -40,6 +40,9 @@ void Levels::downloadLevelsToIOSDirectory(){
     int levelIndex = 1;
     ofxXmlSettings XMLTemp;
     
+    XMLTemp.load("tutorial.xml");
+    XMLTemp.saveFile(ofxiOSGetDocumentsDirectory() + "tutorial.xml");
+    
     while (XMLTemp.load("scene_" + to_string(levelIndex) + ".xml")) {
         
         XMLTemp.saveFile(ofxiOSGetDocumentsDirectory() + "scene_" + to_string(levelIndex) + ".xml");

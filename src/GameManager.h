@@ -66,8 +66,6 @@ private:
     void onEnd();
     shared_ptr<Scene> createNewScene(string _name, string _xmlFile);
     
-    shared_ptr<TutorialScene> tutorialScene;
-    
     //Main sound
     
     ofSoundPlayer mainSound;
