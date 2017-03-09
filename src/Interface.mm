@@ -38,6 +38,16 @@ void Interface::draw(){
         
     }
     
+    for(int i = 0; i < arrows.size(); i++){
+        
+        ofVec2f arrowOriginalPosition = arrows[i]->getPosition();
+        
+        arrows[i]->setPosition(arrowOriginalPosition + getPosition());
+        arrows[i]->draw();
+        arrows[i]->setPosition(arrowOriginalPosition);
+        
+    }
+    
 }
 
 shared_ptr<Button> Interface::addButton(string _text, string _action, ofVec2f _position){
@@ -65,6 +75,19 @@ shared_ptr<Text> Interface::addText(string _text, ofVec2f _position){
     texts.push_back(newText);
     
     return newText;
+    
+}
+
+shared_ptr<Arrow> Interface::addArrow(ofVec2f _position, ofVec2f _direction, float _length){
+    
+    shared_ptr<Arrow> newArrow = shared_ptr<Arrow>(new Arrow());
+    newArrow->setPosition(_position);
+    newArrow->setDirection(_direction);
+    newArrow->setLength(_length);
+    
+    arrows.push_back(newArrow);
+    
+    return newArrow;
     
 }
 

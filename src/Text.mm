@@ -13,6 +13,7 @@ Text::Text(){};
 Text::Text(shared_ptr<ofTrueTypeFont> _font){
     
     font = _font;
+    color = ofFloatColor(255, 255, 255, 255);
     
 }
 
@@ -23,6 +24,7 @@ void Text::draw(){
     ofPushStyle();
     ofSetLineWidth(1);
     ofNoFill();
+    ofSetColor(color);
     font->drawString(text, getPosition().x - dimensions.x / 2, getPosition().y + dimensions.y / 2);
     ofPopStyle();
     
@@ -45,6 +47,18 @@ void Text::setText(string _text){
     
 }
 
+void Text::setColor(ofFloatColor _color){
+    
+    color = _color;
+    
+}
+
+void Text::setAlpha(float _alpha){
+    
+    color.a = _alpha;
+    
+}
+
 //Get
 
 ofVec2f Text::getDimensions(){
@@ -56,5 +70,17 @@ ofVec2f Text::getDimensions(){
 string Text::getText(){
     
     return text;
+    
+}
+
+ofFloatColor Text::getColor(){
+    
+    return color;
+    
+}
+
+float Text::getAlpha(){
+    
+    return color.a;
     
 }

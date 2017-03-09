@@ -230,6 +230,7 @@ protected:
     //XML files
     
     void saveSceneToXML(string _fileName);
+    virtual void setup(){};
     
 public:
     

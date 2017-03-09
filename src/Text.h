@@ -20,6 +20,7 @@ private:
     shared_ptr<ofTrueTypeFont> font;
     
     ofVec2f dimensions;
+    ofFloatColor color;
     
     string text;
     
@@ -34,6 +35,8 @@ public:
     
     void setFont(shared_ptr<ofTrueTypeFont> _font);
     void setText(string _text);
+    void setColor(ofFloatColor _color);
+    void setAlpha(float _alpha);
     
     //Get
     
@@ -41,6 +44,8 @@ public:
     
     string getText();
     string getAction();
+    ofFloatColor getColor();
+    float getAlpha();
     
 };
 

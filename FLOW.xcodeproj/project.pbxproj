@@ -26,6 +26,7 @@
 		0E5382A51E2A325900E27AB2 /* TestScene.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E5382A31E2A325900E27AB2 /* TestScene.mm */; };
 		0E5C4A3D1E35024A00E2CFE7 /* Credits.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E5C4A3B1E35024A00E2CFE7 /* Credits.mm */; };
 		0E7DCB941E718AD200FF529A /* TutorialScene.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E7DCB921E718AD200FF529A /* TutorialScene.mm */; };
+		0E7DCB971E71AE1000FF529A /* Arrow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E7DCB951E71AE1000FF529A /* Arrow.mm */; };
 		0E934CB21E28628F00F136B5 /* LevelCreator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E934CAF1E28628F00F136B5 /* LevelCreator.mm */; };
 		0E934CB31E28628F00F136B5 /* LoadLevelsCreator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E934CB01E28628F00F136B5 /* LoadLevelsCreator.mm */; };
 		0E934CB41E28628F00F136B5 /* NextLevel.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E934CB11E28628F00F136B5 /* NextLevel.mm */; };
@@ -121,6 +122,8 @@
 		0E5C4A3C1E35024A00E2CFE7 /* Credits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Credits.h; sourceTree = "<group>"; };
 		0E7DCB921E718AD200FF529A /* TutorialScene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TutorialScene.mm; sourceTree = "<group>"; };
 		0E7DCB931E718AD200FF529A /* TutorialScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialScene.h; sourceTree = "<group>"; };
+		0E7DCB951E71AE1000FF529A /* Arrow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Arrow.mm; sourceTree = "<group>"; };
+		0E7DCB961E71AE1000FF529A /* Arrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Arrow.h; sourceTree = "<group>"; };
 		0E934CAC1E28628F00F136B5 /* LevelCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelCreator.h; sourceTree = "<group>"; };
 		0E934CAD1E28628F00F136B5 /* LoadLevelsCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadLevelsCreator.h; sourceTree = "<group>"; };
 		0E934CAE1E28628F00F136B5 /* NextLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NextLevel.h; sourceTree = "<group>"; };
@@ -279,6 +282,8 @@
 				0E9BFF961E0442A3007F9857 /* Interface.h */,
 				0E22F05C1E0A8A8500197899 /* Text.mm */,
 				0E22F05D1E0A8A8500197899 /* Text.h */,
+				0E7DCB951E71AE1000FF529A /* Arrow.mm */,
+				0E7DCB961E71AE1000FF529A /* Arrow.h */,
 			);
 			name = GUI;
 			sourceTree = "<group>";
@@ -643,6 +648,7 @@
 				0E934CB41E28628F00F136B5 /* NextLevel.mm in Sources */,
 				C32E84B046A417CA7171613C /* tinyxml.cpp in Sources */,
 				F00B7884241FB2CD87F076E0 /* tinyxmlerror.cpp in Sources */,
+				0E7DCB971E71AE1000FF529A /* Arrow.mm in Sources */,
 				0E078B7E1E16772F004595EF /* BaseElement.mm in Sources */,
 				0E934CB21E28628F00F136B5 /* LevelCreator.mm in Sources */,
 				0E9BFFA71E0553D9007F9857 /* SplashScreen.mm in Sources */,

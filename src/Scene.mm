@@ -181,7 +181,7 @@ void Scene::initializeGPUData(){
         
     }
     
-    emittersVbo.setVertexData(&emittersVertices[0], (int) emittersVertices.size(), GL_DYNAMIC_DRAW);
+    emittersVbo.setVertexData(&emittersVertices[0], (int) emittersVertices.size(), GL_STATIC_DRAW);
     emittersVbo.setIndexData(&emittersIndices[0], (int) emittersIndices.size(), GL_STATIC_DRAW);
     emittersVbo.setTexCoordData(&emittersTexCoords[0], (int) emittersTexCoords.size(), GL_STATIC_DRAW);
     
@@ -1608,6 +1608,7 @@ void Scene::XMLSetup(string _xmlFile){
     //Set up all the GPU data needed for rendering the scene once we loaded all our game components.
     
     initializeGPUData();
+    setup();
     
 }
 

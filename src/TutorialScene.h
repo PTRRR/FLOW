@@ -16,15 +16,19 @@ class TutorialScene : public Scene{
     
 private:
     
-    
+    shared_ptr<ofTrueTypeFont> textFont;
+    Interface tutorialInterface;
+    vector<shared_ptr<Text>> texts;
+    vector<shared_ptr<Arrow>> arrows;
     
 public:
     
     TutorialScene();
     TutorialScene(shared_ptr<ofTrueTypeFont> _mainFont);
-    
 
-    void update();
+    void setup() override;
+    void update() override;
+    void renderToScreen() override;
     
 };
 

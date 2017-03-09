@@ -13,6 +13,7 @@
 #include "ofxiOS.h"
 #include "Button.h"
 #include "Text.h"
+#include "Arrow.h"
 #include "BaseElement.h"
 
 class Interface : public BaseElement{
@@ -25,6 +26,7 @@ private:
     
     vector<shared_ptr<Button>> buttons;
     vector<shared_ptr<Text>> texts;
+    vector<shared_ptr<Arrow>> arrows;
     vector<shared_ptr<BaseElement>> elements;
     
 public:
@@ -35,6 +37,8 @@ public:
     void draw();
     shared_ptr<Button> addButton(string _text, string _action, ofVec2f _position);
     shared_ptr<Text> addText(string _text, ofVec2f _position);
+    
+    shared_ptr<Arrow> addArrow(ofVec2f _position, ofVec2f _direction, float _length);
     
     //Inputs
     

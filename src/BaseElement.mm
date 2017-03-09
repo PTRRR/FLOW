@@ -126,6 +126,12 @@ void BaseElement::setBox(float _x, float _y, float _width, float _height){
     
 }
 
+void BaseElement::setAlpha(float _alpha){
+    
+    alpha = _alpha;
+    
+}
+
 void BaseElement::disable(bool _disable){
     
     disabled = _disable;
@@ -193,6 +199,12 @@ bool BaseElement::isOut(){
 bool BaseElement::isDisabled(){
     
     return disabled;
+    
+}
+
+float BaseElement::getAlpha(){
+    
+    return alpha;
     
 }
 

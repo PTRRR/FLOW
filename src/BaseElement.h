@@ -27,6 +27,8 @@ private:
     
     float maxVelocity;
     
+    float alpha = 1;
+    
     //Box
     //If set, this box restrict the movements of the object in that box
     
@@ -62,6 +64,7 @@ public:
     void setDamping(float _damping);
     void setMaxVelocity(float _maxVelocity);
     void setBox(float _x, float _y, float _width, float _height);
+    void setAlpha(float _alpha);
     
     void disable(bool _disable);
     
@@ -75,6 +78,7 @@ public:
     
     float getMass();
     float getDamping();
+    float getAlpha();
     
     bool isDisabled();
     bool isOut();
