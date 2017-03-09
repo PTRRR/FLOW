@@ -1,13 +1,13 @@
 //
-//  Scene.h
+//  TutorialScene.h
 //  ofMagnet
 //
-//  Created by Pietro Alberti on 17.12.16.
+//  Created by Pietro Alberti on 09.03.17.
 //
 //
 
-#ifndef Scene_h
-#define Scene_h
+#ifndef TutorialScene_h
+#define TutorialScene_h
 
 #include <stdio.h>
 #include "Screen.h"
@@ -26,7 +26,7 @@
 
 #import "AVSoundPlayer.h"
 
-class Scene : public Screen{
+class TutorialScene : public Screen{
     
 private:
     
@@ -154,7 +154,7 @@ private:
     ofVbo particleReceptionFeedbackVbo;
     vector<ofVec3f> particleReceptionFeedbackVertices;
     vector<ofVec3f> particleReceptionFeedbackAttributes;
-
+    
     //Actuators
     
     ofShader actuatorsProgram;
@@ -233,8 +233,8 @@ private:
     
 public:
     
-    Scene();
-    Scene(shared_ptr<ofTrueTypeFont> _mainFont);
+    TutorialScene();
+    TutorialScene(shared_ptr<ofTrueTypeFont> _mainFont);
     
     void update() override;
     void updateSound() override;
@@ -248,4 +248,4 @@ public:
     
 };
 
-#endif /* Scene_h */
+#endif /* TutorialScene_h */

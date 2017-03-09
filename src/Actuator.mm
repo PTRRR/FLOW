@@ -11,7 +11,7 @@
 Actuator::Actuator(){
 
     strength = 0.0;
-    radius = 100.0;
+    radius = 120.0;
     radiusTarget = radius;
     
     overRadius = 50.0;

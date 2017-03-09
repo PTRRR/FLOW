@@ -67,6 +67,14 @@ void Levels::setup(){
 
     //Set up new buttons.
     
+    // First set the tutorial level
+    
+    shared_ptr<Button> newButton = interface.addButton("TUTORIAL", "tutorial.xml", ofVec2f(0));
+    levels.push_back("tutorial.xml");
+    buttons.push_back(newButton);
+    
+    // Then load other level files
+    
     int levelIndex = 1;
     
     ofxXmlSettings XMLTemp;
@@ -85,7 +93,7 @@ void Levels::setup(){
         
         if(XMLTemp.getValue("general:UNLOCKED", 0) == 0){
             
-            newButton->setActive(false);
+            newButton->setActive(true);
             
         }else{
             
@@ -99,7 +107,7 @@ void Levels::setup(){
         
     }
     
-    int numLevels = levelIndex -1;
+    int numLevels = levelIndex;
     
     //Set the buttons to the right position once whe know how much they are.
     

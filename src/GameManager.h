@@ -15,6 +15,7 @@
 #include "SplashScreen.h"
 #include "Menu.h"
 #include "Scene.h"
+#include "TutorialScene.h"
 #include "Levels.h"
 #include "Options.h"
 #include "SceneMenu.h"
@@ -64,6 +65,8 @@ private:
     shared_ptr<Scene> currentScene;
     void onEnd();
     shared_ptr<Scene> createNewScene(string _name, string _xmlFile);
+    
+    shared_ptr<TutorialScene> tutorialScene;
     
     //Main sound
     

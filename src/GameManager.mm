@@ -198,6 +198,8 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
     string currentScreen = screenPipeline.getActiveScreen()->getName();
     screenPipeline.getActiveScreen()->mouseUp(_touch, [&](string text, string action){
         
+        cout << action << endl;
+        
         //Check if we are on the levels screen.
         //On the level screen we take directly the action variable as the xml file name used to setup
         //a specific scene.
@@ -215,6 +217,10 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
                     screenPipeline.setScreenActive(menu);
                     
                 }
+                
+            }else if(action == "tutorial.xml"){
+                
+                cout << "tutorial" << endl;
                 
             }else{
                 
