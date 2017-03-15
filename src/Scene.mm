@@ -179,11 +179,19 @@ void Scene::initializeGPUData(){
         emittersTexCoords.push_back(ofVec2f(1));
         emittersTexCoords.push_back(ofVec2f(-1, 1));
         
+        //Set colors
+        
+        emittersColors.push_back(ofFloatColor(255, 255, 255, 1));
+        emittersColors.push_back(ofFloatColor(255, 255, 255, 1));
+        emittersColors.push_back(ofFloatColor(255, 255, 255, 1));
+        emittersColors.push_back(ofFloatColor(255, 255, 255, 1));
+        
     }
     
     emittersVbo.setVertexData(&emittersVertices[0], (int) emittersVertices.size(), GL_STATIC_DRAW);
     emittersVbo.setIndexData(&emittersIndices[0], (int) emittersIndices.size(), GL_STATIC_DRAW);
     emittersVbo.setTexCoordData(&emittersTexCoords[0], (int) emittersTexCoords.size(), GL_STATIC_DRAW);
+    emittersVbo.setColorData(&emittersColors[0], (int) emittersColors.size(), GL_DYNAMIC_DRAW);
     
     //Actuators
     
@@ -359,6 +367,13 @@ void Scene::initializeGPUData(){
         receptorsAttributes.push_back(ofVec3f(receptors[i]->getRadius(), 0.0, 0.0));
         receptorsAttributes.push_back(ofVec3f(receptors[i]->getRadius(), 0.0, 0.0));
         
+        //Set colors attribute
+        
+        receptorsColors.push_back(ofFloatColor(255, 255, 255, 1));
+        receptorsColors.push_back(ofFloatColor(255, 255, 255, 1));
+        receptorsColors.push_back(ofFloatColor(255, 255, 255, 1));
+        receptorsColors.push_back(ofFloatColor(255, 255, 255, 1));
+        
         //Set particle reception feedback
         
         particleReceptionFeedbackVertices.push_back(ofVec3f(receptors[i]->getPosition().x, receptors[i]->getPosition().y, 0.0));
@@ -370,6 +385,7 @@ void Scene::initializeGPUData(){
     receptorsVbo.setNormalData(&receptorsAttributes[0], (int) receptorsAttributes.size(), GL_DYNAMIC_DRAW);
     receptorsVbo.setIndexData(&receptorsIndices[0], (int) receptorsIndices.size(), GL_STATIC_DRAW);
     receptorsVbo.setTexCoordData(&receptorsTexCoords[0], (int) receptorsTexCoords.size(), GL_STATIC_DRAW);
+    receptorsVbo.setColorData(&receptorsColors[0], (int) receptorsColors.size(), GL_DYNAMIC_DRAW);
     
     particleReceptionFeedbackVbo.setVertexData(&particleReceptionFeedbackVertices[0], (int) particleReceptionFeedbackVertices.size(), GL_STATIC_DRAW);
     particleReceptionFeedbackVbo.setNormalData(&particleReceptionFeedbackAttributes[0], (int) particleReceptionFeedbackAttributes.size(), GL_DYNAMIC_DRAW);
@@ -528,7 +544,7 @@ void Scene::renderToScreen(){
     //Draw all receptors
     
     quadTextureProgram.begin();
-    receptorProgram.setUniform1f("alpha", getAlpha() / 255.0);
+    quadTextureProgram.setUniform1f("alpha", getAlpha() / 255.0);
     receptorImg.bind();
     receptorsVbo.drawElements(GL_TRIANGLES, (int) receptorsIndices.size());
     receptorImg.unbind();
@@ -538,8 +554,13 @@ void Scene::renderToScreen(){
     ofSetColor(200, getAlpha());
     
     for(int i = 0; i < receptors.size(); i++){
+        
+        ofPushStyle();
+        ofSetColor(receptors[i]->getAlpha());
         string text = "[" + to_string((int) floor(receptors[i]->getPercentFill())) + " / 100]";
         infosFont.drawString(text, receptors[i]->getPosition().x - infosFont.stringWidth(text) / 2, receptors[i]->getPosition().y + receptors[i]->getRadius() * 0.8);
+        
+        ofPopStyle();
     }
     
     ofPopStyle();
@@ -562,12 +583,12 @@ void Scene::renderToScreen(){
     //4 - Draw call
     //Draw all emitters
     
-    simpleQuadTextureProgram.begin();
+    quadTextureProgram.begin();
     quadTextureProgram.setUniform1f("alpha", getAlpha() / 255.0);
     emitterImg.bind();
     emittersVbo.drawElements(GL_TRIANGLES, (int) emittersIndices.size());
     emitterImg.unbind();
-    simpleQuadTextureProgram.end();
+    quadTextureProgram.end();
     
     //5 - Draw call
     //Draw all actuators
@@ -634,6 +655,21 @@ void Scene::updateAllParticles(){
         allParticles.insert(allParticles.end(), particles.begin(), particles.end());
         
     }
+    
+}
+
+void Scene::updateEmitterRenderingData(){
+    
+    for(int i = 0; i < emitters.size(); i++){
+        
+        emittersColors[i + 0] = ofFloatColor(255, 255, 255, emitters[i]->getAlpha());
+        emittersColors[i + 1] = ofFloatColor(255, 255, 255, emitters[i]->getAlpha());
+        emittersColors[i + 2] = ofFloatColor(255, 255, 255, emitters[i]->getAlpha());
+        emittersColors[i + 3] = ofFloatColor(255, 255, 255, emitters[i]->getAlpha());
+        
+    }
+    
+    emittersVbo.updateColorData(&emittersColors[0], (int) emittersColors.size());
     
 }
 
@@ -788,6 +824,13 @@ void Scene::updateReceptorsRenderingData(){
         receptorsVertices[i * 4 + 2] = quadVertices[2] * mat;
         receptorsVertices[i * 4 + 3] = quadVertices[3] * mat;
         
+        //Set colore
+        
+        receptorsColors[i + 0] = ofFloatColor(255, 255, 255, receptors[i]->getAlpha());
+        receptorsColors[i + 1] = ofFloatColor(255, 255, 255, receptors[i]->getAlpha());
+        receptorsColors[i + 2] = ofFloatColor(255, 255, 255, receptors[i]->getAlpha());
+        receptorsColors[i + 3] = ofFloatColor(255, 255, 255, receptors[i]->getAlpha());
+        
         //Set attributes
         
         receptorsAttributes[i * 4] = (ofVec3f(receptors[i]->getRadius(), receptors[i]->getPercentFill() * 0.01, 0.0));
@@ -836,6 +879,7 @@ void Scene::updateReceptorsRenderingData(){
     
     receptorsVbo.updateVertexData(&receptorsVertices[0], (int) receptorsVertices.size());
     receptorsVbo.updateNormalData(&receptorsAttributes[0], (int) receptorsAttributes.size());
+    receptorsVbo.updateColorData(&receptorsColors[0], (int) receptorsColors.size());
     
     particleReceptionFeedbackVbo.updateNormalData(&particleReceptionFeedbackAttributes[0], (int) particleReceptionFeedbackAttributes.size());
     
@@ -864,6 +908,8 @@ void Scene::update(){
         emitters[i]->setMainVolume(getVolume());
         
     }
+    
+    updateEmitterRenderingData();
     
     //Update GPU data
     //This will update all the data related to the rendering of the actuators.

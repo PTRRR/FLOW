@@ -114,6 +114,9 @@ protected:
     vector<ofVec3f> emittersVertices;
     vector<ofVec2f> emittersTexCoords;
     vector<ofIndexType> emittersIndices;
+    vector<ofFloatColor> emittersColors;
+    
+    void updateEmitterRenderingData();
     
     //Particles
     
@@ -148,6 +151,7 @@ protected:
     vector<ofVec3f> receptorsVertices;
     vector<ofVec2f> receptorsTexCoords;
     vector<ofIndexType> receptorsIndices;
+    vector<ofFloatColor> receptorsColors;
     vector<ofVec3f> receptorsAttributes;
     
     ofImage particleReceptionFeedbackImg;

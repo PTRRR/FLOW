@@ -19,6 +19,7 @@ private:
     ofVec2f direction;
     float length;
     ofFloatColor color;
+    ofPolyline line;
     
 public:
     

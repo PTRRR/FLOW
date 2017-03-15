@@ -10,7 +10,13 @@
 
 Arrow::Arrow(){
     
-    color = ofFloatColor( 255, 255, 255 );
+    color = ofFloatColor( 1.0, 1.0, 1.0, 1.0 );
+    
+    line.addVertex(ofPoint(0, 0));
+    line.addVertex(ofPoint(0, 0));
+    line.addVertex(ofPoint(0, 0));
+    line.addVertex(ofPoint(0, 0));
+    line.addVertex(ofPoint(0, 0));
     
 }
 
@@ -28,15 +34,14 @@ void Arrow::draw(){
     
     //Main
     
-    ofBeginShape();
     
-    ofVertex( firstSide );
-    ofVertex( head );
-    ofVertex( tail );
-    ofVertex( head );
-    ofVertex( secondSide );
+    line.getVertices()[0] = firstSide;
+    line.getVertices()[1] = head;
+    line.getVertices()[2] = tail;
+    line.getVertices()[3] = head;
+    line.getVertices()[4] = secondSide;
     
-    ofEndShape();
+    line.draw();
     
     ofPopStyle();
     

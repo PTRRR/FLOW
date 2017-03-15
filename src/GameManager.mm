@@ -218,8 +218,6 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
                 
             }else if(action == "tutorial.xml"){
                 
-                cout << "tutorial clicked" << endl;
-                
                 shared_ptr<TutorialScene> newScene = shared_ptr<TutorialScene>(new TutorialScene(mainFont));
                 newScene->setName(action);
                 newScene->XMLSetup(action);

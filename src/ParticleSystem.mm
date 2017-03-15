@@ -119,7 +119,7 @@ void ParticleSystem::update(){
             
             float distance = (particles[i]->getPosition() - receptors[j]->getPosition()).length();
             
-            if(distance < 20){
+            if(distance < 20 && !receptors[j]->isDisabled()){
                 particles.erase(particles.begin() + i);
                 receptors[j]->addOneParticleToCount();
                 
