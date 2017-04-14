@@ -30,6 +30,11 @@ Scene::Scene(shared_ptr<ofTrueTypeFont> _mainFont){
     backButton->setDimensions(ofVec2f(0.0390625 * ofGetWidth()));
     backButton->setImage(backButtonImg);
     
+    congratulationText = interface.addText( "CONGRATS", ofVec2f( ofGetWidth() * 0.5, ofGetHeight() * 0.485 ) );
+    congratulationText2 = interface.addText( "LEVEL COMPLETED", ofVec2f( ofGetWidth() * 0.5, ofGetHeight() * 0.515 ) );
+    congratulationText->setAlpha( 0 );
+    congratulationText2->setAlpha( 0 );
+    
     //Create the actuator box, where the player can take the actuators
     //This is useful to detect whether the actuators are active or not.
     //The player can drag them from the box to make them become active.
@@ -556,9 +561,9 @@ void Scene::renderToScreen(){
     for(int i = 0; i < receptors.size(); i++){
         
         ofPushStyle();
-        ofSetColor(receptors[i]->getAlpha());
+        ofSetColor(255, 255, 255, getAlpha());
         string text = "[" + to_string((int) floor(receptors[i]->getPercentFill())) + " / 100]";
-        infosFont.drawString(text, receptors[i]->getPosition().x - infosFont.stringWidth(text) / 2, receptors[i]->getPosition().y + receptors[i]->getRadius() * 0.8);
+        if( !receptors[i]->isDisabled() )infosFont.drawString(text, receptors[i]->getPosition().x - infosFont.stringWidth(text) / 2, receptors[i]->getPosition().y + receptors[i]->getRadius() * 0.8);
         
         ofPopStyle();
     }
@@ -888,7 +893,7 @@ void Scene::updateReceptorsRenderingData(){
 //Update the scene
 
 void Scene::update(){
-    
+        
     //Update GPU data
     //This will update all the data related to the rendering of the particles.
     //The vbos conataining all rendering data as : heads coords, tails coords, etc... will be updated.
@@ -956,9 +961,13 @@ void Scene::update(){
     
     updateReceptorsRenderingData();
     
+    checkForCollisions();
+    
+    levelTitle->setAlpha(getAlpha() / 255.0);
+    
     //Check if receptors are filled
     
-    if(!allAreFilled){
+    if ( !allAreFilled ) {
         
         allAreFilled = true;
         
@@ -967,16 +976,40 @@ void Scene::update(){
             if(!receptors[i]->isFilled()) allAreFilled = false;
         }
         
-        if(allAreFilled){
+        if ( allAreFilled ) {
             
-            IS_FINISHED = true;
+            for ( int i = 0 ; i < emitters.size(); i ++ ) {
+                
+                emitters[ i ]->setRate( 0 );
+                
+            }
+            
+        }
+        
+    } else {
+        
+        if( IS_FINISHED && !end ){
+            
+            end = true;
             levelEndCallback();
+            
+        } else {
+            
+            finishTimer += ofGetLastFrameTime();
+            
+            congratulationTextAlpha += ( 1.0 - congratulationTextAlpha ) * 0.1;
+            congratulationText->setAlpha( congratulationTextAlpha * getAlpha() / 255.0 );
+            congratulationText2->setAlpha( congratulationTextAlpha * getAlpha() / 255.0 );
+            
+            if ( finishTimer > timeToFinish ) {
+                
+                IS_FINISHED = true;
+                
+            }
             
         }
         
     }
-    
-    checkForCollisions();
     
 }
 
@@ -1018,6 +1051,12 @@ vector<ofVec3f> Scene::getQuadVertices(float _size){
     vertices.push_back(downLeft);
     
     return vertices;
+    
+}
+
+string Scene::getTitle() {
+    
+    return title;
     
 }
 
@@ -1220,7 +1259,7 @@ void Scene::onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, str
     
     //Reset the active actuator
     
-    if(_touch.id < touches.size()){
+    if(_touch.id < activeActuators.size()){
         
         if(activeActuators[_touch.id] != nullptr){
             if(activeActuators[_touch.id]->isDisabled()) activeActuators[_touch.id]->disable(false);
@@ -1242,7 +1281,7 @@ void Scene::onMouseUp(ofTouchEventArgs & _touch, function<void(string _text, str
 
 void Scene::onMouseMove(ofTouchEventArgs & _touch, function<void(string _text, string _action)> _callback){
     
-    if(_touch.id < touches.size()){
+    if(_touch.id < activeActuators.size()){
         
         if(activeActuators[_touch.id] != nullptr){
          
@@ -1442,9 +1481,22 @@ void Scene::saveSceneToXML(string _fileName){
 
 //This function sets up the scene with a xml file.
 
-void Scene::XMLSetup(string _xmlFile){
+void Scene::XMLSetup(string _xmlFile, string _name){
     
     int sceneSoundIndex = (int) round(ofRandom(2));
+    
+    title = _name;
+    levelTitle = interface.addText ( title, ofVec2f ( 0, 0 ) );
+    levelTitle->setPosition ( ofVec2f ( ofGetWidth() - levelTitle->getDimensions().x * 0.5 - ofGetWidth() * 0.036, ofGetHeight() * 0.027 ) );
+    if ( title == "TUTORIAL" ) {
+        
+        congratulationText2->setText ( "NOW YOU KNOW HOW TO PLAY" );
+        
+    } else {
+        
+        congratulationText2->setText ( "LEVEL " + title + " COMPLETED" );
+        
+    }
     
     mainSound.load("sounds/scene_"+ to_string(sceneSoundIndex) +".mp3");
     mainSound.setLoop(true);

@@ -132,7 +132,7 @@ shared_ptr<Scene> GameManager::createNewScene(string _name, string _xmlFile){
     
     shared_ptr<Scene> newScene = shared_ptr<Scene>(new Scene(mainFont));
     newScene->setName(_xmlFile);
-    newScene->XMLSetup(_xmlFile);
+    newScene->XMLSetup(_xmlFile, _name);
     
     //Update the current scene variable.
     
@@ -168,10 +168,13 @@ void GameManager::onEnd(){
                 
                 if (levelsList[i] == currentLevelFile && i < levelsList.size() - 1) {
                     
+                    cout << i << endl;
+                    
                     nextLevelFile = levelsList[i + 1];
                     levels->setUnlocked(nextLevelFile);
                     levels->setup();
                     screenPipeline.setScreenActive(nextLevel);
+                    nextLevelName = to_string(i + 1);
                     break;
                     
                 }
@@ -220,7 +223,7 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
                 
                 shared_ptr<TutorialScene> newScene = shared_ptr<TutorialScene>(new TutorialScene(mainFont));
                 newScene->setName(action);
-                newScene->XMLSetup(action);
+                newScene->XMLSetup(action, text);
                 
                 //Update the current scene variable.
                 
@@ -347,13 +350,13 @@ void GameManager::mouseUp(ofTouchEventArgs & _touch){
                 
             }else if(action == "NEXT-LEVEL"){
                 
-                screenPipeline.setScreenActive(createNewScene("nextLevel", nextLevelFile));
+                screenPipeline.setScreenActive(createNewScene(nextLevelName, nextLevelFile));
                 
                 onEnd();
                 
             }else if(action == "RESTART"){
                 
-                screenPipeline.setScreenActive(createNewScene("currentLevel", currentLevelFile));
+                screenPipeline.setScreenActive(createNewScene(currentScene->getTitle(), currentLevelFile));
                 
                 onEnd();
                 

@@ -16,6 +16,7 @@
 		0E078B891E168984004595EF /* Receptor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E078B871E168984004595EF /* Receptor.mm */; };
 		0E22F05E1E0A8A8500197899 /* Text.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E22F05C1E0A8A8500197899 /* Text.mm */; };
 		0E2775A91E196FC200A9BD2D /* data in Resources */ = {isa = PBXBuildFile; fileRef = 0E2775A81E196FC200A9BD2D /* data */; };
+		0E2A03831E7ACB1100D8350E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0E2A03821E7ACB1100D8350E /* Images.xcassets */; };
 		0E4C31DF1E1EC7B0006B5AE4 /* Levels.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C31DD1E1EC7B0006B5AE4 /* Levels.mm */; };
 		0E4C31FC1E2196EA006B5AE4 /* assert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C31F71E2196EA006B5AE4 /* assert.cpp */; };
 		0E4C31FD1E2196EA006B5AE4 /* del_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E4C31F81E2196EA006B5AE4 /* del_impl.cpp */; };
@@ -99,6 +100,7 @@
 		0E22F05C1E0A8A8500197899 /* Text.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Text.mm; sourceTree = "<group>"; };
 		0E22F05D1E0A8A8500197899 /* Text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Text.h; sourceTree = "<group>"; };
 		0E2775A81E196FC200A9BD2D /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = bin/data; sourceTree = "<group>"; };
+		0E2A03821E7ACB1100D8350E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = FLOW/Images.xcassets; sourceTree = "<group>"; };
 		0E4C31DD1E1EC7B0006B5AE4 /* Levels.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Levels.mm; sourceTree = "<group>"; };
 		0E4C31DE1E1EC7B0006B5AE4 /* Levels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Levels.h; sourceTree = "<group>"; };
 		0E4C31F11E2196EA006B5AE4 /* assert.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = assert.hpp; sourceTree = "<group>"; };
@@ -380,6 +382,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				0E2A03821E7ACB1100D8350E /* Images.xcassets */,
 				0E2775A81E196FC200A9BD2D /* data */,
 				678E130917951536005B6D19 /* Icon.png */,
 				678E130717951530005B6D19 /* Icon@2x.png */,
@@ -539,7 +542,11 @@
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
 						DevelopmentTeam = 9N39DKD768;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 0;
+							};
 							com.apple.Push = {
 								enabled = 0;
 							};
@@ -589,6 +596,7 @@
 			files = (
 				678E130817951530005B6D19 /* Icon@2x.png in Resources */,
 				0E2775A91E196FC200A9BD2D /* data in Resources */,
+				0E2A03831E7ACB1100D8350E /* Images.xcassets in Resources */,
 				678E130A17951536005B6D19 /* Icon.png in Resources */,
 				678E130C1795153C005B6D19 /* Default.png in Resources */,
 				678E130E17951540005B6D19 /* Default@2x.png in Resources */,
@@ -673,6 +681,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 9N39DKD768;
@@ -684,7 +694,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ch.ecal.mid.games.2016.flow;
 				PRODUCT_NAME = FLOW;
 				PROVISIONING_PROFILE = "";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 				VALID_ARCHS = "$(ARCHS_STANDARD)";
 			};
 			name = Debug;
@@ -692,6 +702,8 @@
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 9N39DKD768;
@@ -703,7 +715,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ch.ecal.mid.games.2016.flow;
 				PRODUCT_NAME = FLOW;
 				PROVISIONING_PROFILE = "";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 				VALID_ARCHS = "$(ARCHS_STANDARD)";
 			};
 			name = Release;

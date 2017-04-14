@@ -30,6 +30,10 @@ class GameManager{
 
 private:
     
+    // debug
+    int n = 0;
+    string nextLevelName = "";
+    
     shared_ptr<ofTrueTypeFont> mainFont;
     
     //Timer utilitie

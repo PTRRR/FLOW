@@ -14,6 +14,8 @@ TutorialScene::TutorialScene(shared_ptr<ofTrueTypeFont> _mainFont) : Scene(_main
 
     textFont = shared_ptr<ofTrueTypeFont>(new ofTrueTypeFont());
     textFont->load("GT-Pressura-Mono-Light.ttf", 20);
+    cout << ofGetWidth() << endl;
+    cout << ofGetHeight() << endl;
     tutorialInterface = Interface(textFont);
     
     //Texts
@@ -82,6 +84,8 @@ void TutorialScene::update(){
     float deltaTime = time - lastTime;
     elapsedTime += deltaTime;
     
+    levelTitle->setAlpha(0);
+    
     //Timer
     
     if(elapsedTime < 2000 && tutorialStep < 1){
@@ -135,6 +139,23 @@ void TutorialScene::update(){
     }else if(tutorialStep == 4){
         
         arrows[0]->setAlpha(1.0 * mA);
+        arrows[0]->setPosition(arrows[0]->getPosition() + ofVec2f(0.0, cos(time * 0.005)));
+        
+        if( !begunToFill ){
+            
+            for( int i = 0; i < receptors.size(); i++ ){
+                
+                if( receptors[ i ]->getPercentFill() > 25 ){
+                    
+                    texts[ 0 ]->setAlpha( 0.0 );
+                    begunToFill = true;
+                    break;
+                    
+                }
+                
+            }
+            
+        }
         
     }
     
@@ -189,7 +210,7 @@ void TutorialScene::onMouseUp(ofTouchEventArgs &_touch, function<void (string, s
                 
                 for(int i = 0; i < emitters.size(); i++){
                     
-                    emitters[i]->setRate(50);
+                    emitters[i]->setRate(90);
                     emitters[i]->setAlpha(1.0);
                     
                 }
@@ -210,12 +231,11 @@ void TutorialScene::onMouseUp(ofTouchEventArgs &_touch, function<void (string, s
         
     }else if(tutorialStep == 3){
         
-        cout << movedLength << endl;
-        
         if(movedLength > 700){
             
             texts[0]->setText("WITH THE HELP OF THE MAGNETS TRY TO PUT AS MANY PARTICLES IN THE RECEPTOR BELOW");
-            arrows[0]->setPosition(ofVec2f(ofGetWidth() / 2, 300));
+            arrows[0]->setDirection(ofVec2f( 0, -1 ));
+            arrows[0]->setPosition(ofVec2f(ofGetWidth() / 2, ofGetHeight() - 380));
             
             tutorialStep = 4;
             

@@ -41,7 +41,7 @@ void Credits::renderToScreen(){
     ofDrawRectangle(0, 0, ofGetWidth() + 1, ofGetHeight());
     
     ofSetColor(180, getAlpha());
-    renensMedium->drawString("Flow", 0.06160546875 * ofGetWidth(), 0.2830546875 * ofGetHeight());
+    renensMedium->drawString("Flow Particles", 0.06160546875 * ofGetWidth(), 0.2830546875 * ofGetHeight());
     renensLight->drawString(creditsString, 0.06160546875 * ofGetWidth(), 0.34675 * ofGetHeight());
     
     ecalLogo.draw(0.06160546875 * ofGetWidth(), 0.9126425781 * ofGetHeight(), 0.1634661458 * ofGetWidth(), 0.0379765625 * ofGetHeight());

@@ -13,6 +13,7 @@
 #include "Screen.h"
 #include "Interface.h"
 #include "Button.h"
+#include "Text.h"
 
 #include "VboLine.h"
 #include "BaseElement.h"
@@ -23,6 +24,8 @@
 #include "Polygone.h"
 #include "ofxXmlSettings.h"
 #include "ofxOpenALSoundPlayer.h"
+#include <locale>
+#include <algorithm>
 
 #import "AVSoundPlayer.h"
 
@@ -53,6 +56,15 @@ protected:
     //Hack
     
     bool activateActuatorResize = false;
+    float finishTimer = 0;
+    float timeToFinish = 6;
+    float congratulationTextAlpha = 0.0f;
+    shared_ptr<Text> congratulationText;
+    shared_ptr<Text> congratulationText2;
+    bool end = false;
+    
+    string title;
+    shared_ptr<Text> levelTitle;
     
     //GUI
     
@@ -248,8 +260,8 @@ public:
     void onEnd(function<void()> _levelEndCallback);
     
     bool isFinished();
-    
-    void XMLSetup(string _xmlFile);
+    string getTitle();
+    void XMLSetup(string _xmlFile, string _name);
     
 };
 

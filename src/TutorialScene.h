@@ -30,6 +30,7 @@ private:
     ofVec2f lastTouch;
     float deltaMove;
     float movedLength = 0;
+    bool begunToFill = false;
     
 public:
     
